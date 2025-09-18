@@ -3,6 +3,8 @@ import extras.*
 object bota {
     var estado = botaAsset1
     var property position = game.at(5, 8)
+    const puntos = -150 
+
 
     //acciones
     method aplicarGravedad() {
@@ -20,6 +22,7 @@ object bota {
             game.schedule(1000, {snorlax.cambiarEstadoA(snorlaxNormal)})
         }
         else {
+            puntuacion.incrementaPuntos(puntos)
             snorlax.terminarJuego()
         }
         
