@@ -1,0 +1,11 @@
+import personajes.*
+
+program snorlaxGame{
+    game.title("Snorlax")
+    game.height(11)
+    game.width(7)
+    game.cellSize(50)
+    game.start()
+    game.addVisualCharacter(snorlax)
+    
+}
