@@ -1,7 +1,6 @@
 # Indefinido
 
 ## Equipo de desarrollo
-
 - Omar Sosa
 - Martin Sarracini
 - Santiago Barreto
