@@ -1,10 +1,11 @@
-# Nombre del juego (<- borrar y completar)
+# Indefinido
 
 ## Equipo de desarrollo
 
-- Alguien
-- Persona
-- etc.
+- Omar Sosa
+- Martin Sarracini
+- Santiago Barreto
+- Nahuel Lezcano
 
 ## Capturas
 
