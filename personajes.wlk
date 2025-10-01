@@ -1,4 +1,5 @@
 object snorlax{
+
     var property position = game.at(0, 0) 
     var property iamge = "pepita.png" 
     method estaEnElTablero() {
@@ -20,3 +21,4 @@ object derecha {
     pj.position().right(1)
   }
 }
+
