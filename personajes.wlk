@@ -11,6 +11,12 @@ object snorlax{
     method puedeMover(direccion){
         return direccion.siguiente(self).x().between(0, game.width()-1)
     }
+
+    method comer(){
+      if(game.colliders(self).size() > 0){
+        game.removeVisual(game.colliders(self).get(0))
+      }
+    }
 }
 
 object izquierda {
@@ -28,6 +34,6 @@ object derecha {
   method siguiente(pj){
     return pj.position().right(1)
   }
-}
+} 
 
  

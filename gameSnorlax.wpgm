@@ -9,5 +9,5 @@ program snorlaxGame{
     game.addVisual(snorlax)
     keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
     keyboard.d().onPressDo({snorlax.mover(derecha)})
-    
+    keyboard.space().onPressDo({snorlax.comer()})
 }
