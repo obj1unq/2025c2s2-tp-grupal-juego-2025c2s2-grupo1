@@ -6,6 +6,8 @@ program snorlaxGame{
     game.width(7)
     game.cellSize(50)
     game.start()
-    game.addVisualCharacter(snorlax)
-    
+    game.addVisual(snorlax)
+    keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
+    keyboard.d().onPressDo({snorlax.mover(derecha)})
+    keyboard.space().onPressDo({snorlax.comer()})
 }
