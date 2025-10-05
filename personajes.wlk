@@ -1,6 +1,7 @@
 object snorlax{
     var property position = game.at(0, 0) 
     var property estado = snorlaxNormal
+    var property vidas = 3 //Comienza con 3 vidas
     
     method mover(direccion){
         if (self.puedeMover(direccion)){
@@ -19,6 +20,8 @@ object snorlax{
             game.removeVisual(self.objetoColisinandoConSnorlax())
         }
     }
+
+    method perderUnaVida() { vidas -= 1 }
 
     method objetoColisinandoConSnorlax() { return game.colliders(self).get(0) }
 
@@ -54,4 +57,15 @@ object snorlaxComiendo {
     method nombre() {
         return "come"
     }
+}
+
+
+// Visualizador de vidas
+
+object vida {
+    var property position = game.at(4,9)
+
+    method image() {
+        return "icono-" + snorlax.vidas() + "-vidas.png"
+    }  
 }
