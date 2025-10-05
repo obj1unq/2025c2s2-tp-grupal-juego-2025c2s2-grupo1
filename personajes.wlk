@@ -1,39 +1,57 @@
 object snorlax{
-
     var property position = game.at(0, 0) 
-    var property image = "pepita.png" 
+    var property estado = snorlaxNormal
     
     method mover(direccion){
         if (self.puedeMover(direccion)){
-            direccion.moverA(self)
+            position = direccion.siguiente(self)
         }
     }
+
     method puedeMover(direccion){
-        return direccion.siguiente(self).x().between(0, game.width()-1)
+        return direccion.siguiente(self).x().between(0, game.width()-2)
     }
 
     method comer(){
-      if(game.colliders(self).size() > 0){
-        game.removeVisual(game.colliders(self).get(0))
-      }
+        if(self.hayAlgoColisionando()){
+            self.cambiarEstadoA(snorlaxComiendo)
+            game.schedule(500, {self.cambiarEstadoA(snorlaxNormal)})
+            game.removeVisual(self.objetoColisinandoConSnorlax())
+        }
+    }
+
+    method objetoColisinandoConSnorlax() { return game.colliders(self).get(0) }
+
+    method cambiarEstadoA(estadoNuevo) { estado = estadoNuevo }
+
+    method hayAlgoColisionando() { return game.colliders(self).size() > 0 }
+
+    method image() {
+        return "snorlax-" + estado.nombre() + ".png"
     }
 }
 
+//movimiento del personaje
 object izquierda {
-  method moverA(pj) {
-    pj.position(pj.position().left(1))
-  }
-  method siguiente(pj){
-    return pj.position().left(1)
+    method siguiente(personaje){
+        return personaje.position().left(1)
   }
 }
 object derecha {
-  method moverA(pj){
-    pj.position(pj.position().right(1))
-  }
-  method siguiente(pj){
-    return pj.position().right(1)
+  method siguiente(personaje){
+    return personaje.position().right(1)
   }
 } 
 
- 
+//estados de snorlax
+object snorlaxNormal {
+    method nombre() {
+        return "normal"
+    }
+}
+
+object snorlaxComiendo {
+    method nombre() {
+        return "come"
+    }
+}
