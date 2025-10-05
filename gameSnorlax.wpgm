@@ -1,14 +1,34 @@
+import comida.*
 import personajes.*
+import extras.*
+import basura.*
 
 program snorlaxGame{
     game.title("Snorlax")
     game.height(11)
     game.width(7)
     game.cellSize(50)
-    game.start()
-    game.addVisual(snorlax)
+    game.boardGround("fondo.png")
+
+    game.schedule(1000, {game.addVisual(pokelitoFrutilla)})
+    game.schedule(2000, {game.addVisual(pokelitoNaranja)})
+    game.schedule(2300, {game.addVisual(pokelitoChocolate)})
+    game.schedule(3500, {game.addVisual(pokelitoDulceDeLeche)})
+    game.schedule(6700, {game.addVisual(pokelitoLimon)})
+    game.schedule(8100, {game.addVisual(bota)})
+
+    game.onTick(700, "aplicar gravedad a bota", {bota.aplicarGravedad()})
+    game.onTick(700, "aplicar gravedad a chocolate", {pokelitoChocolate.aplicarGravedad()})
+    game.onTick(700, "aplicar gravedad a dulce de leche", {pokelitoDulceDeLeche.aplicarGravedad()})
+    game.onTick(700, "aplicar gravedad a frutilla", {pokelitoFrutilla.aplicarGravedad()})
+    game.onTick(700, "aplicar gravedad a limon", {pokelitoLimon.aplicarGravedad()})
+    game.onTick(700, "aplicar gravedad a naranja", {pokelitoNaranja.aplicarGravedad()})
+
     game.addVisual(vida)
     keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
     keyboard.d().onPressDo({snorlax.mover(derecha)})
     keyboard.space().onPressDo({snorlax.comer()})
+    game.addVisual(snorlax)
+
+    game.start()
 }
