@@ -17,8 +17,8 @@ object bota {
 
     method aplicarEfecto(personaje) {
         if (snorlax.tieneVidas()) {
-            snorlax.perderUnaVida()
             puntuacion.decrementaPuntos(puntos)
+            snorlax.perderUnaVida()
             game.schedule(1000, {snorlax.cambiarEstadoA(snorlaxNormal)})
         }
         else {

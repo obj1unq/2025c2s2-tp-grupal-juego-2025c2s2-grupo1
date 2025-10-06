@@ -86,14 +86,14 @@ object vida {
 
 object puntuacion{
     var property puntos = 0
-    var property text = "Puntos: 0" 
+    var property text = self.puntos().toString()
     var property position = game.at(1,10) 
     method incrementaPuntos(puntosFruta){
         puntos += puntosFruta
-       // text = "Puntos:" ++self.puntos()++ ""
+        text = self.puntos().toString()
     } 
     method decrementaPuntos(puntosBasura){
         puntos -= puntosBasura
-        //text = "Puntos:" ++self.puntos()++ ""
+        text = self.puntos().toString()
     }
 }
