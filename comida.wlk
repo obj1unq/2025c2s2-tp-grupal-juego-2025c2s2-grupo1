@@ -6,7 +6,7 @@ import extras.*
 
 object pokelitoFrutilla {
     var estado = pokelitoFrutillaAsset1
-    var property position = game.at(0, 9)
+    var property position = game.at(0, 8)
     var property puntos = 150 
     method aplicarGravedad() {
         if (self.puedeMover(abajo)) {
@@ -37,7 +37,7 @@ object pokelitoFrutilla {
 
     method aplicarEfecto(personaje) {
         game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
-        puntuacion.incrementaPuntos(puntos)
+        snorlax.sumarPuntos(puntos)
     }
 
     method eliminarDelJuego() {
@@ -47,7 +47,7 @@ object pokelitoFrutilla {
 
 object pokelitoLimon {
     var estado = pokelitoLimonAsset1
-    var property position = game.at(1, 9)
+    var property position = game.at(1, 8)
     var property puntos = 100 
 
     method aplicarGravedad() {
@@ -80,7 +80,7 @@ object pokelitoLimon {
 
     method aplicarEfecto(personaje) {
         game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
-        puntuacion.incrementaPuntos(puntos)
+        snorlax.sumarPuntos(puntos)
     }
 
     method eliminarDelJuego() {
@@ -90,7 +90,7 @@ object pokelitoLimon {
 
 object pokelitoNaranja {
     var estado = pokelitoNaranjaAsset1
-    var property position = game.at(2, 9)
+    var property position = game.at(2, 8)
     var property puntos = 200 
 
     method aplicarGravedad() {
@@ -123,7 +123,7 @@ object pokelitoNaranja {
 
     method aplicarEfecto(personaje) {
         game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
-        puntuacion.incrementaPuntos(puntos)
+        snorlax.sumarPuntos(puntos)
     }
 
     method eliminarDelJuego() {
@@ -133,7 +133,7 @@ object pokelitoNaranja {
 
 object pokelitoDulceDeLeche {
     var estado = pokelitoDulceDeLecheAsset1
-    var property position = game.at(3, 9)
+    var property position = game.at(3, 8)
     var property puntos = 250 
 
     method aplicarGravedad() {
@@ -166,7 +166,7 @@ object pokelitoDulceDeLeche {
 
     method aplicarEfecto(personaje) {
         game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
-        puntuacion.incrementaPuntos(puntos)
+        snorlax.sumarPuntos(puntos)
     }
 
     method eliminarDelJuego() {
@@ -176,7 +176,7 @@ object pokelitoDulceDeLeche {
 
 object pokelitoChocolate {
     var estado = pokelitoChocolateAsset1
-    var property position = game.at(4, 9)
+    var property position = game.at(4, 8)
     var property puntos = 250
 
     method aplicarGravedad() {
@@ -209,7 +209,7 @@ object pokelitoChocolate {
 
     method aplicarEfecto(personaje) {
         game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
-        puntuacion.incrementaPuntos(puntos)
+        snorlax.sumarPuntos(puntos)
     }
 
     method eliminarDelJuego() {

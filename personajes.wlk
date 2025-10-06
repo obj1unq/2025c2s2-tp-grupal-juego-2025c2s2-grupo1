@@ -3,6 +3,7 @@ object snorlax{
     var property position = game.at(0, 0) 
     var property estado = snorlaxNormal
     var property vidas = 1 //Comienza con 3 vidas
+    var property puntos = 0
     
     //acciones
     method mover(direccion){
@@ -37,6 +38,8 @@ object snorlax{
     method perderUnaVida() { vidas -= 1 }
 
     method cambiarEstadoA(estadoNuevo) { estado = estadoNuevo }
+
+    method sumarPuntos(_puntos) { puntos = puntos + (_puntos) }
 
     //consultas
     method puedeMover(direccion){
@@ -85,11 +88,7 @@ object vida {
 // puntuacion de snorlax
 
 object puntuacion{
-    var property puntos = 0
-    var property text = self.puntos().toString()
     var property position = game.at(1,10) 
-    method incrementaPuntos(puntosFruta){
-        puntos += puntosFruta
-        text = self.puntos().toString()
-    } 
+    
+    method text() { return snorlax.puntos().toString() }
 }
