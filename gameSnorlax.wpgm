@@ -29,6 +29,7 @@ program snorlaxGame{
     keyboard.d().onPressDo({snorlax.mover(derecha)})
     keyboard.space().onPressDo({snorlax.comer()})
     game.addVisual(snorlax)
-
+    game.addVisual(puntuacion)
     game.start()
+
 }

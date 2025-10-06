@@ -81,3 +81,15 @@ object vida {
         return "icono-" + snorlax.vidas() + "-vidas.png"
     }  
 }
+
+// puntuacion de snorlax
+
+object puntuacion{
+    var property puntos = 0
+    var property text = self.puntos().toString()
+    var property position = game.at(1,10) 
+    method incrementaPuntos(puntosFruta){
+        puntos += puntosFruta
+        text = puntos.toString()
+    } 
+}

@@ -6,8 +6,13 @@ import extras.*
 
 object pokelitoFrutilla {
     var estado = pokelitoFrutillaAsset1
+<<<<<<< HEAD
+    var property position = game.at(0, 8)
+    var property puntos = 150 
+=======
     var property position = game.at(0, 9)
-
+    const puntos = 150 
+>>>>>>> 0cfd1b0 (puntuacion lista)
     method aplicarGravedad() {
         if (self.puedeMover(abajo)) {
             position = abajo.siguiente(self)
@@ -36,8 +41,8 @@ object pokelitoFrutilla {
     method estado() { return estado }
 
     method aplicarEfecto(personaje) {
-        //puntuacion
         game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
+        snorlax.sumarPuntos(puntos)
     }
 
     method eliminarDelJuego() {
@@ -47,7 +52,13 @@ object pokelitoFrutilla {
 
 object pokelitoLimon {
     var estado = pokelitoLimonAsset1
+<<<<<<< HEAD
+    var property position = game.at(1, 8)
+    var property puntos = 100 
+=======
     var property position = game.at(1, 9)
+    const puntos = 100 
+>>>>>>> 0cfd1b0 (puntuacion lista)
 
     method aplicarGravedad() {
         if (self.puedeMover(abajo)) {
@@ -78,8 +89,8 @@ object pokelitoLimon {
     method estado() { return estado }
 
     method aplicarEfecto(personaje) {
-        //puntuacion
         game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
+        snorlax.sumarPuntos(puntos)
     }
 
     method eliminarDelJuego() {
@@ -89,7 +100,13 @@ object pokelitoLimon {
 
 object pokelitoNaranja {
     var estado = pokelitoNaranjaAsset1
+<<<<<<< HEAD
+    var property position = game.at(2, 8)
+    var property puntos = 200 
+=======
     var property position = game.at(2, 9)
+    const puntos = 200 
+>>>>>>> 0cfd1b0 (puntuacion lista)
 
     method aplicarGravedad() {
         if (self.puedeMover(abajo)) {
@@ -120,8 +137,8 @@ object pokelitoNaranja {
     method estado() { return estado }
 
     method aplicarEfecto(personaje) {
-        //puntuacion
         game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
+        snorlax.sumarPuntos(puntos)
     }
 
     method eliminarDelJuego() {
@@ -131,7 +148,13 @@ object pokelitoNaranja {
 
 object pokelitoDulceDeLeche {
     var estado = pokelitoDulceDeLecheAsset1
+<<<<<<< HEAD
+    var property position = game.at(3, 8)
+    var property puntos = 250 
+=======
     var property position = game.at(3, 9)
+    const puntos = 250 
+>>>>>>> 0cfd1b0 (puntuacion lista)
 
     method aplicarGravedad() {
         if (self.puedeMover(abajo)) {
@@ -162,8 +185,8 @@ object pokelitoDulceDeLeche {
     method estado() { return estado }
 
     method aplicarEfecto(personaje) {
-        //puntuacion
         game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
+        snorlax.sumarPuntos(puntos)
     }
 
     method eliminarDelJuego() {
@@ -173,7 +196,13 @@ object pokelitoDulceDeLeche {
 
 object pokelitoChocolate {
     var estado = pokelitoChocolateAsset1
+<<<<<<< HEAD
+    var property position = game.at(4, 8)
+    var property puntos = 250
+=======
     var property position = game.at(4, 9)
+    const puntos = 250
+>>>>>>> 0cfd1b0 (puntuacion lista)
 
     method aplicarGravedad() {
         if (self.puedeMover(abajo)) {
@@ -204,8 +233,8 @@ object pokelitoChocolate {
     method estado() { return estado }
 
     method aplicarEfecto(personaje) {
-        //puntuacion
         game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
+        snorlax.sumarPuntos(puntos)
     }
 
     method eliminarDelJuego() {
