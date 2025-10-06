@@ -92,8 +92,4 @@ object puntuacion{
         puntos += puntosFruta
         text = self.puntos().toString()
     } 
-    method decrementaPuntos(puntosBasura){
-        puntos -= puntosBasura
-        text = self.puntos().toString()
-    }
 }
