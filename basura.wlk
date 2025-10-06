@@ -3,6 +3,7 @@ import extras.*
 object bota {
     var estado = botaAsset1
     var property position = game.at(5, 9)
+    var property puntos = 150 
 
     //acciones
     method aplicarGravedad() {
@@ -17,6 +18,7 @@ object bota {
     method aplicarEfecto(personaje) {
         if (snorlax.tieneVidas()) {
             snorlax.perderUnaVida()
+            puntuacion.decrementaPuntos(puntos)
             game.schedule(1000, {snorlax.cambiarEstadoA(snorlaxNormal)})
         }
         else {
