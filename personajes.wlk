@@ -12,9 +12,10 @@ object snorlax{
     }
 
     method recibirDaño() {
-            self.cambiarEstadoA(snorlaxRecibiendoDaño)
-            self.perderUnaVida()
-        }
+        self.cambiarEstadoA(snorlaxRecibiendoDaño)
+        self.objetoColisinandoConSnorlax().aplicarEfecto(self)
+        self.objetoColisinandoConSnorlax().eliminarDelJuego()
+    }
 
     method hayCelda(direccion) {
         return direccion.siguiente(self).x().between(0, game.width()-2)
@@ -30,7 +31,7 @@ object snorlax{
         if(self.hayAlgoColisionando()){
             self.cambiarEstadoA(snorlaxComiendo)
             self.objetoColisinandoConSnorlax().aplicarEfecto(self)
-            self.objetoColisinandoConSnorlax().eliminarDelJuego()
+            self.objetoColisinandoConSnorlax().eliminarDelJuegoEn(500)
         }
     }
 
@@ -40,10 +41,10 @@ object snorlax{
 
     //consultas
     method puedeMover(direccion){
-        return self.hayCelda(direccion) && !self.tieneVidas()
+        return self.hayCelda(direccion) && self.tieneVidas()
     }
 
-    method tieneVidas() { return vidas > 1 }
+    method tieneVidas() { return vidas > 0 }
 
     method objetoColisinandoConSnorlax() { return game.colliders(self).get(0) }
 

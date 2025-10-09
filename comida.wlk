@@ -1,23 +1,26 @@
 import personajes.*
-import assetsComida.*
 import extras.*
+import randomizer.*
 
 //pokelitos
+class Pokelito {
+    const property gusto
+    var estado = gusto.estado() 
+    var property position
+    const property puntos = gusto.puntos()
 
-object pokelitoFrutilla {
-    var estado = pokelitoFrutillaAsset1 
-    var property position = game.at(0, 8)
-    const puntos = 150
-    method aplicarGravedad() {
+    method caer() {
         if (self.puedeMover(abajo)) {
             position = abajo.siguiente(self)
         }
         else if (not self.hayCelda(abajo)) {
-            game.schedule(1500, {game.removeVisual(self)})
+            self.eliminarDelJuegoEn(1500)
         }
     }
 
-    method puedeMover(direccion) { return self.hayCelda(direccion) and self.estaEnElJuego()}
+    method puedeMover(direccion) { 
+        return self.hayCelda(direccion) and self.estaEnElJuego() and snorlax.tieneVidas()
+    }
 
     method hayCelda(direccion) {
 		return 
@@ -25,9 +28,7 @@ object pokelitoFrutilla {
 			(direccion.siguiente(self).y().between(0, game.height()-1))
 	}
 
-    method image() {
-        return estado.nombre() + ".png"
-    }
+    method image() { return estado }
 
     method estaEnElJuego() {
         return game.allVisuals().any({ visual => visual == self})
@@ -40,180 +41,102 @@ object pokelitoFrutilla {
         puntuacion.incrementaPuntos(puntos)
     }
 
-    method eliminarDelJuego() {
-        game.schedule(500, {game.removeVisual(self)})
-    }
-} 
-
-object pokelitoLimon {
-    var estado = pokelitoLimonAsset1
-    var property position = game.at(1, 8)
-    const puntos = 100 
-
-    method aplicarGravedad() {
-        if (self.puedeMover(abajo)) {
-            position = abajo.siguiente(self)
-        }
-        else if (not self.hayCelda(abajo)) {
-            game.schedule(1500, {game.removeVisual(self)})
-        }
-    }
-
-    method puedeMover(direccion) { return self.hayCelda(direccion) and self.estaEnElJuego()}
-
-    method hayCelda(direccion) {
-		return 
-			(direccion.siguiente(self).x().between(0, game.width()-1)) and
-			(direccion.siguiente(self).y().between(0, game.height()-1))
-	}
-
-
-    method image() {
-        return estado.nombre() + ".png"
-    }
-
-    method estaEnElJuego() {
-        return game.allVisuals().any({ visual => visual == self})
-    }
-
-    method estado() { return estado }
-
-    method aplicarEfecto(personaje) {
-        game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
-        puntuacion.incrementaPuntos(puntos)
-    }
-
-    method eliminarDelJuego() {
-        game.schedule(500, {game.removeVisual(self)})
+    method eliminarDelJuegoEn(ticks) {
+        game.schedule(ticks, {pokelitos.eliminarPokelitoAlJuego(self)})
     }
 }
 
-object pokelitoNaranja {
-    var estado = pokelitoNaranjaAsset1
-    var property position = game.at(2, 8)
-    const puntos = 200 
+class Frutilla {
+    var faseActual = 1
+    const property puntos = 150
 
-    method aplicarGravedad() {
-        if (self.puedeMover(abajo)) {
-            position = abajo.siguiente(self)
-        }
-        else if (not self.hayCelda(abajo)) {
-            game.schedule(1500, {game.removeVisual(self)})
-        }
+    method estado() { return "frutilla-" + faseActual + ".png" }
+}
+
+class Limon {
+    var faseActual = 1
+    const property puntos = 100
+
+    method estado() { return "limon-" + faseActual + ".png" }
+
+    method faseActual(fase) { faseActual = fase }
+}
+
+class Naranja {
+    var faseActual = 1
+    const property puntos = 200
+
+    method estado() { return "naranja-" + faseActual + ".png" }
+
+    method faseActual(fase) { faseActual = fase }
+}
+
+class DulceDeLeche {
+    var faseActual = 1
+    const property puntos = 250
+
+    method estado() { return "dulceDeLeche-" + faseActual + ".png" }
+
+    method faseActual(fase) { faseActual = fase }
+}
+
+class Chocolate {
+    var faseActual = 1
+    const property puntos = 250
+
+    method estado() { return "chocolate-" + faseActual + ".png" }
+
+    method faseActual(fase) { faseActual = fase }
+}
+
+
+object pokelitos {
+    const property pokelitosActivos = []
+
+    method nuevoPokelito(_gusto) { 
+        return new Pokelito( gusto = _gusto, position = randomizer.emptyPosition())
     }
 
-    method puedeMover(direccion) { return self.hayCelda(direccion) and self.estaEnElJuego()}
-
-    method hayCelda(direccion) {
-		return 
-			(direccion.siguiente(self).x().between(0, game.width()-1)) and
-			(direccion.siguiente(self).y().between(0, game.height()-1))
+	method añadirPokelitoAlAzar() {
+		game.onTick(1500, "añadir comida al azar", {
+			self.añadirPokelitoAlJuego(self.crearPokelito())
+		})
 	}
 
+	method crearPokelito() {
+		const pokelitoElegido = [
+                {self.nuevoPokelito(new Frutilla())}, {self.nuevoPokelito(new Limon())},
+                {self.nuevoPokelito(new Naranja())}, {self.nuevoPokelito(new DulceDeLeche())},
+                {self.nuevoPokelito(new Chocolate())}].anyOne()
 
-    method image() {
-        return estado.nombre() + ".png"
+		return pokelitoElegido.apply()
+	}
+
+    method añadirPokelitoAlJuego(pokelito) {
+        pokelitosActivos.add(pokelito)
+        game.addVisual(pokelito)
     }
 
-    method estaEnElJuego() {
-        return game.allVisuals().any({ visual => visual == self })
+    method aplicarGravedadATodosLosPokelitos() {
+        game.onTick(700, "Gravedad en pokelitos", {
+                pokelitosActivos.forEach({ pokelito => pokelito.caer() })
+            }
+        )
     }
 
-    method estado() { return estado }
-
-    method aplicarEfecto(personaje) {
-        game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
-        puntuacion.incrementaPuntos(puntos)
-    }
-
-    method eliminarDelJuego() {
-        game.schedule(500, {game.removeVisual(self)})
+    method eliminarPokelitoAlJuego(pokelito) {
+        pokelitosActivos.remove(pokelito)
+        game.removeVisual(pokelito)
     }
 }
 
-object pokelitoDulceDeLeche {
-    var estado = pokelitoDulceDeLecheAsset1
-    var property position = game.at(3, 8)
-    const puntos = 250 
+/* Para probabilidad:
+			method factoryElegida() {
+				const probabilidad = 0.randomUpto(1)
 
-    method aplicarGravedad() {
-        if (self.puedeMover(abajo)) {
-            position = abajo.siguiente(self)
-        }
-        else if (not self.hayCelda(abajo)) {
-            game.schedule(1500, {game.removeVisual(self)})
-        }
-    }
-
-    method puedeMover(direccion) { return self.hayCelda(direccion) and self.estaEnElJuego()}
-
-    method hayCelda(direccion) {
-		return 
-			(direccion.siguiente(self).x().between(0, game.width()-1)) and
-			(direccion.siguiente(self).y().between(0, game.height()-1))
-	}
-
-
-    method image() {
-        return estado.nombre() + ".png"
-    }
-
-    method estaEnElJuego() {
-        return game.allVisuals().any({ visual => visual == self })
-    }
-
-    method estado() { return estado }
-
-    method aplicarEfecto(personaje) {
-        game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
-        puntuacion.incrementaPuntos(puntos)
-    }
-
-    method eliminarDelJuego() {
-        game.schedule(500, {game.removeVisual(self)})
-    }
-}
-
-object pokelitoChocolate {
-    var estado = pokelitoChocolateAsset1
-    var property position = game.at(4, 8)
-    const puntos = 250
-
-    method aplicarGravedad() {
-        if (self.puedeMover(abajo)) {
-            position = abajo.siguiente(self)
-        }
-        else if (not self.hayCelda(abajo)) {
-            game.schedule(1500, {game.removeVisual(self)})
-        }
-    }
-
-    method puedeMover(direccion) { return self.hayCelda(direccion) and self.estaEnElJuego()}
-
-    method hayCelda(direccion) {
-		return 
-			(direccion.siguiente(self).x().between(0, game.width()-1)) and
-			(direccion.siguiente(self).y().between(0, game.height()-1))
-	}
-
-
-    method image() {
-        return estado.nombre() + ".png"
-    }
-
-    method estaEnElJuego() {
-        return game.allVisuals().any({ visual => visual == self })
-    }
-
-    method estado() { return estado }
-
-    method aplicarEfecto(personaje) {
-        game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
-        puntuacion.incrementaPuntos(puntos)
-    }
-
-    method eliminarDelJuego() {
-        game.schedule(500, {game.removeVisual(self)})
-    }
-}
-
+				if (probabilidad.between(0, 0.15)) {
+					return {alpisteFactory.crear()}
+				}
+				else { return {manzanaFactory.apply()} }
+			}
+		*/
