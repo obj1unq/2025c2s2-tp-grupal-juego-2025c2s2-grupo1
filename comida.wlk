@@ -16,7 +16,7 @@ class Pokelito {
         else if (not self.hayCelda(abajo)) {
             self.eliminarDelJuegoEn(1500)
         }
-    }
+    } 
 
     method puedeMover(direccion) { 
         return self.hayCelda(direccion) and self.estaEnElJuego() and snorlax.tieneVidas()
