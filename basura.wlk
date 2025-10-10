@@ -1,13 +1,14 @@
 import personajes.*
 import extras.*
-object bota {
-    var estado = botaAsset1
-    var property position = game.at(5, 8)
-    const puntos = -150 
+import randomizer.*
 
+class Basura {
+    const property basura
+    var estado = basura.estado() 
+    var property position
+    const property puntos = basura.puntos()
 
-    //acciones
-    method aplicarGravedad() {
+    method caer() {
         if (self.puedeMover(abajo)) {
             position = abajo.siguiente(self)
         }
@@ -15,6 +16,24 @@ object bota {
             game.schedule(1500, {game.removeVisual(self)})
         }
     }
+
+    method puedeMover(direccion) { 
+        return self.hayCelda(direccion) and self.estaEnElJuego() and snorlax.tieneVidas()
+    }
+
+    method hayCelda(direccion) {
+		return 
+			(direccion.siguiente(self).x().between(0, game.width()-1)) and
+			(direccion.siguiente(self).y().between(0, game.height()-1))
+	}
+
+    method image() { return estado }
+
+    method estaEnElJuego() {
+        return game.allVisuals().any({ visual => visual == self})
+    }
+
+    method estado() { return estado }
 
     method aplicarEfecto(personaje) {
         if (snorlax.tieneVidas()) {
@@ -25,33 +44,57 @@ object bota {
             puntuacion.incrementaPuntos(puntos)
             snorlax.terminarJuego()
         }
-        
     }
 
-    method eliminarDelJuego() {
-        game.removeVisual(self)
+    method eliminarDelJuego() { game.removeVisual(self) }
+
+    method aplicarDañoPorCaida() {
+        game.onCollideDo(self, {algo => algo.recibirDaño()})
     }
-
-    //consultas
-    method puedeMover(direccion) { return self.hayCelda(direccion) and self.estaEnElJuego()}
-
-    method hayCelda(direccion) {
-		return 
-			(direccion.siguiente(self).x().between(0, game.width()-1)) and
-			(direccion.siguiente(self).y().between(0, game.height()-1))
-	}
-
-    method image() {
-        return estado.nombre() + ".png"
-    }
-
-    method estaEnElJuego() {
-        return game.allVisuals().any({ visual => visual == self})
-    }
-
-    method estado() { return estado }
 }
 
-object botaAsset1 {
-    method nombre() { return "bota-1" }
+class Bota {
+    var faseActual = 1
+    const property puntos = -150
+
+    method estado() { return "bota-" + faseActual + ".png" }
+}
+
+object basuraDelJuego {
+    const property basuraActiva = []
+
+    method nuevaBasura(_basura) { 
+        return new Basura( basura = _basura, position = randomizer.emptyPosition())
+    }
+
+	method añadirBasuraAlAzar() {
+		game.onTick(1500, "añadir basura al azar", {
+			self.añadirBasuraAlJuego(self.crearBasura())
+		})
+	}
+
+	method crearBasura() {
+		const basuraElegida = [
+                {self.nuevaBasura(new Bota())}].anyOne()
+
+		return basuraElegida.apply()
+	}
+
+    method añadirBasuraAlJuego(basura) {
+        basuraActiva.add(basura)
+        basura.aplicarDañoPorCaida()
+        game.addVisual(basura)
+    }
+
+    method aplicarGravedadATodaLaBasura() {
+        game.onTick(700, "Gravedad en basura", {
+                basuraActiva.forEach({ basura => basura.caer() })
+            }
+        )
+    }
+
+    method eliminarBasuraAlJuego(basura) {
+        basuraActiva.remove(basura)
+        game.removeVisual(basura)
+    }
 }
