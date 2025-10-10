@@ -37,13 +37,18 @@ class Pokelito {
     method estado() { return estado }
 
     method aplicarEfecto(personaje) {
-        game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
+        snorlaxComiendo.animacion()
         puntuacion.incrementaPuntos(puntos)
+        self.eliminarDelJuegoEn(500)
     }
 
     method eliminarDelJuegoEn(ticks) {
-        game.schedule(ticks, {pokelitos.eliminarPokelitoAlJuego(self)})
+        game.schedule(ticks, {pokelitos.eliminarPokelitoDelJuego(self)})
     }
+
+    method esComida() { return true }
+
+    method chocasteConSnorlax() { /* nada */ }
 }
 
 class Frutilla {
@@ -124,19 +129,8 @@ object pokelitos {
         )
     }
 
-    method eliminarPokelitoAlJuego(pokelito) {
+    method eliminarPokelitoDelJuego(pokelito) {
         pokelitosActivos.remove(pokelito)
         game.removeVisual(pokelito)
     }
 }
-
-/* Para probabilidad:
-			method factoryElegida() {
-				const probabilidad = 0.randomUpto(1)
-
-				if (probabilidad.between(0, 0.15)) {
-					return {alpisteFactory.crear()}
-				}
-				else { return {manzanaFactory.apply()} }
-			}
-		*/

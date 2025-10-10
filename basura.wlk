@@ -13,7 +13,7 @@ class Basura {
             position = abajo.siguiente(self)
         }
         else if (not self.hayCelda(abajo)) {
-            game.schedule(1500, {game.removeVisual(self)})
+            game.removeVisual(self)
         }
     }
 
@@ -36,21 +36,16 @@ class Basura {
     method estado() { return estado }
 
     method aplicarEfecto(personaje) {
-        if (snorlax.tieneVidas()) {
-            snorlax.perderUnaVida()
-            game.schedule(1000, {snorlax.cambiarEstadoA(snorlaxNormal)})
-        }
-        else {
-            puntuacion.incrementaPuntos(puntos)
-            snorlax.terminarJuego()
-        }
+        snorlax.perderUnaVida()
+        puntuacion.incrementaPuntos(self.puntos())
+        self.eliminarDelJuego()
     }
 
     method eliminarDelJuego() { game.removeVisual(self) }
+    
+    method chocasteConSnorlax() { snorlax.recibirDaño() }
 
-    method aplicarDañoPorCaida() {
-        game.onCollideDo(self, {algo => algo.recibirDaño()})
-    }
+    method esComida() { return false }
 }
 
 class Bota {
@@ -82,7 +77,6 @@ object basuraDelJuego {
 
     method añadirBasuraAlJuego(basura) {
         basuraActiva.add(basura)
-        basura.aplicarDañoPorCaida()
         game.addVisual(basura)
     }
 
@@ -93,8 +87,24 @@ object basuraDelJuego {
         )
     }
 
+    method aplicarDañoPorCaida() {
+         game.onCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
+    }
+
     method eliminarBasuraAlJuego(basura) {
         basuraActiva.remove(basura)
         game.removeVisual(basura)
     }
 }
+
+/* Para probabilidad:
+    method factoryElegida() {
+        const probabilidad = 0.randomUpto(1)
+
+        if (probabilidad.between(0, 0.15)) {
+            return {alpisteFactory.crear()}
+        }
+        else { return {manzanaFactory.apply()} }
+    }
+    Cuando tengamos mas basura lo pondremos :D
+*/ 
