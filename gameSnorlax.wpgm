@@ -30,7 +30,7 @@ object configuraciones {
 
     method añadirVisuales() {
         game.addVisual(snorlax)
-        pokelitos.añadirPokelitoAlAzar()
+        comidaDelJuego.añadirComidaAlAzar()
         basuraDelJuego.añadirBasuraAlAzar()
     }
 
@@ -40,7 +40,7 @@ object configuraciones {
     }
 
     method aplicarMecanicas() {
-        pokelitos.aplicarGravedadATodosLosPokelitos()
+        comidaDelJuego.aplicarGravedadATodaLaComida()
         basuraDelJuego.aplicarGravedadATodaLaBasura()
         basuraDelJuego.aplicarDañoPorCaida()
     }
