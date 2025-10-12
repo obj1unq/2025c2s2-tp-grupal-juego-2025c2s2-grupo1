@@ -1,13 +1,13 @@
-import personajes.*
 import extras.*
+import personajes.*
+import pokelitos.*
 import randomizer.*
 
-//pokelitos
-class Pokelito {
-    const property gusto
-    var estado = gusto.estado() 
+class Comida {
+    const property tipoDeComida
+    var estado = tipoDeComida.estado() 
     var property position
-    const property puntos = gusto.puntos()
+    const property puntos = tipoDeComida.puntos()
 
     method caer() {
         if (self.puedeMover(abajo)) {
@@ -43,7 +43,7 @@ class Pokelito {
     }
 
     method eliminarDelJuegoEn(ticks) {
-        game.schedule(ticks, {pokelitos.eliminarPokelitoDelJuego(self)})
+         game.schedule(ticks, {comidaDelJuego.eliminarComidaDelJuego(self)})
     }
 
     method esComida() { return true }
@@ -51,86 +51,41 @@ class Pokelito {
     method chocasteConSnorlax() { /* nada */ }
 }
 
-class Frutilla {
-    var faseActual = 1
-    const property puntos = 150
+object comidaDelJuego {
+    const property comidaActiva = []
 
-    method estado() { return "frutilla-" + faseActual + ".png" }
-}
-
-class Limon {
-    var faseActual = 1
-    const property puntos = 100
-
-    method estado() { return "limon-" + faseActual + ".png" }
-
-    method faseActual(fase) { faseActual = fase }
-}
-
-class Naranja {
-    var faseActual = 1
-    const property puntos = 200
-
-    method estado() { return "naranja-" + faseActual + ".png" }
-
-    method faseActual(fase) { faseActual = fase }
-}
-
-class DulceDeLeche {
-    var faseActual = 1
-    const property puntos = 250
-
-    method estado() { return "dulceDeLeche-" + faseActual + ".png" }
-
-    method faseActual(fase) { faseActual = fase }
-}
-
-class Chocolate {
-    var faseActual = 1
-    const property puntos = 250
-
-    method estado() { return "chocolate-" + faseActual + ".png" }
-
-    method faseActual(fase) { faseActual = fase }
-}
-
-
-object pokelitos {
-    const property pokelitosActivos = []
-
-    method nuevoPokelito(_gusto) { 
-        return new Pokelito( gusto = _gusto, position = randomizer.emptyPosition())
+    method nuevaComida(_comida) { 
+        return new Comida(tipoDeComida = _comida, position = randomizer.emptyPosition())
     }
 
-	method añadirPokelitoAlAzar() {
+	method añadirComidaAlAzar() {
 		game.onTick(1500, "añadir comida al azar", {
-			self.añadirPokelitoAlJuego(self.crearPokelito())
+			self.añadirComidaAlJuego(self.crearComida())
 		})
 	}
 
-	method crearPokelito() {
-		const pokelitoElegido = [
-                {self.nuevoPokelito(new Frutilla())}, {self.nuevoPokelito(new Limon())},
-                {self.nuevoPokelito(new Naranja())}, {self.nuevoPokelito(new DulceDeLeche())},
-                {self.nuevoPokelito(new Chocolate())}].anyOne()
+	method crearComida() {
+		const comidaElegida = [
+                {self.nuevaComida(pokelitos.crearPokelito())}
+                ].anyOne()
 
-		return pokelitoElegido.apply()
+		return comidaElegida.apply()
 	}
 
-    method añadirPokelitoAlJuego(pokelito) {
-        pokelitosActivos.add(pokelito)
-        game.addVisual(pokelito)
+    method añadirComidaAlJuego(comida) {
+        comidaActiva.add(comida)
+        game.addVisual(comida)
     }
 
-    method aplicarGravedadATodosLosPokelitos() {
-        game.onTick(700, "Gravedad en pokelitos", {
-                pokelitosActivos.forEach({ pokelito => pokelito.caer() })
+    method aplicarGravedadATodaLaComida() {
+        game.onTick(700, "Gravedad en la Comida", {
+                comidaActiva.forEach({ comida => comida.caer() })
             }
         )
     }
 
-    method eliminarPokelitoDelJuego(pokelito) {
-        pokelitosActivos.remove(pokelito)
-        game.removeVisual(pokelito)
+    method eliminarComidaDelJuego(comida) {
+        comidaActiva.remove(comida)
+        game.removeVisual(comida)
     }
 }
