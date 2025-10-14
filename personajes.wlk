@@ -48,7 +48,7 @@ object snorlax{
     method objetoColisionandoConSnorlax() { return game.colliders(self).get(0) }
 
     method hayComidaColisionando() { 
-        return self.hayAlgoColisionando() &&self.objetoColisionandoConSnorlax().esComida() 
+        return self.hayAlgoColisionando() && self.objetoColisionandoConSnorlax().esComida() 
     }
  
     method hayAlgoColisionando() { return game.colliders(self).size() > 0 }

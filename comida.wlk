@@ -50,7 +50,18 @@ class Comida {
 
     method chocasteConSnorlax() { /* nada */ }
 
-    method cambiarAlSiguienteEstado() { estado = estado.proximoEstado() }
+    method cambiarAlSiguienteEstado() { 
+        if (not self.estaSobreElSuelo()) {
+            estado = estado.proximoEstado() 
+        }
+        else { estado = quintoEstado }
+    }
+
+    method estaSobreElSuelo() {
+        return (self.tieneEstado(segundoEstado) ) && (not self.hayCelda(abajo))
+    }
+
+    method tieneEstado(_estado) { return estado == _estado }
 }
 
 object comidaDelJuego {
