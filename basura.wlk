@@ -4,9 +4,9 @@ import randomizer.*
 
 class Basura {
     const property basura
-    var estado = basura.estado() 
     var property position
     const property puntos = basura.puntos()
+    var estado = primerEstado
 
     method caer() {
         if (self.puedeMover(abajo)) {
@@ -46,13 +46,25 @@ class Basura {
     method chocasteConSnorlax() { snorlax.recibirDaño() }
 
     method esComida() { return false }
+
+    method cambiarAlSiguienteEstado() { 
+        if ((not self.estaSobreElSuelo())) {
+            estado = estado.proximoEstado() 
+        }
+        else { estado = quintoEstado }
+    }
+
+    method estaSobreElSuelo() {
+        return (self.tieneEstado(segundoEstado) ) && (not self.hayCelda(abajo))
+    }
+
+    method tieneEstado(_estado) { return estado == _estado }
 }
 
 class Bota {
-    var faseActual = 1
     const property puntos = -150
 
-    method estado() { return "bota-" + faseActual + ".png" }
+    method nombre() { return "bota_" } 
 }
 
 class Pokebola {
@@ -92,7 +104,7 @@ object basuraDelJuego {
     }
 
 	method añadirBasuraAlAzar() {
-		game.onTick(1500, "añadir basura al azar", {
+		game.onTick(4000, "añadir basura al azar", {
 			self.añadirBasuraAlJuego(self.crearBasura())
 		})
 	}
@@ -129,8 +141,15 @@ object basuraDelJuego {
     }
 
     method aplicarGravedadATodaLaBasura() {
-        game.onTick(700, "Gravedad en basura", {
+        game.onTick(2000, "Gravedad en basura", {
                 basuraActiva.forEach({ basura => basura.caer() })
+            }
+        )
+    }
+
+    method aplicarAnimacionesATodaLaComida() {
+        game.onTick(1000, "Animaciones a la Comida", {
+                basuraActiva.forEach({ comida => comida.cambiarAlSiguienteEstado() })
             }
         )
     }
