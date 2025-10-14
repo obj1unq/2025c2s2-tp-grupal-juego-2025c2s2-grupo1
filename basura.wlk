@@ -55,6 +55,35 @@ class Bota {
     method estado() { return "bota-" + faseActual + ".png" }
 }
 
+class Pokebola {
+    var faseActual = 1
+    const property puntos = 0
+
+    method estado() { return "bota-" + faseActual + ".png" }  //CAMBIAR IMAGEN
+}
+
+class BolsaDeBasura {
+    var faseActual = 1
+    const property puntos = 0
+
+    method estado() { return "basura-" + faseActual + ".png" }
+}
+
+class Pokeflauta {
+    var faseActual = 1
+    const property puntos = 0
+
+    method estado() { return "bota-" + faseActual + ".png" }  //CAMBIAR IMAGEN
+}
+
+class ManzanaPodrida {
+    var faseActual = 1
+    const property puntos = 0
+
+    method estado() { return "manzana-podrida-" + faseActual + ".png" }
+}
+
+
 object basuraDelJuego {
     const property basuraActiva = []
 
@@ -69,11 +98,30 @@ object basuraDelJuego {
 	}
 
 	method crearBasura() {
-		const basuraElegida = [
-                {self.nuevaBasura(new Bota())}].anyOne()
+        const basuraElegida = self.elegirSegunProbabilidad()
 
 		return basuraElegida.apply()
 	}
+
+    method elegirSegunProbabilidad() { 
+        const probabilidad = 0.randomUpTo(100)
+
+        if(probabilidad.between(0, 30)) {
+            return {self.nuevaBasura(new Pokeflauta())}
+        }
+        else if(probabilidad.between(30, 40)) {
+            return {self.nuevaBasura(new Pokebola())}
+        }
+        else if(probabilidad.between(40, 70)){
+            return {self.nuevaBasura(new Bota())}
+        }
+        else if(probabilidad.between(70, 85)) {
+            return {self.nuevaBasura(new BolsaDeBasura())}
+        } 
+        else {
+            return {self.nuevaBasura(new ManzanaPodrida())}
+        }
+    }
 
     method añadirBasuraAlJuego(basura) {
         basuraActiva.add(basura)
@@ -96,15 +144,3 @@ object basuraDelJuego {
         game.removeVisual(basura)
     }
 }
-
-/* Para probabilidad:
-    method factoryElegida() {
-        const probabilidad = 0.randomUpto(1)
-
-        if (probabilidad.between(0, 0.15)) {
-            return {alpisteFactory.crear()}
-        }
-        else { return {manzanaFactory.apply()} }
-    }
-    Cuando tengamos mas basura lo pondremos :D
-*/ 
