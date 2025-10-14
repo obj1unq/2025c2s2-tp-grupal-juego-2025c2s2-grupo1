@@ -39,6 +39,7 @@ class Comida {
     method aplicarEfecto(personaje) {
         snorlaxComiendo.animacion()
         puntuacion.incrementaPuntos(puntos)
+        estado = primerEstado
         self.eliminarDelJuegoEn(500)
     }
 
@@ -51,7 +52,7 @@ class Comida {
     method chocasteConSnorlax() { /* nada */ }
 
     method cambiarAlSiguienteEstado() { 
-        if (not self.estaSobreElSuelo()) {
+        if ((not self.estaSobreElSuelo())) {
             estado = estado.proximoEstado() 
         }
         else { estado = quintoEstado }

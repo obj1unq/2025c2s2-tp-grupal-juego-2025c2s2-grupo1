@@ -56,6 +56,8 @@ object snorlax{
     method image() {
         return "snorlax-" + estado.nombre() + ".png"
     }
+
+    method estaComiendo() { return estado == snorlaxComiendo }
 }
 
 //estados de snorlax
