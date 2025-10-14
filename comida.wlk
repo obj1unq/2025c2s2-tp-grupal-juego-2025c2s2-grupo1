@@ -5,7 +5,7 @@ import randomizer.*
 
 class Comida {
     const property tipoDeComida
-    var estado = tipoDeComida.estado() 
+    var estado = primerEstado 
     var property position
     const property puntos = tipoDeComida.puntos()
 
@@ -28,7 +28,7 @@ class Comida {
 			(direccion.siguiente(self).y().between(0, game.height()-1))
 	}
 
-    method image() { return estado }
+    method image() { return tipoDeComida.nombre() + estado.nivel() + ".png" }
 
     method estaEnElJuego() {
         return game.allVisuals().any({ visual => visual == self})
@@ -49,6 +49,8 @@ class Comida {
     method esComida() { return true }
 
     method chocasteConSnorlax() { /* nada */ }
+
+    method cambiarAlSiguienteEstado() { estado = estado.proximoEstado() }
 }
 
 object comidaDelJuego {
@@ -78,7 +80,7 @@ object comidaDelJuego {
     }
 
     method aplicarGravedadATodaLaComida() {
-        game.onTick(700, "Gravedad en la Comida", {
+        game.onTick(2000, "Gravedad en la Comida", {
                 comidaActiva.forEach({ comida => comida.caer() })
             }
         )
@@ -88,4 +90,41 @@ object comidaDelJuego {
         comidaActiva.remove(comida)
         game.removeVisual(comida)
     }
+
+    method aplicarAnimacionesATodaLaComida() {
+        game.onTick(1000, "Animaciones a la Comida", {
+                comidaActiva.forEach({ comida => comida.cambiarAlSiguienteEstado() })
+            }
+        )
+    }
+}
+
+object primerEstado {
+    method nivel() { return 0 }
+    method proximoEstado() { return segundoEstado }
+}
+
+object segundoEstado {
+    method nivel() { return 1 }
+    method proximoEstado() { return tercerEstado }
+}
+
+object tercerEstado {
+    method nivel() { return 2 }
+    method proximoEstado() { return cuartoEstado }
+}
+
+object cuartoEstado {
+    method nivel() { return 3 }
+    method proximoEstado() { return primerEstado }
+}
+
+object quintoEstado {
+    method nivel() { return 4 }
+    method proximoEstado() { return ultimoEstado }
+}
+
+object ultimoEstado {
+    method nivel() { return 5 }
+    method proximoEstado() { return self }
 }

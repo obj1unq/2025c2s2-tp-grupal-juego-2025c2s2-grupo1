@@ -1,3 +1,4 @@
+import pokelitos.*
 import comida.*
 import personajes.*
 import extras.*
@@ -30,8 +31,9 @@ object configuraciones {
 
     method añadirVisuales() {
         game.addVisual(snorlax)
-        comidaDelJuego.añadirComidaAlAzar()
-        basuraDelJuego.añadirBasuraAlAzar()
+        comidaDelJuego.añadirComidaAlJuego(comidaDelJuego.nuevaComida(pokelitos.nuevoPokelito(new Frutilla())))
+        //comidaDelJuego.añadirComidaAlAzar()
+        //basuraDelJuego.añadirBasuraAlAzar()
     }
 
     method añadirInformacionDelPersonaje() {
@@ -41,7 +43,8 @@ object configuraciones {
 
     method aplicarMecanicas() {
         comidaDelJuego.aplicarGravedadATodaLaComida()
-        basuraDelJuego.aplicarGravedadATodaLaBasura()
-        basuraDelJuego.aplicarDañoPorCaida()
+        comidaDelJuego.aplicarAnimacionesATodaLaComida()
+        //basuraDelJuego.aplicarGravedadATodaLaBasura()
+        //basuraDelJuego.aplicarDañoPorCaida()
     }
 }
