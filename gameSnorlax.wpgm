@@ -31,8 +31,7 @@ object configuraciones {
 
     method añadirVisuales() {
         game.addVisual(snorlax)
-        comidaDelJuego.añadirComidaAlJuego(comidaDelJuego.nuevaComida(pokelitos.nuevoPokelito(new Frutilla())))
-        //comidaDelJuego.añadirComidaAlAzar()
+        comidaDelJuego.añadirComidaAlAzar()
         //basuraDelJuego.añadirBasuraAlAzar()
     }
 

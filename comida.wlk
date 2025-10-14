@@ -73,7 +73,7 @@ object comidaDelJuego {
     }
 
 	method añadirComidaAlAzar() {
-		game.onTick(1500, "añadir comida al azar", {
+		game.onTick(2000, "añadir comida al azar", {
 			self.añadirComidaAlJuego(self.crearComida())
 		})
 	}
