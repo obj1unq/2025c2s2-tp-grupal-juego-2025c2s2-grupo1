@@ -1,0 +1,47 @@
+import comida.*
+import personajes.*
+import extras.*
+import basura.*
+
+program snorlaxGame{
+    configuraciones.sobreElTablero()
+    configuraciones.sobreLasTeclas()
+    configuraciones.añadirVisuales()
+    configuraciones.aplicarMecanicas()
+    configuraciones.añadirInformacionDelPersonaje()
+
+    game.start()
+}
+
+object configuraciones {
+    method sobreElTablero() {
+        game.title("Snorlax")
+        game.height(11)
+        game.width(7)
+        game.cellSize(50)
+        game.boardGround("fondo.png")
+    }
+
+    method sobreLasTeclas() {
+        keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
+        keyboard.d().onPressDo({snorlax.mover(derecha)})
+        keyboard.space().onPressDo({snorlax.comer()})
+    }
+
+    method añadirVisuales() {
+        game.addVisual(snorlax)
+        comidaDelJuego.añadirComidaAlAzar()
+        basuraDelJuego.añadirBasuraAlAzar()
+    }
+
+    method añadirInformacionDelPersonaje() {
+        game.addVisual(puntuacion)
+        game.addVisual(vida)
+    }
+
+    method aplicarMecanicas() {
+        comidaDelJuego.aplicarGravedadATodaLaComida()
+        basuraDelJuego.aplicarGravedadATodaLaBasura()
+        basuraDelJuego.aplicarDañoPorCaida()
+    }
+}
