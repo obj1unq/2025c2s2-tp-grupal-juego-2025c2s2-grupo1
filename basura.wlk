@@ -27,7 +27,7 @@ class Basura {
 			(direccion.siguiente(self).y().between(0, game.height()-1))
 	}
 
-    method image() { return estado }
+    method image() { return basura.nombre() + estado.nivel() + ".png"}
 
     method estaEnElJuego() {
         return game.allVisuals().any({ visual => visual == self})
@@ -68,31 +68,27 @@ class Bota {
 }
 
 class Pokebola {
-    var faseActual = 1
     const property puntos = 0
 
-    method estado() { return "bota-" + faseActual + ".png" }  //CAMBIAR IMAGEN
+    method nombre() { return "bota_" }  //CAMBIAR IMAGEN
 }
 
 class BolsaDeBasura {
-    var faseActual = 1
     const property puntos = 0
 
-    method estado() { return "basura-" + faseActual + ".png" }
+    method nombre() { return "bota_" }
 }
 
 class Pokeflauta {
-    var faseActual = 1
     const property puntos = 0
 
-    method estado() { return "bota-" + faseActual + ".png" }  //CAMBIAR IMAGEN
+    method nombre() { return "bota_" }  //CAMBIAR IMAGEN
 }
 
 class ManzanaPodrida {
-    var faseActual = 1
     const property puntos = 0
 
-    method estado() { return "manzana-podrida-" + faseActual + ".png" }
+    method nombre () { return "bota_" }
 }
 
 

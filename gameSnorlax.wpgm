@@ -4,6 +4,7 @@ import personajes.*
 import extras.*
 import basura.*
 
+
 program snorlaxGame{
     configuraciones.sobreElTablero()
     configuraciones.sobreLasTeclas()
@@ -32,7 +33,7 @@ object configuraciones {
     method añadirVisuales() {
         game.addVisual(snorlax)
         comidaDelJuego.añadirComidaAlAzar()
-        //basuraDelJuego.añadirBasuraAlAzar()
+        basuraDelJuego.añadirBasuraAlAzar()
     }
 
     method añadirInformacionDelPersonaje() {
@@ -43,7 +44,8 @@ object configuraciones {
     method aplicarMecanicas() {
         comidaDelJuego.aplicarGravedadATodaLaComida()
         comidaDelJuego.aplicarAnimacionesATodaLaComida()
-        //basuraDelJuego.aplicarGravedadATodaLaBasura()
-        //basuraDelJuego.aplicarDañoPorCaida()
+        basuraDelJuego.aplicarAnimacionesATodaLaComida()    
+        basuraDelJuego.aplicarGravedadATodaLaBasura()
+        basuraDelJuego.aplicarDañoPorCaida()
     }
 }

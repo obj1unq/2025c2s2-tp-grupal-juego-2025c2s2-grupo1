@@ -19,7 +19,6 @@ class Frutilla {
 class Limon {
     const property puntos = 100
 
-
     method nombre() { return "limon_" }
 }
 
