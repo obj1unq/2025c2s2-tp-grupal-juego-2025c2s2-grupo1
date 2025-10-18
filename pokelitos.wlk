@@ -5,53 +5,39 @@ import randomizer.*
 //pokelitos
 class Pokelito {
     const property gusto
-    var estado = gusto.estado() 
     const property puntos = gusto.puntos()
 
-    method estado() { return estado }
+    method nombre() { return "pokelito-" + gusto.nombre() }
 }
 
 class Frutilla {
-    var faseActual = 1
     const property puntos = 150
 
-    method estado() { return "frutilla-" + faseActual + ".png" }
+    method nombre() { return "frutilla_" }
 }
 
 class Limon {
-    var faseActual = 1
     const property puntos = 100
 
-    method estado() { return "limon-" + faseActual + ".png" }
-
-    method faseActual(fase) { faseActual = fase }
+    method nombre() { return "limon_" }
 }
 
 class Naranja {
-    var faseActual = 1
     const property puntos = 200
 
-    method estado() { return "naranja-" + faseActual + ".png" }
-
-    method faseActual(fase) { faseActual = fase }
+    method nombre() { return "naranja_" }
 }
 
 class DulceDeLeche {
-    var faseActual = 1
     const property puntos = 250
-
-    method estado() { return "dulceDeLeche-" + faseActual + ".png" }
-
-    method faseActual(fase) { faseActual = fase }
+    
+    method nombre() { return "dulceDeLeche_" }
 }
 
 class Chocolate {
-    var faseActual = 1
     const property puntos = 250
 
-    method estado() { return "chocolate-" + faseActual + ".png" }
-
-    method faseActual(fase) { faseActual = fase }
+    method nombre() { return "chocolate_" }
 }
 
 
@@ -60,12 +46,15 @@ object pokelitos {
         return new Pokelito( gusto = _gusto)
     }
 
-	method crearPokelito() {
-		const pokelitoElegido = [
-                {self.nuevoPokelito(new Frutilla())}, {self.nuevoPokelito(new Limon())},
-                {self.nuevoPokelito(new Naranja())}, {self.nuevoPokelito(new DulceDeLeche())},
-                {self.nuevoPokelito(new Chocolate())}].anyOne()
+	method crearPokelito() { return self.nuevoPokelito(gustos.crearNuevoGusto()) }
+}
 
-		return pokelitoElegido.apply()
-	}
+object gustos {
+    method crearNuevoGusto() {
+        const gustoElegido = [
+                {new Frutilla()}, {new Limon()}, {new Naranja()}, 
+                {new DulceDeLeche()}, {new Chocolate()} ].anyOne()
+
+		return gustoElegido.apply()
+    }
 }

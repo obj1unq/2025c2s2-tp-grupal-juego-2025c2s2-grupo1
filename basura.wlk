@@ -4,83 +4,91 @@ import randomizer.*
 
 class Basura {
     const property basura
-    var estado = basura.estado() 
     var property position
     const property puntos = basura.puntos()
+    var property estado = primerEstado
 
+    //acciones
     method caer() {
-        if (self.puedeMover(abajo)) {
-            position = abajo.siguiente(self)
-        }
-        else if (not self.hayCelda(abajo)) {
-            game.removeVisual(self)
-        }
+        self.validarExistencia()
+        self.validarCaida()
+        position = abajo.siguiente(self)
+    }
+    
+    method dañar() {
+        snorlax.perderUnaVida()
+        puntuacion.incrementaPuntos(self.puntos())
+        basuraDelJuego.eliminarBasuraDelJuego(self)
+    }
+    
+    method chocasteConSnorlax() { snorlax.recibirDaño() }
+
+    method cambiarAlSiguienteEstado() {
+        self.validarCaida()
+        estado.proximoEstado(self)
     }
 
-    method puedeMover(direccion) { 
-        return self.hayCelda(direccion) and self.estaEnElJuego() and snorlax.tieneVidas()
+    method eliminarDelJuegoEn(ticks) {
+        game.schedule(ticks, {basuraDelJuego.eliminarBasuraDelJuego(self)})
+    }
+
+    //consultas
+    method image() { return basura.nombre() + estado.nivel() + ".png"}
+    
+    method puedeCaer() {
+        return self.estaEnElJuego() and snorlax.tieneVidas()
     }
 
     method hayCelda(direccion) {
-		return 
-			(direccion.siguiente(self).x().between(0, game.width()-1)) and
-			(direccion.siguiente(self).y().between(0, game.height()-1))
+		return (direccion.siguiente(self).y().between(0, game.height()-1))
 	}
-
-    method image() { return estado }
 
     method estaEnElJuego() {
         return game.allVisuals().any({ visual => visual == self})
     }
 
-    method estado() { return estado }
-
-    method aplicarEfecto(personaje) {
-        snorlax.perderUnaVida()
-        puntuacion.incrementaPuntos(self.puntos())
-        self.eliminarDelJuego()
+    //validaciones
+    method validarCaida() {
+        if (not self.puedeCaer()) {
+            self.error("No puedo seguir cayendo.")
+        }
     }
 
-    method eliminarDelJuego() { game.removeVisual(self) }
-    
-    method chocasteConSnorlax() { snorlax.recibirDaño() }
-
-    method esComida() { return false }
+    method validarExistencia() {
+        if (not self.hayCelda(abajo)) {
+            self.eliminarDelJuegoEn(2000)
+        }
+    }
 }
 
 class Bota {
-    var faseActual = 1
     const property puntos = -150
 
-    method estado() { return "bota-" + faseActual + ".png" }
+    method nombre() { return "bota_" } 
 }
 
 class Pokebola {
-    var faseActual = 1
     const property puntos = 0
 
-    method estado() { return "bota-" + faseActual + ".png" }  //CAMBIAR IMAGEN
+    method nombre() { return "bota_" }  //CAMBIAR IMAGEN
 }
 
 class BolsaDeBasura {
-    var faseActual = 1
     const property puntos = 0
 
-    method estado() { return "basura-" + faseActual + ".png" }
+    method nombre() { return "bota_" }
 }
 
 class Pokeflauta {
-    var faseActual = 1
     const property puntos = 0
 
-    method estado() { return "bota-" + faseActual + ".png" }  //CAMBIAR IMAGEN
+    method nombre() { return "bota_" }  //CAMBIAR IMAGEN
 }
 
 class ManzanaPodrida {
-    var faseActual = 1
     const property puntos = 0
 
-    method estado() { return "manzana-podrida-" + faseActual + ".png" }
+    method nombre () { return "bota_" }
 }
 
 
@@ -92,7 +100,7 @@ object basuraDelJuego {
     }
 
 	method añadirBasuraAlAzar() {
-		game.onTick(1500, "añadir basura al azar", {
+		game.onTick(4000, "añadir basura al azar", {
 			self.añadirBasuraAlJuego(self.crearBasura())
 		})
 	}
@@ -129,17 +137,24 @@ object basuraDelJuego {
     }
 
     method aplicarGravedadATodaLaBasura() {
-        game.onTick(700, "Gravedad en basura", {
+        game.onTick(2000, "Gravedad en basura", {
                 basuraActiva.forEach({ basura => basura.caer() })
             }
         )
     }
 
-    method aplicarDañoPorCaida() {
-         game.onCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
+    method aplicarAnimacionesATodaLaComida() {
+        game.onTick(1000, "Animaciones a la Comida", {
+                basuraActiva.forEach({ comida => comida.cambiarAlSiguienteEstado() })
+            }
+        )
     }
 
-    method eliminarBasuraAlJuego(basura) {
+    method aplicarDañoPorCaida() {
+        game.onCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
+    }
+
+    method eliminarBasuraDelJuego(basura) {
         basuraActiva.remove(basura)
         game.removeVisual(basura)
     }

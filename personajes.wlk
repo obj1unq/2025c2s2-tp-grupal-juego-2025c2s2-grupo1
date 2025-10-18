@@ -1,19 +1,22 @@
 import extras.*
+import comida.*
+import basura.*
+
+
 object snorlax{
     var property position = game.at(0, 0) 
     var property estado = snorlaxNormal
-    var property vidas = 2 //Comienza con 3 vidas
+    var property vidas = 3 //Comienza con 3 vidas
     
     //acciones
     method mover(direccion){
-        if (self.puedeMover(direccion)){
-            position = direccion.siguiente(self)
-        }
+        self.validarMover(direccion)
+        position = direccion.siguiente(self)
     }
 
     method recibirDaño() {
-        self.objetoColisionandoConSnorlax().aplicarEfecto(self)
-        if (self.tieneVidas()) {
+        self.objetoEnColision().dañar()
+        if (self.tieneVidas()) { // no se puede añadir validacion porque no interrumpe el flujo.
             snorlaxRecibiendoDaño.animacion()
         }
         else { self.terminarJuego() }
@@ -25,9 +28,8 @@ object snorlax{
     }
 
     method comer(){
-        if(self.hayComidaColisionando()){
-            self.objetoColisionandoConSnorlax().aplicarEfecto(self)
-        }
+        self.validarComer()
+        self.objetoEnColision().comer()
     }
 
     method perderUnaVida() { vidas -= 1 }
@@ -45,16 +47,30 @@ object snorlax{
 
     method tieneVidas() { return vidas > 0 }
 
-    method objetoColisionandoConSnorlax() { return game.colliders(self).get(0) }
+    method hayComidaColisionando() { return comidaDelJuego.hayComidaEn(position) }
 
-    method hayComidaColisionando() { 
-        return self.hayAlgoColisionando() &&self.objetoColisionandoConSnorlax().esComida() 
-    }
- 
-    method hayAlgoColisionando() { return game.colliders(self).size() > 0 }
+    method objetoEnColision() { return game.uniqueCollider(self) }
 
     method image() {
         return "snorlax-" + estado.nombre() + ".png"
+    }
+
+    method validarVidas() {
+        if (not self.tieneVidas()) {
+            self.terminarJuego()
+        }
+    }
+
+    method validarMover(direccion) {
+        if (not self.puedeMover(direccion)) {
+            self.error("No puedo mover en esa direccion.")
+        }
+    }
+
+    method validarComer() {
+        if (not self.hayComidaColisionando()) {
+            self.error("No hay nada para comer.")
+        }
     }
 }
 
@@ -63,6 +79,8 @@ object snorlaxNormal {
     method nombre() { return "normal" }
 
     method animacion() {}
+
+    method validarComer() {}
 }
 
 object snorlaxComiendo {
@@ -71,6 +89,16 @@ object snorlaxComiendo {
     method animacion() {
         snorlax.cambiarEstadoA(self)
         game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
+    }
+
+    method validarComer() {
+        if (not self.hayCelda(abajo)) {
+            self.error("No se puede cambiar de estado mientras snorlax come")
+        }
+    }
+
+    method hayCelda(direccion) {
+        return direccion.siguiente(self).x().between(0, game.width()-2)
     }
 }
 
@@ -81,6 +109,8 @@ object snorlaxRecibiendoDaño {
         snorlax.cambiarEstadoA(self)
         game.schedule(1000, {snorlax.cambiarEstadoA(snorlaxNormal)})
     }
+
+    method validarComer() {}
 }
 
 object snorlaxPerdedor {
@@ -90,6 +120,8 @@ object snorlaxPerdedor {
         snorlax.cambiarEstadoA(snorlaxRecibiendoDaño)
         game.schedule(2000, {snorlax.cambiarEstadoA(self)})
     }
+
+    method validarComer() {}
 }
 
 
@@ -100,7 +132,9 @@ object vida {
 
     method image() {
         return "icono-" + snorlax.vidas() + "-vidas.png"
-    }  
+    }
+
+    method validarComer() {}
 }
 
 // puntuacion de snorlax

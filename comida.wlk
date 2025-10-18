@@ -5,38 +5,18 @@ import randomizer.*
 
 class Comida {
     const property tipoDeComida
-    var estado = tipoDeComida.estado() 
+    var property estado = primerEstado 
     var property position
     const property puntos = tipoDeComida.puntos()
 
+    //acciones
     method caer() {
-        if (self.puedeMover(abajo)) {
-            position = abajo.siguiente(self)
-        }
-        else if (not self.hayCelda(abajo)) {
-            self.eliminarDelJuegoEn(1500)
-        }
-    } 
-
-    method puedeMover(direccion) { 
-        return self.hayCelda(direccion) and self.estaEnElJuego() and snorlax.tieneVidas()
+        self.validarExistencia()
+        self.validarCaida()
+        position = abajo.siguiente(self)
     }
 
-    method hayCelda(direccion) {
-		return 
-			(direccion.siguiente(self).x().between(0, game.width()-1)) and
-			(direccion.siguiente(self).y().between(0, game.height()-1))
-	}
-
-    method image() { return estado }
-
-    method estaEnElJuego() {
-        return game.allVisuals().any({ visual => visual == self})
-    }
-
-    method estado() { return estado }
-
-    method aplicarEfecto(personaje) {
+    method comer() {
         snorlaxComiendo.animacion()
         puntuacion.incrementaPuntos(puntos)
         self.eliminarDelJuegoEn(500)
@@ -45,10 +25,45 @@ class Comida {
     method eliminarDelJuegoEn(ticks) {
          game.schedule(ticks, {comidaDelJuego.eliminarComidaDelJuego(self)})
     }
+    method cambiarAlSiguienteEstado() {
+        estado.proximoEstado(self) 
+    }
+    
+    method chocasteConSnorlax() { estado = primerEstado }
 
-    method esComida() { return true }
+    //consultas
+    method puedeCaer() {
+        return self.estaEnElJuego() and snorlax.tieneVidas()
+    }
 
-    method chocasteConSnorlax() { /* nada */ }
+    method hayCelda(direccion) {
+		return (direccion.siguiente(self).y().between(0, game.height()-1))
+	}
+
+    method image() { return tipoDeComida.nombre() + estado.nivel() + ".png" }
+
+    method estaEnElJuego() {
+        return game.allVisuals().any({ visual => visual == self})
+    }
+
+    method validarSnorlaxlevantaComida() {
+        if (!game.colliders(self).isEmpty()) {
+            self.error("No puedo cambiar mientras snorlax me levanta")
+        }
+    }
+
+    //validaciones
+    method validarCaida() {
+        if (not self.puedeCaer()) {
+            self.error("No puedo seguir cayendo.")
+        }
+    }
+
+    method validarExistencia() {
+        if (not self.hayCelda(abajo)) {
+            self.eliminarDelJuegoEn(1500)
+        }
+    }
 }
 
 object comidaDelJuego {
@@ -57,35 +72,49 @@ object comidaDelJuego {
     method nuevaComida(_comida) { 
         return new Comida(tipoDeComida = _comida, position = randomizer.emptyPosition())
     }
-
-	method añadirComidaAlAzar() {
-		game.onTick(1500, "añadir comida al azar", {
-			self.añadirComidaAlJuego(self.crearComida())
-		})
-	}
+	
+    method nuevoPokelito() {
+        return self.nuevaComida(pokelitos.crearPokelito())
+    }
 
 	method crearComida() {
-		const comidaElegida = [
-                {self.nuevaComida(pokelitos.crearPokelito())}
-                ].anyOne()
+		const comidaElegida = [{self.nuevoPokelito()}].anyOne()
 
 		return comidaElegida.apply()
 	}
 
+    method añadirComidaAlAzar() {
+		game.onTick(2000, "añadir comida al azar", {
+			self.añadirComidaAlJuego(self.crearComida())
+		})
+	}
+    
     method añadirComidaAlJuego(comida) {
         comidaActiva.add(comida)
         game.addVisual(comida)
     }
 
     method aplicarGravedadATodaLaComida() {
-        game.onTick(700, "Gravedad en la Comida", {
+        game.onTick(2000, "Gravedad en la Comida", {
                 comidaActiva.forEach({ comida => comida.caer() })
             }
         )
     }
+    
 
     method eliminarComidaDelJuego(comida) {
         comidaActiva.remove(comida)
         game.removeVisual(comida)
+    }
+
+    method aplicarAnimacionesATodaLaComida() {
+        game.onTick(1000, "Animaciones a la Comida", {
+                comidaActiva.forEach({ comida => comida.cambiarAlSiguienteEstado() })
+            }
+        )
+    }
+
+    method hayComidaEn(_position) {
+        return comidaActiva.any({comida => comida.position() == _position })
     }
 }
