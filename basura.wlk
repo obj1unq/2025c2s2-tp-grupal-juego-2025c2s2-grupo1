@@ -10,8 +10,8 @@ class Basura {
 
     //acciones
     method caer() {
-        self.validarCaida()
         self.validarExistencia()
+        self.validarCaida()
         position = abajo.siguiente(self)
     }
     
@@ -24,19 +24,23 @@ class Basura {
     method chocasteConSnorlax() { snorlax.recibirDaño() }
 
     method cambiarAlSiguienteEstado() {
-        estado.proximoEstado(self) 
+        self.validarCaida()
+        estado.proximoEstado(self)
+    }
+
+    method eliminarDelJuegoEn(ticks) {
+        game.schedule(ticks, {basuraDelJuego.eliminarBasuraDelJuego(self)})
     }
 
     //consultas
     method image() { return basura.nombre() + estado.nivel() + ".png"}
     
     method puedeCaer() {
-        return self.estaEnElJuego() and snorlax.tieneVidas() and self.hayCelda(abajo)
+        return self.estaEnElJuego() and snorlax.tieneVidas()
     }
 
     method hayCelda(direccion) {
-		return 
-			(direccion.siguiente(self).y().between(0, game.height()-1))
+		return (direccion.siguiente(self).y().between(0, game.height()-1))
 	}
 
     method estaEnElJuego() {
@@ -52,7 +56,7 @@ class Basura {
 
     method validarExistencia() {
         if (not self.hayCelda(abajo)) {
-            basuraDelJuego.eliminarBasuraDelJuego(self)
+            self.eliminarDelJuegoEn(2000)
         }
     }
 }
@@ -147,15 +151,11 @@ object basuraDelJuego {
     }
 
     method aplicarDañoPorCaida() {
-         game.onCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
+        game.onCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
     }
 
     method eliminarBasuraDelJuego(basura) {
         basuraActiva.remove(basura)
         game.removeVisual(basura)
-    }
-
-    method eliminarTodaLaBasura() {
-        basuraActiva.forEach({basura => self.eliminarBasuraDelJuego(basura)})
     }
 }

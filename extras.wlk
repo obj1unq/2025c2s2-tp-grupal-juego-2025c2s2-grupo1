@@ -45,12 +45,9 @@ object primerEstado {
 
 object segundoEstado {
     method nivel() { return 1 }
-    method proximoEstado(algo) { 
-        if (algo.hayCelda(abajo)) {// no puedo cortar el flujo con un error.
-            algo.estado(tercerEstado)
-        }
-        else { algo.estado(quintoEstado) }
-    }
+    method proximoEstado(algo) {
+        algo.estado(tercerEstado)
+    } 
 }
 
 object tercerEstado {
@@ -61,16 +58,4 @@ object tercerEstado {
 object cuartoEstado {
     method nivel() { return 3 }
     method proximoEstado(algo) { algo.estado(primerEstado) }
-}
-
-object quintoEstado {
-    method nivel() { return 4 }
-    method proximoEstado(algo) { algo.estado(ultimoEstado) }
-}
-
-object ultimoEstado {
-    method nivel() { return 5 }
-    method proximoEstado(algo) { 
-        return self
-    } //no cambia al llegar a este estado pues esta en el suelo.
 }

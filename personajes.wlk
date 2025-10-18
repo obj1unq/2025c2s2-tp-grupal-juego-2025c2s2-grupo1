@@ -23,8 +23,6 @@ object snorlax{
     }
 
     method terminarJuego() { 
-        comidaDelJuego.eliminarTodaLaComida()
-        basuraDelJuego.eliminarTodaLaBasura()
         snorlaxPerdedor.animacion()
         game.schedule(3000, { game.stop() }) 
     }

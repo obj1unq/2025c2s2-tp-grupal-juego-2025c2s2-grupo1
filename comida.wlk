@@ -11,8 +11,8 @@ class Comida {
 
     //acciones
     method caer() {
-        self.validarCaida()
         self.validarExistencia()
+        self.validarCaida()
         position = abajo.siguiente(self)
     }
 
@@ -33,19 +33,23 @@ class Comida {
 
     //consultas
     method puedeCaer() {
-        return self.estaEnElJuego() and snorlax.tieneVidas() and self.hayCelda(abajo)
+        return self.estaEnElJuego() and snorlax.tieneVidas()
     }
 
     method hayCelda(direccion) {
-		return 
-			(direccion.siguiente(self).x().between(0, game.width()-1)) and
-			(direccion.siguiente(self).y().between(0, game.height()-1))
+		return (direccion.siguiente(self).y().between(0, game.height()-1))
 	}
 
     method image() { return tipoDeComida.nombre() + estado.nivel() + ".png" }
 
     method estaEnElJuego() {
         return game.allVisuals().any({ visual => visual == self})
+    }
+
+    method validarSnorlaxlevantaComida() {
+        if (!game.colliders(self).isEmpty()) {
+            self.error("No puedo cambiar mientras snorlax me levanta")
+        }
     }
 
     //validaciones
@@ -96,14 +100,11 @@ object comidaDelJuego {
             }
         )
     }
+    
 
     method eliminarComidaDelJuego(comida) {
         comidaActiva.remove(comida)
         game.removeVisual(comida)
-    }
-
-    method eliminarTodaLaComida() {
-        comidaActiva.forEach({comida => self.eliminarComidaDelJuego(comida)})
     }
 
     method aplicarAnimacionesATodaLaComida() {
