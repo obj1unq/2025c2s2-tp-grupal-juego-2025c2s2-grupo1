@@ -32,7 +32,9 @@ object configuraciones {
 
     method añadirVisuales() {
         game.addVisual(snorlax)
-        comidaDelJuego.añadirComidaAlAzar()
+        //comidaDelJuego.añadirComidaAlAzar()
+        //basuraDelJuego.añadirBasuraAlJuego(basuraDelJuego.crearBasura())
+        
         basuraDelJuego.añadirBasuraAlAzar()
     }
 
@@ -42,8 +44,8 @@ object configuraciones {
     }
 
     method aplicarMecanicas() {
-        comidaDelJuego.aplicarGravedadATodaLaComida()
-        comidaDelJuego.aplicarAnimacionesATodaLaComida()
+        //comidaDelJuego.aplicarGravedadATodaLaComida()
+        //comidaDelJuego.aplicarAnimacionesATodaLaComida()
         basuraDelJuego.aplicarAnimacionesATodaLaComida()    
         basuraDelJuego.aplicarGravedadATodaLaBasura()
         basuraDelJuego.aplicarDañoPorCaida()

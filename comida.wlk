@@ -5,21 +5,35 @@ import randomizer.*
 
 class Comida {
     const property tipoDeComida
-    var estado = primerEstado 
+    var property estado = primerEstado 
     var property position
     const property puntos = tipoDeComida.puntos()
 
+    //acciones
     method caer() {
-        if (self.puedeMover(abajo)) {
-            position = abajo.siguiente(self)
-        }
-        else if (not self.hayCelda(abajo)) {
-            self.eliminarDelJuegoEn(1500)
-        }
-    } 
+        self.validarCaida()
+        self.validarExistencia()
+        position = abajo.siguiente(self)
+    }
 
-    method puedeMover(direccion) { 
-        return self.hayCelda(direccion) and self.estaEnElJuego() and snorlax.tieneVidas()
+    method comer() {
+        snorlaxComiendo.animacion()
+        puntuacion.incrementaPuntos(puntos)
+        self.eliminarDelJuegoEn(500)
+    }
+
+    method eliminarDelJuegoEn(ticks) {
+         game.schedule(ticks, {comidaDelJuego.eliminarComidaDelJuego(self)})
+    }
+    method cambiarAlSiguienteEstado() {
+        estado.proximoEstado(self) 
+    }
+    
+    method chocasteConSnorlax() { estado = primerEstado }
+
+    //consultas
+    method puedeCaer() {
+        return self.estaEnElJuego() and snorlax.tieneVidas() and self.hayCelda(abajo)
     }
 
     method hayCelda(direccion) {
@@ -34,35 +48,18 @@ class Comida {
         return game.allVisuals().any({ visual => visual == self})
     }
 
-    method estado() { return estado }
-
-    method aplicarEfecto(personaje) {
-        snorlaxComiendo.animacion()
-        puntuacion.incrementaPuntos(puntos)
-        estado = primerEstado
-        self.eliminarDelJuegoEn(500)
-    }
-
-    method eliminarDelJuegoEn(ticks) {
-         game.schedule(ticks, {comidaDelJuego.eliminarComidaDelJuego(self)})
-    }
-
-    method esComida() { return true }
-
-    method chocasteConSnorlax() { /* nada */ }
-
-    method cambiarAlSiguienteEstado() { 
-        if ((not self.estaSobreElSuelo())) {
-            estado = estado.proximoEstado() 
+    //validaciones
+    method validarCaida() {
+        if (not self.puedeCaer()) {
+            self.error("No puedo seguir cayendo.")
         }
-        else { estado = quintoEstado }
     }
 
-    method estaSobreElSuelo() {
-        return (self.tieneEstado(segundoEstado) ) && (not self.hayCelda(abajo))
+    method validarExistencia() {
+        if (not self.hayCelda(abajo)) {
+            self.eliminarDelJuegoEn(1500)
+        }
     }
-
-    method tieneEstado(_estado) { return estado == _estado }
 }
 
 object comidaDelJuego {
@@ -71,21 +68,23 @@ object comidaDelJuego {
     method nuevaComida(_comida) { 
         return new Comida(tipoDeComida = _comida, position = randomizer.emptyPosition())
     }
-
-	method añadirComidaAlAzar() {
-		game.onTick(2000, "añadir comida al azar", {
-			self.añadirComidaAlJuego(self.crearComida())
-		})
-	}
+	
+    method nuevoPokelito() {
+        return self.nuevaComida(pokelitos.crearPokelito())
+    }
 
 	method crearComida() {
-		const comidaElegida = [
-                {self.nuevaComida(pokelitos.crearPokelito())}
-                ].anyOne()
+		const comidaElegida = [{self.nuevoPokelito()}].anyOne()
 
 		return comidaElegida.apply()
 	}
 
+    method añadirComidaAlAzar() {
+		game.onTick(2000, "añadir comida al azar", {
+			self.añadirComidaAlJuego(self.crearComida())
+		})
+	}
+    
     method añadirComidaAlJuego(comida) {
         comidaActiva.add(comida)
         game.addVisual(comida)
@@ -103,10 +102,18 @@ object comidaDelJuego {
         game.removeVisual(comida)
     }
 
+    method eliminarTodaLaComida() {
+        comidaActiva.forEach({comida => self.eliminarComidaDelJuego(comida)})
+    }
+
     method aplicarAnimacionesATodaLaComida() {
         game.onTick(1000, "Animaciones a la Comida", {
                 comidaActiva.forEach({ comida => comida.cambiarAlSiguienteEstado() })
             }
         )
+    }
+
+    method hayComidaEn(_position) {
+        return comidaActiva.any({comida => comida.position() == _position })
     }
 }

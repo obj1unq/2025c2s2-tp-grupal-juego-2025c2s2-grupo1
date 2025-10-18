@@ -6,59 +6,55 @@ class Basura {
     const property basura
     var property position
     const property puntos = basura.puntos()
-    var estado = primerEstado
+    var property estado = primerEstado
 
+    //acciones
     method caer() {
-        if (self.puedeMover(abajo)) {
-            position = abajo.siguiente(self)
-        }
-        else if (not self.hayCelda(abajo)) {
-            game.removeVisual(self)
-        }
+        self.validarCaida()
+        self.validarExistencia()
+        position = abajo.siguiente(self)
+    }
+    
+    method dañar() {
+        snorlax.perderUnaVida()
+        puntuacion.incrementaPuntos(self.puntos())
+        basuraDelJuego.eliminarBasuraDelJuego(self)
+    }
+    
+    method chocasteConSnorlax() { snorlax.recibirDaño() }
+
+    method cambiarAlSiguienteEstado() {
+        estado.proximoEstado(self) 
     }
 
-    method puedeMover(direccion) { 
-        return self.hayCelda(direccion) and self.estaEnElJuego() and snorlax.tieneVidas()
+    //consultas
+    method image() { return basura.nombre() + estado.nivel() + ".png"}
+    
+    method puedeCaer() {
+        return self.estaEnElJuego() and snorlax.tieneVidas() and self.hayCelda(abajo)
     }
 
     method hayCelda(direccion) {
 		return 
-			(direccion.siguiente(self).x().between(0, game.width()-1)) and
 			(direccion.siguiente(self).y().between(0, game.height()-1))
 	}
-
-    method image() { return basura.nombre() + estado.nivel() + ".png"}
 
     method estaEnElJuego() {
         return game.allVisuals().any({ visual => visual == self})
     }
 
-    method estado() { return estado }
-
-    method aplicarEfecto(personaje) {
-        snorlax.perderUnaVida()
-        puntuacion.incrementaPuntos(self.puntos())
-        self.eliminarDelJuego()
-    }
-
-    method eliminarDelJuego() { game.removeVisual(self) }
-    
-    method chocasteConSnorlax() { snorlax.recibirDaño() }
-
-    method esComida() { return false }
-
-    method cambiarAlSiguienteEstado() { 
-        if ((not self.estaSobreElSuelo())) {
-            estado = estado.proximoEstado() 
+    //validaciones
+    method validarCaida() {
+        if (not self.puedeCaer()) {
+            self.error("No puedo seguir cayendo.")
         }
-        else { estado = quintoEstado }
     }
 
-    method estaSobreElSuelo() {
-        return (self.tieneEstado(segundoEstado) ) && (not self.hayCelda(abajo))
+    method validarExistencia() {
+        if (not self.hayCelda(abajo)) {
+            basuraDelJuego.eliminarBasuraDelJuego(self)
+        }
     }
-
-    method tieneEstado(_estado) { return estado == _estado }
 }
 
 class Bota {
@@ -154,8 +150,12 @@ object basuraDelJuego {
          game.onCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
     }
 
-    method eliminarBasuraAlJuego(basura) {
+    method eliminarBasuraDelJuego(basura) {
         basuraActiva.remove(basura)
         game.removeVisual(basura)
+    }
+
+    method eliminarTodaLaBasura() {
+        basuraActiva.forEach({basura => self.eliminarBasuraDelJuego(basura)})
     }
 }
