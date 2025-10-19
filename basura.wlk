@@ -12,7 +12,7 @@ class Basura {
     method caer() {
         self.validarExistencia()
         self.validarCaida()
-        position = abajo.siguiente(self)
+        position = position.down(2)
     }
     
     method dañar() {
@@ -137,7 +137,7 @@ object basuraDelJuego {
     }
 
     method aplicarGravedadATodaLaBasura() {
-        game.onTick(2000, "Gravedad en basura", {
+        game.onTick(4000, "Gravedad en basura", {
                 basuraActiva.forEach({ basura => basura.caer() })
             }
         )

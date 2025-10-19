@@ -13,7 +13,7 @@ class Comida {
     method caer() {
         self.validarExistencia()
         self.validarCaida()
-        position = abajo.siguiente(self)
+        position = position.down(2)
     }
 
     method comer() {
