@@ -36,6 +36,10 @@ object snorlax{
 
     method cambiarEstadoA(estadoNuevo) { estado = estadoNuevo }
 
+    method levantarComida(comida) {
+        comida.cambiarEstadoA(primerEstado)
+    }
+
     //consultas
     method puedeMover(direccion){
         return self.hayCelda(direccion) && self.tieneVidas()

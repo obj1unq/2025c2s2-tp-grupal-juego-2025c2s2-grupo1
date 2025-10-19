@@ -16,9 +16,9 @@ class Basura {
     }
     
     method dañar() {
+        basuraDelJuego.eliminarBasuraDelJuego(self)
         snorlax.perderUnaVida()
         puntuacion.incrementaPuntos(self.puntos())
-        basuraDelJuego.eliminarBasuraDelJuego(self)
     }
     
     method chocasteConSnorlax() { snorlax.recibirDaño() }
@@ -31,6 +31,8 @@ class Basura {
     method eliminarDelJuegoEn(ticks) {
         game.schedule(ticks, {basuraDelJuego.eliminarBasuraDelJuego(self)})
     }
+
+    method cambiarEstadoA(_estado) { estado = _estado }
 
     //consultas
     method image() { return basura.nombre() + estado.nivel() + ".png"}
@@ -149,9 +151,9 @@ object basuraDelJuego {
             }
         )
     }
-
+    
     method aplicarDañoPorCaida() {
-        game.onCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
+        game.whenCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
     }
 
     method eliminarBasuraDelJuego(basura) {

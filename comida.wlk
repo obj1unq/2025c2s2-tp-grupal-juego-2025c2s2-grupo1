@@ -27,9 +27,11 @@ class Comida {
     }
     method cambiarAlSiguienteEstado() {
         estado.proximoEstado(self) 
-    }
+    }// probar con nuevo method
     
-    method chocasteConSnorlax() { estado = primerEstado }
+    method chocasteConSnorlax() { snorlax.levantarComida(self) }
+
+    method cambiarEstadoA(_estado) { estado = _estado }
 
     //consultas
     method puedeCaer() {
@@ -46,10 +48,8 @@ class Comida {
         return game.allVisuals().any({ visual => visual == self})
     }
 
-    method validarSnorlaxlevantaComida() {
-        if (!game.colliders(self).isEmpty()) {
-            self.error("No puedo cambiar mientras snorlax me levanta")
-        }
+    method colisionaConSnorlax() {
+        return position == snorlax.position()
     }
 
     //validaciones
@@ -84,7 +84,7 @@ object comidaDelJuego {
 	}
 
     method añadirComidaAlAzar() {
-		game.onTick(2000, "añadir comida al azar", {
+		game.onTick(4000, "añadir comida al azar", {
 			self.añadirComidaAlJuego(self.crearComida())
 		})
 	}
@@ -95,7 +95,7 @@ object comidaDelJuego {
     }
 
     method aplicarGravedadATodaLaComida() {
-        game.onTick(2000, "Gravedad en la Comida", {
+        game.onTick(4000, "Gravedad en la Comida", {
                 comidaActiva.forEach({ comida => comida.caer() })
             }
         )
@@ -112,6 +112,10 @@ object comidaDelJuego {
                 comidaActiva.forEach({ comida => comida.cambiarAlSiguienteEstado() })
             }
         )
+    }
+
+    method aplicarPropiedadDeLevantarComida() {
+        game.whenCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
     }
 
     method hayComidaEn(_position) {

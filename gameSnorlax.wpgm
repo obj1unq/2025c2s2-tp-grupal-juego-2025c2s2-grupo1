@@ -33,9 +33,10 @@ object configuraciones {
     method añadirVisuales() {
         game.addVisual(snorlax)
         //comidaDelJuego.añadirComidaAlAzar()
-        //basuraDelJuego.añadirBasuraAlJuego(basuraDelJuego.crearBasura())
+        basuraDelJuego.añadirBasuraAlJuego(basuraDelJuego.crearBasura())
+        comidaDelJuego.añadirComidaAlJuego(comidaDelJuego.crearComida())
         
-        basuraDelJuego.añadirBasuraAlAzar()
+        //basuraDelJuego.añadirBasuraAlAzar()
     }
 
     method añadirInformacionDelPersonaje() {
@@ -48,6 +49,8 @@ object configuraciones {
         comidaDelJuego.aplicarAnimacionesATodaLaComida()
         basuraDelJuego.aplicarAnimacionesATodaLaComida()    
         basuraDelJuego.aplicarGravedadATodaLaBasura()
-        basuraDelJuego.aplicarDañoPorCaida()
+        comidaDelJuego.aplicarPropiedadDeLevantarComida() //tiene el mismo whenCollideDo pero
+        basuraDelJuego.aplicarDañoPorCaida()              //no se si es valido.
     }
+
 }
