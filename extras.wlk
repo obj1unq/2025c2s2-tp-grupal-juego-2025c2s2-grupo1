@@ -28,34 +28,23 @@ object abajo {
 object primerEstado {
     method nivel() { return 0 }
     method proximoEstado(algo) {
-        self.validarSnorlaxLevanta(algo)
-        algo.estado(segundoEstado)
-    }
-
-    method validarSnorlaxLevanta(algo) {
-        if (self.algoColisionaConSnorlax(algo)) {
-            self.error("No puedo cambiar mientras snorlax me levanta")
-        }
-    }
-
-    method algoColisionaConSnorlax(algo) {
-        return algo.position() == snorlax.position()
+        algo.cambiarEstadoA(segundoEstado)
     }
 }
 
 object segundoEstado {
     method nivel() { return 1 }
     method proximoEstado(algo) {
-        algo.estado(tercerEstado)
+        algo.cambiarEstadoA(tercerEstado)
     } 
 }
 
 object tercerEstado {
     method nivel() { return 2 }
-    method proximoEstado(algo) { algo.estado(cuartoEstado) }
+    method proximoEstado(algo) { algo.cambiarEstadoA(cuartoEstado) }
 }
 
 object cuartoEstado {
     method nivel() { return 3 }
-    method proximoEstado(algo) { algo.estado(primerEstado) }
+    method proximoEstado(algo) { algo.cambiarEstadoA(primerEstado) }
 }

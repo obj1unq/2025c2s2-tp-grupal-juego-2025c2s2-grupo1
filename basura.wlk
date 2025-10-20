@@ -12,13 +12,13 @@ class Basura {
     method caer() {
         self.validarExistencia()
         self.validarCaida()
-        position = abajo.siguiente(self)
+        position = position.down(2)
     }
     
     method dañar() {
+        basuraDelJuego.eliminarBasuraDelJuego(self)
         snorlax.perderUnaVida()
         puntuacion.incrementaPuntos(self.puntos())
-        basuraDelJuego.eliminarBasuraDelJuego(self)
     }
     
     method chocasteConSnorlax() { snorlax.recibirDaño() }
@@ -31,6 +31,8 @@ class Basura {
     method eliminarDelJuegoEn(ticks) {
         game.schedule(ticks, {basuraDelJuego.eliminarBasuraDelJuego(self)})
     }
+
+    method cambiarEstadoA(_estado) { estado = _estado }
 
     //consultas
     method image() { return basura.nombre() + estado.nivel() + ".png"}
@@ -137,7 +139,7 @@ object basuraDelJuego {
     }
 
     method aplicarGravedadATodaLaBasura() {
-        game.onTick(2000, "Gravedad en basura", {
+        game.onTick(4000, "Gravedad en basura", {
                 basuraActiva.forEach({ basura => basura.caer() })
             }
         )
@@ -149,9 +151,9 @@ object basuraDelJuego {
             }
         )
     }
-
+    
     method aplicarDañoPorCaida() {
-        game.onCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
+        game.whenCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
     }
 
     method eliminarBasuraDelJuego(basura) {
