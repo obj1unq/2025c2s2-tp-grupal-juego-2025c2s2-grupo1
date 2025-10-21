@@ -145,7 +145,7 @@ object basuraDelJuego {
         )
     }
 
-    method aplicarAnimacionesATodaLaComida() {
+    method aplicarAnimaciones() {
         game.onTick(1000, "Animaciones a la Comida", {
                 basuraActiva.forEach({ comida => comida.cambiarAlSiguienteEstado() })
             }

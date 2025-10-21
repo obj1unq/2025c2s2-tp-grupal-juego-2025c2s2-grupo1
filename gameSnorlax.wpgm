@@ -46,8 +46,7 @@ object configuraciones {
 
     method aplicarMecanicas() {
         fallingObjectsDelJuego.aplicarGravedad()
-        comidaDelJuego.aplicarAnimacionesATodaLaComida()
-        basuraDelJuego.aplicarAnimacionesATodaLaComida()    
+        fallingObjectsDelJuego.aplicarAnimaciones()
         comidaDelJuego.aplicarPropiedadDeLevantarComida() //tiene el mismo whenCollideDo pero
         basuraDelJuego.aplicarDañoPorCaida()              //no se si es valido.
     }

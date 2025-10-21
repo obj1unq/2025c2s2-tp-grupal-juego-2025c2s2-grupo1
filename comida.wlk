@@ -100,14 +100,13 @@ object comidaDelJuego {
             }
         )
     }
-    
 
     method eliminarComidaDelJuego(comida) {
         comidaActiva.remove(comida)
         game.removeVisual(comida)
     }
 
-    method aplicarAnimacionesATodaLaComida() {
+    method aplicarAnimaciones() {
         game.onTick(1000, "Animaciones a la Comida", {
                 comidaActiva.forEach({ comida => comida.cambiarAlSiguienteEstado() })
             }

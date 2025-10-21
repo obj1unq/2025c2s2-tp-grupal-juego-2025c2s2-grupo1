@@ -83,7 +83,9 @@ object fallingObjectsDelJuego {
     }
 
     method aplicarAnimaciones() {
-        
+        game.onTick(1000, "aplicar animaciones", 
+            { self.fallingObjectsActivos().forEach({ item => item.cambiarAlSiguienteEstado() }) }
+        )
     }
 
     method aplicarColisiones() {
