@@ -33,10 +33,11 @@ object configuraciones {
 
     method añadirVisuales() {
         game.addVisual(snorlax)
-        comidaDelJuego.añadirComidaAlAzar()
+        fallingObjectsDelJuego.añadirItemAlAzar()
+        //comidaDelJuego.añadirComidaAlAzar()
         //basuraDelJuego.añadirBasuraAlJuego(basuraDelJuego.crearBasura())
         //comidaDelJuego.añadirComidaAlJuego(comidaDelJuego.crearComida())
-        basuraDelJuego.añadirBasuraAlAzar()
+        //basuraDelJuego.añadirBasuraAlAzar()
     }
 
     method añadirInformacionDelPersonaje() {

@@ -65,15 +65,11 @@ object fallingObjectsDelJuego {
         return comidaDelJuego.comidaActiva() + basuraDelJuego.basuraActiva()
     }
 
-	method añadirItemAlJuego() {
-		const itemElegido = [
-             {comidaDelJuego.añadirComidaAlAzar()}, {basuraDelJuego.añadirBasuraAlAzar()}].anyOne()
-
-		return itemElegido.apply()
-	}
-
     method añadirItemAlAzar() {
-        game.onTick(4000, "añadir falling object al azar", {self.añadirItemAlJuego()})
+        game.onTick(4000, "añadir objeto al azar", {
+            comidaDelJuego.añadirComidaAlAzar()
+            basuraDelJuego.añadirBasuraAlAzar()
+        })
     }
 
     method aplicarGravedad() {
