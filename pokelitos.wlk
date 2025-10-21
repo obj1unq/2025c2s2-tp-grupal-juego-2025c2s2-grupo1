@@ -46,14 +46,9 @@ object pokelitos {
         return new Pokelito( gusto = _gusto)
     }
 
-	method crearPokelito() { return self.nuevoPokelito(gustos.crearNuevoGusto()) }
-}
+	method crearPokelito() { return self.nuevoPokelito(self.gustoAlAzar()) }
 
-object gustos {
-    method crearNuevoGusto() {
-        const gustoElegido = [frutilla, naranja, limon, 
-                                dulceDeLeche, chocolate].anyOne()
-
-		return gustoElegido
+    method gustoAlAzar() {
+        return [frutilla, naranja, limon, dulceDeLeche, chocolate].anyOne()
     }
 }

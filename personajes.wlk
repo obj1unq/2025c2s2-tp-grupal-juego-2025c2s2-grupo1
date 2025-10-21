@@ -137,8 +137,6 @@ object vida {
     method image() {
         return "icono-" + snorlax.vidas() + "-vidas.png"
     }
-
-    method validarComer() {}
 }
 
 // puntuacion de snorlax
