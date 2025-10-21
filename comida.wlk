@@ -94,7 +94,7 @@ object comidaDelJuego {
         game.addVisual(comida)
     }
 
-    method aplicarGravedadATodaLaComida() {
+    method aplicarGravedad() {
         game.onTick(4000, "Gravedad en la Comida", {
                 comidaActiva.forEach({ comida => comida.caer() })
             }

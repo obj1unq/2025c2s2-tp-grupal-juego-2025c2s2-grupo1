@@ -138,7 +138,7 @@ object basuraDelJuego {
         game.addVisual(basura)
     }
 
-    method aplicarGravedadATodaLaBasura() {
+    method aplicarGravedad() {
         game.onTick(4000, "Gravedad en basura", {
                 basuraActiva.forEach({ basura => basura.caer() })
             }

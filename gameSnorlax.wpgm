@@ -1,3 +1,4 @@
+import fallingObjects.*
 import pokelitos.*
 import comida.*
 import personajes.*
@@ -44,10 +45,9 @@ object configuraciones {
     }
 
     method aplicarMecanicas() {
-        comidaDelJuego.aplicarGravedadATodaLaComida()
+        fallingObjectsDelJuego.aplicarGravedad()
         comidaDelJuego.aplicarAnimacionesATodaLaComida()
         basuraDelJuego.aplicarAnimacionesATodaLaComida()    
-        basuraDelJuego.aplicarGravedadATodaLaBasura()
         comidaDelJuego.aplicarPropiedadDeLevantarComida() //tiene el mismo whenCollideDo pero
         basuraDelJuego.aplicarDañoPorCaida()              //no se si es valido.
     }
