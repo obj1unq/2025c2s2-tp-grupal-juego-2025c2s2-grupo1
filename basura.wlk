@@ -102,7 +102,7 @@ object basuraDelJuego {
     }
 
 	method añadirBasuraAlAzar() {
-		self.añadirSegunProbabilidad()
+		self.añadirBasuraAlJuego(self.crearBasura())
 	}
 
 	method crearBasura() {
@@ -110,13 +110,6 @@ object basuraDelJuego {
 
 		return basuraElegida.apply()
 	}
-
-    method añadirSegunProbabilidad() {
-        const probabilidad = 0.randomUpTo(100)
-        if(probabilidad.between(0, 30)) {
-            self.añadirBasuraAlJuego(self.crearBasura())
-        }
-    }
 
     method elegirSegunProbabilidad() { 
         const probabilidad = 0.randomUpTo(100)

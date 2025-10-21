@@ -67,9 +67,19 @@ object fallingObjectsDelJuego {
 
     method añadirItemAlAzar() {
         game.onTick(4000, "añadir objeto al azar", {
-            comidaDelJuego.añadirComidaAlAzar()
-            basuraDelJuego.añadirBasuraAlAzar()
+            self.añadirItemSegunProbabilidad()
         })
+    }
+
+    method añadirItemSegunProbabilidad() {
+        const probabilidad = 0.randomUpTo(100)
+
+        if(probabilidad.between(0, 50)) {
+            basuraDelJuego.añadirBasuraAlAzar()
+        }
+        else {
+            comidaDelJuego.añadirComidaAlAzar()
+        }
     }
 
     method aplicarGravedad() {
