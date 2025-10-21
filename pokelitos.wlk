@@ -1,13 +1,21 @@
-import personajes.*
+import snorlax.*
 import extras.*
+import comida.*
 import randomizer.*
 
 //pokelitos
-class Pokelito {
+class Pokelito inherits Comida {
     const property gusto
     const property puntos = gusto.puntos()
 
+    override method comer() {
+        puntuacion.incrementaPuntos(puntos)
+        super()
+    }
+
     method nombre() { return "pokelito-" + gusto.nombre() }
+
+    override method image() { return self.nombre() + estado.nivel() + ".png" }
 }
 
 object frutilla {
@@ -43,7 +51,7 @@ object chocolate {
 
 object pokelitos {
     method nuevoPokelito(_gusto) { 
-        return new Pokelito( gusto = _gusto)
+        return new Pokelito( gusto = _gusto, position = randomizer.emptyPosition() )
     }
 
 	method crearPokelito() { return self.nuevoPokelito(self.gustoAlAzar()) }

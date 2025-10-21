@@ -1,12 +1,12 @@
 import extras.*
-import personajes.*
+import snorlax.*
 import basura.*
 import comida.*
+import randomizer.*
 
 class FallingObject {
     var property estado = primerEstado
     var property position
-    const property puntos
 
     //acciones
     method caer() {
@@ -41,10 +41,6 @@ class FallingObject {
         return game.allVisuals().any({ visual => visual == self})
     }
 
-    method colisionaConSnorlax() {
-        return position == snorlax.position()
-    }
-
     //validaciones
     method validarCaida() {
         if (not self.puedeCaer()) {
@@ -66,7 +62,7 @@ object fallingObjectsDelJuego {
     }
 
     method añadirItemAlAzar() {
-        game.onTick(4000, "añadir objeto al azar", {
+        game.onTick(4000, "añadir item al azar", {
             self.añadirItemSegunProbabilidad()
         })
     }
