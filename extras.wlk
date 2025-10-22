@@ -1,4 +1,4 @@
-import personajes.*
+import snorlax.*
 
 //direcciones de movimiento
 object izquierda {
