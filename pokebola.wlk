@@ -3,16 +3,17 @@ import basura.*
 
 class Pokebola inherits Basura {
 
-    override method dañar() {
-        super()
-        snorlax.efectoInmovilizador(true)
-        game.schedule(8000, {snorlax.efectoInmovilizador(false)})
-    }
-
     override method chocasteConSnorlax() { 
-        snorlaxCapturado.animacion() 
+        self.eliminarDelJuegoEn(250)
+        self.inmovilizarSnorlax()
+        snorlaxCapturado.animacion()
     }
 
+    method inmovilizarSnorlax() {
+        snorlax.estaInmovilizado(true) 
+        game.schedule(10000, {snorlax.estaInmovilizado(false)})
+    }
+ 
     method nombre() { return "pokebola_" } 
 
     override method image() { return self.nombre() + estado.nivel() + ".png" }

@@ -6,7 +6,7 @@ import basura.*
 object snorlax{
     var property position = game.at(0, 0) 
     var property estado = snorlaxNormal
-    var property efectoInmovilizador = false 
+    var property estaInmovilizado = false  
     var property vidas = 3 //Comienza con 3 vidas
     
     //acciones
@@ -52,6 +52,8 @@ object snorlax{
 
     method tieneVidas() { return vidas > 0 }
 
+    method esInvensible() { return estaInmovilizado }
+
     method hayComidaColisionando() { return comidaDelJuego.hayComidaEn(position) }
 
     method objetoEnColision() { return game.uniqueCollider(self) }
@@ -67,7 +69,7 @@ object snorlax{
     }
 
     method validarMover(direccion) {
-        if (not self.puedeMover(direccion) || self.efectoInmovilizador()) {
+        if (not self.puedeMover(direccion) || self.estaInmovilizado()) {
             self.error("No puedo mover.")
         }
     }
@@ -78,7 +80,7 @@ object snorlax{
         }
     }
 }
-
+ 
 //estados de snorlax
 object snorlaxNormal {
     method nombre() { return "normal" }
@@ -89,27 +91,31 @@ object snorlaxNormal {
 }
 
 object snorlaxCapturado {
-    var transicion = 0
+    var etapaTransicion = 0
 
-    method nombre() { return "capturado-_" + transicion + "" }
+    method nombre() { return "capturado-_" + etapaTransicion + "" }
 
     method animacion() {
-        
+        //Inicio animación
         snorlax.cambiarEstadoA(self)
         self.aplicarAnimacion()
-        game.schedule(8000, {snorlax.cambiarEstadoA(snorlaxNormal)})
+
+        //Fin animación
+        game.schedule(10000, {snorlax.cambiarEstadoA(snorlaxNormal) 
+                              self.resetearTransicion()} )
+        game.schedule(8000, {game.removeTickEvent("animacion")})
     }
     
     method aplicarAnimacion() { 
-        game.onTick(900, "animacion", { self.realizarTransicion() }) 
+        game.onTick(500, "animacion", {self.realizarTransicion()}) 
     }
 
     method realizarTransicion() {
-        transicion = (transicion + 1).min(14)
+        etapaTransicion = (etapaTransicion + 1).min(14)
     }
 
-    method resetear() {
-        transicion = 0
+    method resetearTransicion() {
+        etapaTransicion = 0
     }
 
     method validarComer() {}

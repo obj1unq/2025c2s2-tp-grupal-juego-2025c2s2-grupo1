@@ -3,10 +3,10 @@ import basura.*
 
 class Pokeflauta inherits Basura {
 
-    // override method dañar() { falta desarrollar
-    //     // super()
-    //     // game.schedule(1000, {self.ralentizarPersonaje()})
-    // }
+    override method dañar() { 
+        super()
+        puntuacion.incrementaPuntos(-(puntuacion.puntos()))
+    }
 
     method nombre() { return "pokeflauta_" } 
 
