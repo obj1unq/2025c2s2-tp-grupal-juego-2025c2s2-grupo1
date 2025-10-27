@@ -25,9 +25,12 @@ object comidaDelJuego {
     method nuevoPokelito() {
         return pokelitos.crearPokelito()
     }
+    method nuevaBayalita(){
+        return bayalitas.crearBayalita()
+    }
 
 	method crearComida() {
-		const comidaElegida = [self.nuevoPokelito(), self.crearBayalita()].anyOne()
+		const comidaElegida = [{self.nuevoPokelito()}, {self.nuevaBayalita()}].anyOne()
 
 		return comidaElegida.apply()
 	}
