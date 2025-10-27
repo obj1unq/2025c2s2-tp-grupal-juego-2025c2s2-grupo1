@@ -2,14 +2,13 @@ import snorlax.*
 import basura.*
 
 class Pokeflauta inherits Basura {
-    const property puntos = 0
 
-    override method dañar() {
-        super()
-        puntuacion.incrementaPuntos(self.puntos())
-    }
+    // override method dañar() { falta desarrollar
+    //     // super()
+    //     // game.schedule(1000, {self.ralentizarPersonaje()})
+    // }
 
-    method nombre() { return "bota_" } 
+    method nombre() { return "pokeflauta_" } 
 
     override method image() { return self.nombre() + estado.nivel() + ".png" }
 }

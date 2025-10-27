@@ -2,14 +2,18 @@ import snorlax.*
 import basura.*
 
 class Pokebola inherits Basura {
-    const property puntos = 0
 
     override method dañar() {
         super()
-        puntuacion.incrementaPuntos(self.puntos())
+        snorlax.efectoInmovilizador(true)
+        game.schedule(8000, {snorlax.efectoInmovilizador(false)})
     }
 
-    method nombre() { return "bota_" } 
+    override method chocasteConSnorlax() { 
+        snorlaxCapturado.animacion() 
+    }
+
+    method nombre() { return "pokebola_" } 
 
     override method image() { return self.nombre() + estado.nivel() + ".png" }
 }

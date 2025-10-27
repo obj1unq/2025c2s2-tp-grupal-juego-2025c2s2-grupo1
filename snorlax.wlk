@@ -6,6 +6,7 @@ import basura.*
 object snorlax{
     var property position = game.at(0, 0) 
     var property estado = snorlaxNormal
+    var property efectoInmovilizador = false 
     var property vidas = 3 //Comienza con 3 vidas
     
     //acciones
@@ -66,8 +67,8 @@ object snorlax{
     }
 
     method validarMover(direccion) {
-        if (not self.puedeMover(direccion)) {
-            self.error("No puedo mover en esa direccion.")
+        if (not self.puedeMover(direccion) || self.efectoInmovilizador()) {
+            self.error("No puedo mover.")
         }
     }
 
@@ -83,6 +84,33 @@ object snorlaxNormal {
     method nombre() { return "normal" }
 
     method animacion() {}
+
+    method validarComer() {}
+}
+
+object snorlaxCapturado {
+    var transicion = 0
+
+    method nombre() { return "capturado-_" + transicion + "" }
+
+    method animacion() {
+        
+        snorlax.cambiarEstadoA(self)
+        self.aplicarAnimacion()
+        game.schedule(8000, {snorlax.cambiarEstadoA(snorlaxNormal)})
+    }
+    
+    method aplicarAnimacion() { 
+        game.onTick(900, "animacion", { self.realizarTransicion() }) 
+    }
+
+    method realizarTransicion() {
+        transicion = (transicion + 1).min(14)
+    }
+
+    method resetear() {
+        transicion = 0
+    }
 
     method validarComer() {}
 }
