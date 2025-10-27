@@ -33,7 +33,8 @@ object snorlax{
     }
 
     method perderUnaVida() { vidas -= 1 }
-    method ganarUnaVida(){vidas += 1}
+    
+    method ganarUnaVida() { vidas += 1 }
 
     method cambiarEstadoA(estadoNuevo) { estado = estadoNuevo }
 

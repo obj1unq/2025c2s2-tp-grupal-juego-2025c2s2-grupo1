@@ -8,12 +8,20 @@ class Baya inherits Comida {
     const property puntos = gusto.puntos()
 
     override method comer() {
-        puntuacion.incrementaPuntos(puntos)
-        snorlax.ganarUnaVida()
         super()
+        puntuacion.incrementaPuntos(puntos)
+        self.validarVidas()
+        snorlax.ganarUnaVida()
     }
 
     method nombre() { return "baya-" + gusto.nombre() }
+
+    method validarVidas() {
+        if (snorlax.vidas() == 3) {
+            self.error("No se pueden añadir mas corazones.")
+        }
+    }
+
 
     override method image() { return self.nombre() + estado.nivel() + ".png" }
 }
