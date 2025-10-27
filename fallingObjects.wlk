@@ -16,6 +16,7 @@ class FallingObject {
     }
 
     method cambiarAlSiguienteEstado() {
+        self.validarVidas()
         estado.proximoEstado(self) 
     }
 
@@ -51,6 +52,12 @@ class FallingObject {
     method validarExistencia() {
         if (not self.hayCelda(abajo)) {
             self.eliminarDelJuegoEn(1500)
+        }
+    }
+
+    method validarVidas() {
+        if (!snorlax.tieneVidas()) {
+            self.error("Snorlax no tiene mas vidas.")
         }
     }
 }

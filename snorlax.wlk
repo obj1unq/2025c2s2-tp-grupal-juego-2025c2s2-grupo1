@@ -1,6 +1,7 @@
 import extras.*
 import comida.*
 import basura.*
+import estadosDeSnorlax.*
 
 
 object snorlax{
@@ -17,7 +18,7 @@ object snorlax{
 
     method recibirDaño() {
         self.objetoEnColision().dañar()
-        if (self.tieneVidas()) { // no se puede añadir validacion porque no interrumpe el flujo.
+        if (self.tieneVidas()) { // no se puede añadir validacion porque interrumpe el flujo.
             snorlaxRecibiendoDaño.animacion()
         }
         else { self.terminarJuego() }
@@ -25,7 +26,7 @@ object snorlax{
 
     method terminarJuego() { 
         snorlaxPerdedor.animacion()
-        game.schedule(2000, { game.stop() }) 
+        game.schedule(1000, { game.stop() }) 
     }
 
     method comer(){
@@ -35,9 +36,12 @@ object snorlax{
 
     method perderUnaVida() { vidas -= 1 }
 
-    method cambiarEstadoA(estadoNuevo) { estado = estadoNuevo }
+    method cambiarEstadoA(estadoNuevo) { 
+        estado = estadoNuevo 
+    }
 
     method levantarComida(comida) {
+        estado.validarAdormecimiento()
         comida.cambiarEstadoA(primerEstado)
     }
 
@@ -75,93 +79,12 @@ object snorlax{
     }
 
     method validarComer() {
+        estado.validarAdormecimiento()
         if (not self.hayComidaColisionando()) {
             self.error("No hay nada para comer.")
         }
     }
 }
- 
-//estados de snorlax
-object snorlaxNormal {
-    method nombre() { return "normal" }
-
-    method animacion() {}
-
-    method validarComer() {}
-}
-
-object snorlaxCapturado {
-    var etapaTransicion = 0
-
-    method nombre() { return "capturado-_" + etapaTransicion + "" }
-
-    method animacion() {
-        //Inicio animación
-        snorlax.cambiarEstadoA(self)
-        self.aplicarAnimacion()
-
-        //Fin animación
-        game.schedule(10000, {snorlax.cambiarEstadoA(snorlaxNormal) 
-                              self.resetearTransicion()} )
-        game.schedule(8000, {game.removeTickEvent("animacion")})
-    }
-    
-    method aplicarAnimacion() { 
-        game.onTick(500, "animacion", {self.realizarTransicion()}) 
-    }
-
-    method realizarTransicion() {
-        etapaTransicion = (etapaTransicion + 1).min(14)
-    }
-
-    method resetearTransicion() {
-        etapaTransicion = 0
-    }
-
-    method validarComer() {}
-}
-
-object snorlaxComiendo {
-    method nombre() { return "come" }
-
-    method animacion() {
-        snorlax.cambiarEstadoA(self)
-        game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
-    }
-
-    method validarComer() {
-        if (not self.hayCelda(abajo)) {
-            self.error("No se puede cambiar de estado mientras snorlax come")
-        }
-    }
-
-    method hayCelda(direccion) {
-        return direccion.siguiente(self).x().between(0, game.width()-2)
-    }
-}
-
-object snorlaxRecibiendoDaño {
-    method nombre() { return "daño-1" }
-
-    method animacion() {
-        snorlax.cambiarEstadoA(self)
-        game.schedule(1000, {snorlax.cambiarEstadoA(snorlaxNormal)})
-    }
-
-    method validarComer() {}
-}
-
-object snorlaxPerdedor {
-    method nombre() { return "perdedor-1" }
-
-    method animacion() {
-        snorlax.cambiarEstadoA(snorlaxRecibiendoDaño)
-        game.schedule(2000, {snorlax.cambiarEstadoA(self)})
-    }
-
-    method validarComer() {}
-}
-
 
 // Visualizador de vidas
 
