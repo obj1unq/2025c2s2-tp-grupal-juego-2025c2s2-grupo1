@@ -25,7 +25,7 @@ object snorlax{
 
     method terminarJuego() { 
         snorlaxPerdedor.animacion()
-        game.schedule(3000, { game.stop() }) 
+        game.schedule(2000, { game.stop() }) 
     }
 
     method comer(){
