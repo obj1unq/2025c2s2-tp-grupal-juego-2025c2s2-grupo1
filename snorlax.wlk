@@ -52,7 +52,7 @@ object snorlax{
 
     method tieneVidas() { return vidas > 0 }
 
-    method esInvensible() { return estaInmovilizado }
+    method esInvencible() { return estaInmovilizado }
 
     method hayComidaColisionando() { return comidaDelJuego.hayComidaEn(position) }
 

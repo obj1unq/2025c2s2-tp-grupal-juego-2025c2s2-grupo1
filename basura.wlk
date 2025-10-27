@@ -14,7 +14,7 @@ class Basura inherits FallingObject {
     }
     
     override method chocasteConSnorlax() { 
-        if (not snorlax.esInvensible()) {
+        if (not snorlax.esInvencible()) {
             snorlax.recibirDaño()
         } 
     }
