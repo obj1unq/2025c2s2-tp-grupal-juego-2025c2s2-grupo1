@@ -10,9 +10,7 @@ class Baya inherits Comida {
     override method comer() {
         super()
         puntuacion.incrementaPuntos(puntos)
-        if (snorlax.vidas() < 3) {
-            snorlax.ganarUnaVida()
-        }
+        snorlax.ganarUnaVida()
     }
 
     method nombre() { return "baya-" + gusto.nombre() }
