@@ -4,6 +4,7 @@ import estadosDeSnorlax.*
 import pokelitos.*
 import randomizer.*
 import fallingObjects.*
+import pokeBayas.*
 
 class Comida inherits FallingObject {
     //acciones
@@ -25,9 +26,12 @@ object comidaDelJuego {
     method nuevoPokelito() {
         return pokelitos.crearPokelito()
     }
+    method nuevaBayalita(){
+        return bayalitas.crearBayalita()
+    }
 
 	method crearComida() {
-		const comidaElegida = [{self.nuevoPokelito()}].anyOne()
+		const comidaElegida = [{self.nuevoPokelito()}, {self.nuevaBayalita()}].anyOne()
 
 		return comidaElegida.apply()
 	}
