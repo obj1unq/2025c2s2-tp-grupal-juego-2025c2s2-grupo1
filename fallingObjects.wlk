@@ -16,6 +16,7 @@ class FallingObject {
     }
 
     method cambiarAlSiguienteEstado() {
+        self.validarVidas()
         estado.proximoEstado(self) 
     }
 
@@ -53,6 +54,12 @@ class FallingObject {
             self.eliminarDelJuegoEn(1500)
         }
     }
+
+    method validarVidas() {
+        if (!snorlax.tieneVidas()) {
+            self.error("Snorlax no tiene mas vidas.")
+        }
+    }
 }
 
 object fallingObjectsDelJuego {
@@ -62,7 +69,7 @@ object fallingObjectsDelJuego {
     }
 
     method añadirItemAlAzar() {
-        game.onTick(4000, "añadir item al azar", {
+        game.onTick(1000, "añadir item al azar", {
             self.añadirItemSegunProbabilidad()
         })
     }
@@ -79,13 +86,13 @@ object fallingObjectsDelJuego {
     }
 
     method aplicarGravedad() {
-        game.onTick(4000, "aplicar gravedad", 
+        game.onTick(1000, "aplicar gravedad", 
             { self.fallingObjectsActivos().forEach({ item => item.caer() }) }
         )
     }
 
     method aplicarAnimaciones() {
-        game.onTick(1000, "aplicar animaciones", 
+        game.onTick(250, "aplicar animaciones", 
             { self.fallingObjectsActivos().forEach({ item => item.cambiarAlSiguienteEstado() }) }
         )
     }

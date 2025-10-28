@@ -11,10 +11,13 @@ class Basura inherits FallingObject {
     //acciones
     method dañar() {
         basuraDelJuego.eliminarBasuraDelJuego(self)
-        snorlax.perderUnaVida()
     }
     
-    override method chocasteConSnorlax() { snorlax.recibirDaño() }
+    override method chocasteConSnorlax() { 
+        if (not snorlax.esInvencible()) {
+            snorlax.recibirDaño()
+        } 
+    }
 
     override method eliminarDelJuegoEn(ticks) {
         game.schedule(ticks, {basuraDelJuego.eliminarBasuraDelJuego(self)})
@@ -57,13 +60,13 @@ object basuraDelJuego {
     method elegirSegunProbabilidad() { 
         const probabilidad = 0.randomUpTo(100)
 
-        if(probabilidad.between(0, 30)) {
+        if(probabilidad.between(0, 25)) {
             return {self.nuevaPokeflauta()}
         }
-        else if(probabilidad.between(30, 40)) {
+        else if(probabilidad.between(25, 45)) {
             return {self.nuevaPokebola()}
         }
-        else if(probabilidad.between(40, 70)){
+        else if(probabilidad.between(45, 70)){
             return {self.nuevaBota()}
         }
         else if(probabilidad.between(70, 85)) {

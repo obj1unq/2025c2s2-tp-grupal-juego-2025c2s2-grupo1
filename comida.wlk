@@ -1,5 +1,6 @@
 import extras.*
 import snorlax.*
+import estadosDeSnorlax.*
 import pokelitos.*
 import randomizer.*
 import fallingObjects.*
