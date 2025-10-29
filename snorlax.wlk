@@ -36,7 +36,10 @@ object snorlax{
 
     method perderUnaVida() { vidas -= 1 }
     
-    method ganarUnaVida() { vidas += 1 }
+    method ganarUnaVida() { 
+        self.validarFaltanVidas()
+        vidas += 1
+    }
 
     method cambiarEstadoA(estadoNuevo) { 
         estado = estadoNuevo 
@@ -68,9 +71,15 @@ object snorlax{
         return "snorlax-" + estado.nombre() + ".png"
     }
 
-    method validarVidas() {
+    method validarFaltanVidas() {
         if (not self.tieneVidas()) {
             self.terminarJuego()
+        }
+    }
+
+    method validarVidaLlena() {
+        if (self.vidas() == 3) {
+            self.error("Snorlax tiene vidas suficientes.")
         }
     }
 
