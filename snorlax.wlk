@@ -71,13 +71,13 @@ object snorlax{
         return "snorlax-" + estado.nombre() + ".png"
     }
 
-    method validarFaltanVidas() {
+    method validarVidas() {
         if (not self.tieneVidas()) {
             self.terminarJuego()
         }
     }
 
-    method validarVidaLlena() {
+    method validarFaltanVidas() {
         if (self.vidas() == 3) {
             self.error("Snorlax tiene vidas suficientes.")
         }
