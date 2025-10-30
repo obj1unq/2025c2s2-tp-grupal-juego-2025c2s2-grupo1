@@ -50,6 +50,10 @@ object comidaDelJuego {
         game.removeVisual(comida)
     }
 
+    method remover() {
+        comidaActiva.forEach({comida => self.eliminarComidaDelJuego(comida)})
+    }
+
     method hayComidaEn(_position) {
         return comidaActiva.any({comida => comida.position() == _position })
     }

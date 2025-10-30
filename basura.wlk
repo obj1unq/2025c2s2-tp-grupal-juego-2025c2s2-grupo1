@@ -86,4 +86,8 @@ object basuraDelJuego {
         basuraActiva.remove(basura)
         game.removeVisual(basura)
     }
+
+    method remover() {
+        basuraActiva.forEach({basura => self.eliminarBasuraDelJuego(basura)})
+    }
 }

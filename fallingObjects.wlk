@@ -68,6 +68,11 @@ object fallingObjectsDelJuego {
         return comidaDelJuego.comidaActiva() + basuraDelJuego.basuraActiva()
     }
 
+    method remover() {
+        comidaDelJuego.remover()
+        basuraDelJuego.remover()
+    }
+
     method añadirItemAlAzar() {
         game.onTick(1000, "añadir item al azar", {
             self.añadirItemSegunProbabilidad()

@@ -4,47 +4,28 @@ import comida.*
 import snorlax.*
 import extras.*
 import basura.*
-
+import interfaces.*
 
 program snorlaxGame{
     configuraciones.sobreElTablero()
-    configuraciones.sobreLasTeclas()
-    configuraciones.añadirVisuales()
-    configuraciones.aplicarMecanicas()
-    configuraciones.añadirInformacionDelPersonaje()
+    configuraciones.inicializar()
 
     game.start()
 }
 
+
+
 object configuraciones {
+    
     method sobreElTablero() {
-        game.title("Snorlax")
+        game.title("Snack Attack")
         game.height(11)
         game.width(7)
         game.cellSize(50)
         game.boardGround("fondo.png")
     }
 
-    method sobreLasTeclas() {
-        keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
-        keyboard.d().onPressDo({snorlax.mover(derecha)})
-        keyboard.space().onPressDo({snorlax.comer()})
+    method inicializar() {
+        pantallaDeInicio.inicializar()
     }
-
-    method añadirVisuales() {
-        game.addVisual(snorlax)
-        fallingObjectsDelJuego.añadirItemAlAzar()
-    }
-
-    method añadirInformacionDelPersonaje() {
-        game.addVisual(puntuacion)
-        game.addVisual(vida)
-    }
-
-    method aplicarMecanicas() {
-        fallingObjectsDelJuego.aplicarGravedad()
-        fallingObjectsDelJuego.aplicarAnimaciones()
-        fallingObjectsDelJuego.aplicarColisiones()
-    }
-
 }
