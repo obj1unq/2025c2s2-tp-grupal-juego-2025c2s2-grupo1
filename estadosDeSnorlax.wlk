@@ -6,6 +6,8 @@ object snorlaxNormal {
     method animacion() {}
 
     method validarAdormecimiento() {}
+
+    method estaInmovilizado() { return false }
 }
 
 object snorlaxCapturado {
@@ -37,6 +39,8 @@ object snorlaxCapturado {
     }
 
     method validarAdormecimiento() {}
+
+    method estaInmovilizado() { return true }
 }
 
 object snorlaxComiendo {
@@ -52,6 +56,8 @@ object snorlaxComiendo {
     method hayCelda(direccion) {
         return direccion.siguiente(self).x().between(0, game.width()-2)
     }
+
+    method estaInmovilizado() { return false }
 }
 
 object snorlaxRecibiendoDaño {
@@ -63,6 +69,8 @@ object snorlaxRecibiendoDaño {
     }
 
     method validarAdormecimiento() {}
+
+    method estaInmovilizado() { return false }
 }
 
 object snorlaxPerdedor {
@@ -74,6 +82,8 @@ object snorlaxPerdedor {
     }
 
     method validarAdormecimiento() {}
+
+    method estaInmovilizado() { return false }
 }
 
 
@@ -88,4 +98,6 @@ object snorlaxAdormecido {
     method validarAdormecimiento() {
         self.error("No puede comer mientras esta con sueño.")
     }
+
+    method estaInmovilizado() { return false }
 }
