@@ -21,7 +21,7 @@ class Basura inherits FallingObject {
 
     method validarChoque() {
         if (snorlax.esInvencible()) {
-            self.error("Snorlax es invencible")
+            self.error("Snorlax es invencible.")
         }
     }
 
