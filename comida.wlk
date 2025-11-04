@@ -18,7 +18,6 @@ class Comida inherits FallingObject {
     }
 
     override method chocasteConSnorlax() { 
-        super()
         snorlax.levantarComida(self) 
     }
 }

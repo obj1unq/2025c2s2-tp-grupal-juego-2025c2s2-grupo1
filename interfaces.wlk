@@ -2,6 +2,7 @@ import snorlax.*
 import extras.*
 import fallingObjects.*
 import estadosDelJuego.*
+import gameSnorlax.configuraciones
 
 object juego {
     var estado = juegoEnPausa
@@ -15,6 +16,7 @@ object juego {
 
     method comenzar() {
         pantallaDeInicio.removerFondo()
+        configuraciones.cambiarEstadoA(self)
         self.configurarTeclas()
         self.añadirVisuales()
         self.añadirFondo()
@@ -28,6 +30,7 @@ object juego {
         puntuacion.reiniciar()
         pantallaDeFin.removerFondo()
         self.alternarEstado()
+        configuraciones.cambiarEstadoA(self)
     }
 
     method finalizar() {
@@ -41,6 +44,8 @@ object juego {
         keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
         keyboard.d().onPressDo({snorlax.mover(derecha)})
         keyboard.space().onPressDo({snorlax.comer()})
+        keyboard.p().onPressDo({ juegoInGame.pausar() }) // Es para pausar o reanudar.
+        //keyboard.p().onPressDo({ juegoEnPausa.reanudar() })
     }
 
     method añadirVisuales() {
@@ -61,6 +66,8 @@ object juego {
     method validarEstado() {
         estado.validarEstado()
     }
+
+    method validarFaseDelJuego() {} //no ocurre nada
 }
 
 //Pantallas del juego
@@ -87,8 +94,13 @@ class PantallaDelJuego {
     method fondo()
 
     method inicializar() {
+        configuraciones.cambiarEstadoA(self)
         self.añadirFondo()
         self.configurarTeclas()
+    }
+
+    method validarFaseDelJuego() {
+        self.error("Hay una pantalla en este momento.")
     }
 }
 
@@ -96,6 +108,7 @@ object pantallaDeInicio inherits PantallaDelJuego {
     override method fondo() { return fondoDeInicio }
 
     override method jugar() { juego.comenzar() }
+    
 }
 
 object pantallaDeFin inherits PantallaDelJuego {

@@ -16,7 +16,8 @@ program snorlaxGame{
 
 
 object configuraciones {
-    
+    var estado = pantallaDeInicio
+
     method sobreElTablero() {
         game.title("Snack Attack")
         game.height(11)
@@ -26,6 +27,14 @@ object configuraciones {
     }
 
     method inicializar() {
-        pantallaDeInicio.inicializar()
+        estado.inicializar()
+    }
+
+    method validarEstado() {
+        estado.validarFaseDelJuego()
+    }
+
+    method cambiarEstadoA(_estado) {
+        estado = _estado
     }
 }

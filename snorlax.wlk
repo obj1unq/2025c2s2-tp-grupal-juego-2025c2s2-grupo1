@@ -58,6 +58,7 @@ object snorlax{
         vidas = 3
         self.cambiarEstadoA(snorlaxNormal)
     }
+    
 
     //consultas
     method puedeMover(direccion){

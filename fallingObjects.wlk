@@ -25,9 +25,7 @@ class FallingObject {
 
     method cambiarEstadoA(_estado) { estado = _estado }
 
-    method chocasteConSnorlax() {
-        juego.validarEstado()
-    }
+    method chocasteConSnorlax()
 
     method eliminarDelJuegoEn(ticks)
 
