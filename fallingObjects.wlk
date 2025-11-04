@@ -11,14 +11,14 @@ class FallingObject {
 
     //acciones
     method caer() {
-        juego.validarEstado()
+        //juego.validarEstado()
         self.validarExistencia()
         self.validarCaida()
         position = position.down(2)
     }
 
     method cambiarAlSiguienteEstado() {
-        juego.validarEstado()
+        //juego.validarEstado()
         self.validarVidas()
         estado.proximoEstado(self) 
     }

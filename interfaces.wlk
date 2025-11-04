@@ -45,7 +45,7 @@ object juego {
         keyboard.d().onPressDo({snorlax.mover(derecha)})
         keyboard.space().onPressDo({snorlax.comer()})
         keyboard.p().onPressDo({ juegoInGame.pausar() }) // Es para pausar o reanudar.
-        //keyboard.p().onPressDo({ juegoEnPausa.reanudar() })
+        keyboard.r().onPressDo({ juegoEnPausa.reanudar() })
     }
 
     method añadirVisuales() {
@@ -61,6 +61,20 @@ object juego {
         fallingObjectsDelJuego.aplicarGravedad()
         fallingObjectsDelJuego.aplicarAnimaciones()
         fallingObjectsDelJuego.aplicarColisiones()
+    }
+
+    method removerMecanicas() {
+        game.removeTickEvent("aplicar gravedad")
+        game.removeTickEvent("aplicar animaciones")
+        game.removeTickEvent("añadir item al azar")
+    }
+
+    method pausar() {
+        estado.pausar()
+    }
+
+    method reanudar() {
+        estado.reanudar()
     }
 
     method validarEstado() {

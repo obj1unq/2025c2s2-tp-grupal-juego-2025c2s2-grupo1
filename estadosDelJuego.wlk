@@ -7,15 +7,17 @@ object juegoInGame {
         juego.cambiarEstadoA(juegoEnPausa)
     }
 
-    method validarEstado() {// no ocurre nada
+    method reanudar() { 
+        self.error("No se puede reanudar porque el juego ya está corriendo.") 
     }
 
     method pausar() {
+        configuraciones.validarEstado()
         self.alternarEstado()
-        game.removeTickEvent("aplicar gravedad")
-        game.removeTickEvent("aplicar animaciones")
-        game.removeTickEvent("añadir item al azar")
+        juego.removerMecanicas()
     }
+
+    method validarEstado() {}
 }
 
 object juegoEnPausa {
@@ -25,11 +27,15 @@ object juegoEnPausa {
 
     method validarEstado() {
         self.error("El juego está en pausa.")
-    }
+    } // es para las mecanicas
 
     method reanudar() {
         configuraciones.validarEstado()
-        fallingObjectsDelJuego.aplicarAnimaciones()
-        fallingObjectsDelJuego.aplicarGravedad()
+        self.alternarEstado()
+        
+        juego.aplicarMecanicas()
+        fallingObjectsDelJuego.añadirItemAlAzar()
     }
+
+    method pausar() { self.error("No se puede pausar ya que está en pausa.") }
 }
