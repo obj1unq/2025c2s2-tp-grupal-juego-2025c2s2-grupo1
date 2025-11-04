@@ -7,7 +7,6 @@ import estadosDeSnorlax.*
 object snorlax{
     var property position = game.at(0, 0) 
     var property estado = snorlaxNormal
-    var property estaInmovilizado = false  
     var property vidas = 3 //Comienza con 3 vidas
     
     //acciones
@@ -61,7 +60,7 @@ object snorlax{
 
     method tieneVidas() { return vidas > 0 }
 
-    method esInvencible() { return estaInmovilizado }
+    method esInvencible() { return estado.estaInmovilizado() }
 
     method hayComidaColisionando() { return comidaDelJuego.hayComidaEn(position) }
 
@@ -84,7 +83,7 @@ object snorlax{
     }
 
     method validarMover(direccion) {
-        if (not self.puedeMover(direccion) || self.estaInmovilizado()) {
+        if (not self.puedeMover(direccion) || estado.estaInmovilizado()) {
             self.error("No puedo mover.")
         }
     }

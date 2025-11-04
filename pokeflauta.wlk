@@ -6,9 +6,11 @@ class Pokeflauta inherits Basura {
 
     method adormecer() { snorlaxAdormecido.animacion() }
 
-    override method chocasteConSnorlax() {
+    override method chocasteConSnorlax() { 
+        self.validarChoque()
         basuraDelJuego.eliminarBasuraDelJuego(self)
         self.adormecer()
+        
     }
 
     method nombre() { return "pokeflauta_" } 
