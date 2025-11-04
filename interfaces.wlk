@@ -19,12 +19,12 @@ object juego {
         self.añadirVisuales()
         self.añadirFondo()
         self.aplicarMecanicas()
+        self.alternarEstado()
     }
 
     method reiniciar() {
         fallingObjectsDelJuego.removerTodo()
         snorlax.reiniciar()
-        vidas.reiniciar()
         puntuacion.reiniciar()
         pantallaDeFin.removerFondo()
         self.alternarEstado()
@@ -35,7 +35,7 @@ object juego {
         pantallaDeFin.inicializar()
     }
 
-    method alternarEstado() { estado.cambiarEstado() }
+    method alternarEstado() { estado.alternarEstado() }
 
     method configurarTeclas() { //detenerse cuando esta en pausa
         keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
@@ -57,8 +57,13 @@ object juego {
         fallingObjectsDelJuego.aplicarAnimaciones()
         fallingObjectsDelJuego.aplicarColisiones()
     }
+
+    method validarEstado() {
+        estado.validarEstado()
+    }
 }
 
+//Pantallas del juego
 class PantallaDelJuego {
     //Metodos Template
     method añadirFondo() {
@@ -88,26 +93,26 @@ class PantallaDelJuego {
 }
 
 object pantallaDeInicio inherits PantallaDelJuego {
-    override method fondo() { return fondoGameStart }
+    override method fondo() { return fondoDeInicio }
 
     override method jugar() { juego.comenzar() }
 }
 
 object pantallaDeFin inherits PantallaDelJuego {
-    override method fondo() { return fondoGameOver }
+    override method fondo() { return fondoDeGameOver }
 
     override method jugar() { juego.reiniciar() }
 }
 
 //Fondos de Pantalla
-class FondoDePantalla {
+object fondoDeInicio {
     const property position = game.origin()
 
-    method image() { self.pantallaDelJuego() + ".png" }
-
-    method pantallaDelJuego() { return self.toString() } //experimental
+    method image() { return "fondoGameStart.png"}
 }
 
-object fondoGameStart inherits FondoDePantalla {}
+object fondoDeGameOver {
+    const property position = game.origin()
 
-object fondoGameOver inherits FondoDePantalla {}
+    method image() { return "fondoGameOver.png"}
+}

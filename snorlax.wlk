@@ -2,6 +2,7 @@ import extras.*
 import comida.*
 import basura.*
 import estadosDeSnorlax.*
+import interfaces.*
 
 
 object snorlax{
@@ -12,6 +13,7 @@ object snorlax{
     
     //acciones
     method mover(direccion){
+        juego.validarEstado()
         self.validarMover(direccion)
         position = direccion.siguiente(self)
     }
@@ -30,6 +32,7 @@ object snorlax{
     }
 
     method comer(){
+        juego.validarEstado()
         self.validarComer()
         self.objetoEnColision().comer()
     }
@@ -50,13 +53,19 @@ object snorlax{
         comida.cambiarEstadoA(primerEstado)
     }
 
+    method reiniciar() {
+        position = game.at(0, 3)
+        vidas = 3
+        self.cambiarEstadoA(snorlaxNormal)
+    }
+
     //consultas
     method puedeMover(direccion){
         return self.hayCelda(direccion) && self.tieneVidas()
     }
 
     method hayCelda(direccion) {
-        return direccion.siguiente(self).x().between(0, game.width()-2)
+        return direccion.siguiente(self).x().between(0, game.width()-4)
     }
 
     method tieneVidas() { return vidas > 0 }
@@ -118,4 +127,6 @@ object puntuacion{
     } 
 
     method text() { return self.puntos().toString() }
+
+    method reiniciar() { puntos = 0 }
 }

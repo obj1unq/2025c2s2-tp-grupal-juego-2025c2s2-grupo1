@@ -14,6 +14,7 @@ class Basura inherits FallingObject {
     }
     
     override method chocasteConSnorlax() { 
+        super()
         if (not snorlax.esInvencible()) {
             snorlax.recibirDaño()
         } 
@@ -87,7 +88,7 @@ object basuraDelJuego {
         game.removeVisual(basura)
     }
 
-    method remover() {
+    method removerTodo() {
         basuraActiva.forEach({basura => self.eliminarBasuraDelJuego(basura)})
     }
 }

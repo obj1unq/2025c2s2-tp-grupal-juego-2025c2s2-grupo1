@@ -1,22 +1,19 @@
 import interfaces.*
 object juegoInGame {
-    method cambiarEstado() {
+    method alternarEstado() {
         juego.cambiarEstadoA(juegoEnPausa)
-        self.pausar()
     }
 
-    method pausar() {
-        
+    method validarEstado() {// no ocurre nada
     }
 }
 
 object juegoEnPausa {
-    method cambiarEstado() {
+    method alternarEstado() {
         juego.cambiarEstadoA(juegoInGame)
-        self.reanudar()
     }
 
-    method reanudar() {
-
+    method validarEstado() {
+        self.error("El juego está en pausa.")
     }
 }
