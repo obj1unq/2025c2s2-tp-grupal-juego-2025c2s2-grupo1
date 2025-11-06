@@ -1,4 +1,7 @@
+import fallingObjects.*
 import interfaces.*
+import gameSnorlax.configuraciones
+
 object juegoInGame {
     method alternarEstado() {
         juego.cambiarEstadoA(juegoEnPausa)

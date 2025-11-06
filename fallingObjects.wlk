@@ -18,16 +18,14 @@ class FallingObject {
     }
 
     method cambiarAlSiguienteEstado() {
-        juego.validarEstado()
+        //juego.validarEstado()
         self.validarVidas()
         estado.proximoEstado(self) 
     }
 
     method cambiarEstadoA(_estado) { estado = _estado }
 
-    method chocasteConSnorlax() {
-        juego.validarEstado()
-    }
+    method chocasteConSnorlax()
 
     method eliminarDelJuegoEn(ticks)
 

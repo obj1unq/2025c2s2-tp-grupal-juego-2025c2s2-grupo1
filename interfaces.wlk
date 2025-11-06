@@ -2,6 +2,7 @@ import snorlax.*
 import extras.*
 import fallingObjects.*
 import estadosDelJuego.*
+import gameSnorlax.configuraciones
 
 object juego {
     var estado = juegoEnPausa
@@ -16,23 +17,29 @@ object juego {
     method comenzar() {
         pantallaDeInicio.removerFondo()
         self.configurarTeclas()
-        self.añadirVisuales()
         self.añadirFondo()
-        self.aplicarMecanicas()
-        self.alternarEstado()
+        self.inicializar()
     }
 
     method reiniciar() {
-        fallingObjectsDelJuego.removerTodo()
         snorlax.reiniciar()
         puntuacion.reiniciar()
         pantallaDeFin.removerFondo()
-        self.alternarEstado()
+        self.inicializar()
     }
 
     method finalizar() {
         self.alternarEstado()
+        self.removerVisuales()
+        self.removerMecanicas()
         pantallaDeFin.inicializar()
+    }
+
+    method inicializar() {
+        configuraciones.cambiarEstadoA(self)
+        self.añadirVisuales()
+        self.aplicarMecanicas()
+        self.alternarEstado()
     }
 
     method alternarEstado() { estado.alternarEstado() }
@@ -41,6 +48,7 @@ object juego {
         keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
         keyboard.d().onPressDo({snorlax.mover(derecha)})
         keyboard.space().onPressDo({snorlax.comer()})
+        //Se intentó añadir boton de pausar y reanudar pero no se logró solucionar las bug con las animaciones.
     }
 
     method añadirVisuales() {
@@ -50,12 +58,29 @@ object juego {
         fallingObjectsDelJuego.añadirItemAlAzar() //detenerse cuando esta en pausa
     }
 
+    method removerVisuales() {
+        game.removeVisual(snorlax)
+        game.removeVisual(puntuacion)
+        game.removeVisual(vida)
+        fallingObjectsDelJuego.removerTodo()
+    }
+
     method añadirFondo() {} //Varia segun el nivel
 
     method aplicarMecanicas() { //detenerse cuando esta en pausa
         fallingObjectsDelJuego.aplicarGravedad()
         fallingObjectsDelJuego.aplicarAnimaciones()
         fallingObjectsDelJuego.aplicarColisiones()
+    }
+
+    method removerMecanicas() {
+        game.removeTickEvent("aplicar gravedad")
+        game.removeTickEvent("aplicar animaciones")
+        game.removeTickEvent("añadir item al azar")
+    }
+
+    method jugar() { //No me convence pues ya está inicializar(). Este metodo lo añadí por polimorfismo.
+        self.error("El juego ya está corriendo.")
     }
 
     method validarEstado() {
@@ -76,20 +101,20 @@ class PantallaDelJuego {
 
     method configurarTeclas() {
         keyboard.enter().onPressDo({
-            //validacion
-            self.jugar()
+            configuraciones.iniciarJuego()
         })
     }
 
-    //Metodos Hook
-    method jugar()
-
-    method fondo()
-
     method inicializar() {
+        configuraciones.cambiarEstadoA(self)
         self.añadirFondo()
         self.configurarTeclas()
     }
+
+    method jugar()
+
+    //Metodos Hook
+    method fondo()
 }
 
 object pantallaDeInicio inherits PantallaDelJuego {
@@ -105,14 +130,20 @@ object pantallaDeFin inherits PantallaDelJuego {
 }
 
 //Fondos de Pantalla
-object fondoDeInicio {
+class Fondo {
     const property position = game.origin()
 
-    method image() { return "fondoGameStart.png"}
+    method chocasteConSnorlax() {} //En caso de que snorlax esté en la misma celda donde aparece una pantalla.
+
+    method image() { return self.fondo() }
+
+    method fondo()
 }
 
-object fondoDeGameOver {
-    const property position = game.origin()
+object fondoDeInicio inherits Fondo {
+    override method fondo() { return "fondoGameStart.png" }
+}
 
-    method image() { return "fondoGameOver.png"}
+object fondoDeGameOver inherits Fondo {
+    override method fondo() { return "fondoGameOver.png" }
 }

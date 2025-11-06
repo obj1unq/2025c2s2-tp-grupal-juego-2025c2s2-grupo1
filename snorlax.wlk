@@ -28,7 +28,7 @@ object snorlax{
 
     method terminarJuego() { 
         snorlaxPerdedor.animacion()
-        game.schedule(1000, { game.stop() }) 
+        game.schedule(2000, { juego.finalizar() }) 
     }
 
     method comer(){
@@ -54,10 +54,11 @@ object snorlax{
     }
 
     method reiniciar() {
-        position = game.at(0, 3)
+        position = game.at(0, 0)
         vidas = 3
         self.cambiarEstadoA(snorlaxNormal)
     }
+    
 
     //consultas
     method puedeMover(direccion){
@@ -109,10 +110,10 @@ object snorlax{
 // Visualizador de vidas
 
 object vida {
-    var property position = game.at(4,9)
+    var property position = game.at(7,9)
 
     method image() {
-        return "icono-" + snorlax.vidas() + "-vidas.png"
+        return "vidas_" + snorlax.vidas() + ".png"
     }
 }
 
@@ -120,7 +121,7 @@ object vida {
 
 object puntuacion{
     var property puntos = 0
-    var property position = game.at(1,10) 
+    var property position = game.at(7,8) 
     
     method incrementaPuntos(puntosFruta){
         puntos += puntosFruta
