@@ -11,7 +11,7 @@ class FallingObject {
 
     //acciones
     method caer() {
-        juego.validarEstado()
+        //juego.validarEstado()
         self.validarExistencia()
         self.validarCaida()
         position = position.down(2)

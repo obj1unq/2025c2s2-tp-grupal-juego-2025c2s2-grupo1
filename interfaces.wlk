@@ -16,6 +16,7 @@ object juego {
 
     method comenzar() {
         pantallaDeInicio.removerFondo()
+        configuraciones.cambiarEstadoA(self)
         self.configurarTeclas()
         self.añadirFondo()
         self.inicializar()
@@ -86,6 +87,8 @@ object juego {
     method validarEstado() {
         estado.validarEstado()
     }
+
+    method validarFaseDelJuego() {} //no ocurre nada
 }
 
 //Pantallas del juego
@@ -121,6 +124,7 @@ object pantallaDeInicio inherits PantallaDelJuego {
     override method fondo() { return fondoDeInicio }
 
     override method jugar() { juego.comenzar() }
+    
 }
 
 object pantallaDeFin inherits PantallaDelJuego {

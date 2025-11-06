@@ -7,8 +7,7 @@ object juegoInGame {
         juego.cambiarEstadoA(juegoEnPausa)
     }
 
-    method validarEstado() {// no ocurre nada
-    }
+    method validarEstado() {}
 }
 
 object juegoEnPausa {
@@ -18,5 +17,5 @@ object juegoEnPausa {
 
     method validarEstado() {
         self.error("El juego está en pausa.")
-    }
+    } // es para las mecanicas
 }
