@@ -17,7 +17,9 @@ class Comida inherits FallingObject {
          game.schedule(ticks, {comidaDelJuego.eliminarComidaDelJuego(self)})
     }
 
-    override method chocasteConSnorlax() { snorlax.levantarComida(self) }
+    override method chocasteConSnorlax() { 
+        snorlax.levantarComida(self) 
+    }
 }
 
 object comidaDelJuego {
@@ -48,6 +50,10 @@ object comidaDelJuego {
     method eliminarComidaDelJuego(comida) {
         comidaActiva.remove(comida)
         game.removeVisual(comida)
+    }
+
+    method removerTodo() {
+        comidaActiva.forEach({comida => self.eliminarComidaDelJuego(comida)})
     }
 
     method hayComidaEn(_position) {

@@ -3,7 +3,7 @@ import wollok.game.*
 object randomizer {
 		
 	method position() {
-		return 	game.at((0 .. game.width() - 2 ).anyOne(), 8) 
+		return 	game.at((0 .. game.width() - 4 ).anyOne(), 8) 
 	}
 	
 	method emptyPosition() {

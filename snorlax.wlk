@@ -2,6 +2,7 @@ import extras.*
 import comida.*
 import basura.*
 import estadosDeSnorlax.*
+import interfaces.*
 
 
 object snorlax{
@@ -11,6 +12,7 @@ object snorlax{
     
     //acciones
     method mover(direccion){
+        juego.validarEstado()
         self.validarMover(direccion)
         position = direccion.siguiente(self)
     }
@@ -25,10 +27,11 @@ object snorlax{
 
     method terminarJuego() { 
         snorlaxPerdedor.animacion()
-        game.schedule(1000, { game.stop() }) 
+        game.schedule(2000, { juego.finalizar() }) 
     }
 
     method comer(){
+        juego.validarEstado()
         self.validarComer()
         self.objetoEnColision().comer()
     }
@@ -49,13 +52,20 @@ object snorlax{
         comida.cambiarEstadoA(primerEstado)
     }
 
+    method reiniciar() {
+        position = game.at(0, 0)
+        vidas = 3
+        self.cambiarEstadoA(snorlaxNormal)
+    }
+    
+
     //consultas
     method puedeMover(direccion){
         return self.hayCelda(direccion) && self.tieneVidas()
     }
 
     method hayCelda(direccion) {
-        return direccion.siguiente(self).x().between(0, game.width()-2)
+        return direccion.siguiente(self).x().between(0, game.width()-4)
     }
 
     method tieneVidas() { return vidas > 0 }
@@ -99,10 +109,10 @@ object snorlax{
 // Visualizador de vidas
 
 object vida {
-    var property position = game.at(4,9)
+    var property position = game.at(7,9)
 
     method image() {
-        return "icono-" + snorlax.vidas() + "-vidas.png"
+        return "vidas_" + snorlax.vidas() + ".png"
     }
 }
 
@@ -110,11 +120,13 @@ object vida {
 
 object puntuacion{
     var property puntos = 0
-    var property position = game.at(1,10) 
+    var property position = game.at(7,8) 
     
     method incrementaPuntos(puntosFruta){
         puntos += puntosFruta
     } 
 
     method text() { return self.puntos().toString() }
+
+    method reiniciar() { puntos = 0 }
 }

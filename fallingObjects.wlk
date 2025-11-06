@@ -3,6 +3,7 @@ import snorlax.*
 import basura.*
 import comida.*
 import randomizer.*
+import interfaces.*
 
 class FallingObject {
     var property estado = primerEstado
@@ -10,12 +11,14 @@ class FallingObject {
 
     //acciones
     method caer() {
+        //juego.validarEstado()
         self.validarExistencia()
         self.validarCaida()
         position = position.down(2)
     }
 
     method cambiarAlSiguienteEstado() {
+        //juego.validarEstado()
         self.validarVidas()
         estado.proximoEstado(self) 
     }
@@ -68,6 +71,11 @@ object fallingObjectsDelJuego {
         return comidaDelJuego.comidaActiva() + basuraDelJuego.basuraActiva()
     }
 
+    method removerTodo() {
+        comidaDelJuego.removerTodo()
+        basuraDelJuego.removerTodo()
+    }
+
     method añadirItemAlAzar() {
         game.onTick(1000, "añadir item al azar", {
             self.añadirItemSegunProbabilidad()
@@ -77,6 +85,7 @@ object fallingObjectsDelJuego {
     method añadirItemSegunProbabilidad() {
         const probabilidad = 0.randomUpTo(100)
 
+        juego.validarEstado()
         if(probabilidad.between(0, 50)) {
             basuraDelJuego.añadirBasuraAlAzar()
         }
@@ -99,5 +108,5 @@ object fallingObjectsDelJuego {
 
     method aplicarColisiones() {
         game.whenCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
-    }
+    }//Debe ser whenCollideDo dado que levantarComida() debe estar ejecutandose continuamente. No afecta a basura.
 }
