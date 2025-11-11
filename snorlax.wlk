@@ -133,7 +133,7 @@ object puntuacion{
 }
 
 object progressNivel {
-    var property position = game.at(7, 6)
+    var property position = game.at(8, 6)
 
-    method text() { return juego.nivel().toString() }
+    method text() { return juego.nivel().toString().drop(5) }
 }

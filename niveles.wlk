@@ -11,6 +11,7 @@ class Nivel {
         self.actualizarDificultad()
     }
 
+
     method añadirFondo() {
         game.addVisual(self.fondo())
     }
@@ -19,13 +20,14 @@ class Nivel {
         game.removeVisual(self.fondo())
     }
 
-    method actualizarDificultad() {
-        fallingObjectsDelJuego.modificarSpawneoBasura(self.probabilidad())
-        fallingObjectsDelJuego.modificarVelocidadDeCaida(self.velocidadDeCaida())
-    }
-
     method puedeSubirDeNivel() {
         return puntuacion.puntos() > self.umbralParaSiguienteNivel()
+    }
+
+    method actualizarDificultad() {
+        juego.removerMecanicas()
+        juego.aplicarMecanicas()
+        fallingObjectsDelJuego.añadirItemAlAzar()
     }
 
     method siguienteNivel()

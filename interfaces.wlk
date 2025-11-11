@@ -41,7 +41,7 @@ object juego {
 
     method inicializar() {
         configuraciones.cambiarEstadoA(self)
-        nivel.inicializar()
+        nivel.añadirFondo()
         self.añadirVisuales()
         self.aplicarMecanicas()
         self.alternarEstado()

@@ -66,8 +66,6 @@ class FallingObject {
 }
 
 object fallingObjectsDelJuego {
-    var probabilidadDeSpawneoBasura = 25
-    var velocidadDeCaida = 1
 
     method fallingObjectsActivos() {
         return comidaDelJuego.comidaActiva() + basuraDelJuego.basuraActiva()
@@ -78,13 +76,9 @@ object fallingObjectsDelJuego {
         basuraDelJuego.removerTodo()
     }
 
-    method modificarSpawneoBasura(probabilidadNueva) {
-        probabilidadDeSpawneoBasura = probabilidadNueva
-    }
+    //method velocidadDeCaida() { return juego.nivel().velocidadDeCaida() }
 
-    method modificarVelocidadDeCaida(velocidadNueva) {
-        velocidadDeCaida = velocidadNueva
-    }
+    //method probabilidadDeSpawneoBasura() { return juego.nivel().probabilidad() }
 
     method añadirItemAlAzar() {
         game.onTick(1000, "añadir item al azar", {
@@ -96,7 +90,7 @@ object fallingObjectsDelJuego {
         const probabilidad = 0.randomUpTo(100)
 
         juego.validarEstado()
-        if(probabilidad.between(0, probabilidadDeSpawneoBasura)) {
+        if(probabilidad.between(0, 25)) {
             basuraDelJuego.añadirBasuraAlAzar()
         }
         else {
@@ -105,23 +99,20 @@ object fallingObjectsDelJuego {
     }
 
     method aplicarGravedad() {
-        game.onTick(self.tiempoPorVelocidadDeCaida(), "aplicar gravedad", 
+        game.onTick(1000, "aplicar gravedad", 
             { self.fallingObjectsActivos().forEach({ item => item.caer() }) }
         )
     }
 
-    method tiempoPorVelocidadDeCaida() {
-        return 1000 / velocidadDeCaida
-    }
-
     method aplicarAnimaciones() {
-        game.onTick(self.tiempoDeCambioEnAnimacion(), "aplicar animaciones", 
+        game.onTick(250, "aplicar animaciones", 
             { self.fallingObjectsActivos().forEach({ item => item.cambiarAlSiguienteEstado() }) }
         )
     }
-    method tiempoDeCambioEnAnimacion() {
-        return self.tiempoPorVelocidadDeCaida() / 4
-    }
+    
+    //method tiempoDeCambioEnAnimacion() { return 1000 / 4 }
+
+    //method tiempoPorVelocidadDeCaida() { return 1000 / self.velocidadDeCaida() }
 
     method aplicarColisiones() {
         game.whenCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
