@@ -70,6 +70,7 @@ object juego {
         game.removeVisual(snorlax)
         game.removeVisual(puntuacion)
         game.removeVisual(vida)
+        nivel.removerFondo()
         fallingObjectsDelJuego.removerTodo()
     }
 

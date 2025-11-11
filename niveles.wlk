@@ -14,6 +14,10 @@ class Nivel {
         game.addVisual(self.fondo())
     }
 
+    method removerFondo() {
+        game.removeVisual(self.fondo())
+    }
+
     method actualizarDificultad() {
         fallingObjectsDelJuego.modificarSpawneoBasura(self.probabilidad())
         fallingObjectsDelJuego.modificarVelocidadDeCaida(self.velocidadDeCaida())

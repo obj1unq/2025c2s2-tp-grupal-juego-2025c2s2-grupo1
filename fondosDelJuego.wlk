@@ -1,5 +1,5 @@
 class Fondo {
-    method position() { return game.origin() }
+    method position() { return game.at(0, -1) } //Para evitar problemas con el whenCollideDo de Snorlax
 
     method image() { return "fondo-" + self.fondo() + ".png" }
 
@@ -7,8 +7,6 @@ class Fondo {
 }
 
 class FondoNivel inherits Fondo {
-    override method position() { return game.at(0, -1) } //Para evitar problemas con el whenCollideDo de Snorlax
-
     override method fondo() { return "nivel-" + self.nivel() }
 
     method nivel() //provisional facil
