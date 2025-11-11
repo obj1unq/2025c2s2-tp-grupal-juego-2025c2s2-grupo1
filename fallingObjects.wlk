@@ -66,6 +66,8 @@ class FallingObject {
 }
 
 object fallingObjectsDelJuego {
+    var probabilidadDeSpawneoBasura = 25
+    var velocidadDeCaida = 1
 
     method fallingObjectsActivos() {
         return comidaDelJuego.comidaActiva() + basuraDelJuego.basuraActiva()
@@ -74,6 +76,14 @@ object fallingObjectsDelJuego {
     method removerTodo() {
         comidaDelJuego.removerTodo()
         basuraDelJuego.removerTodo()
+    }
+
+    method modificarSpawneoBasura(probabilidadNueva) {
+        probabilidadDeSpawneoBasura = probabilidadNueva
+    }
+
+    method modificarVelocidadDeCaida(velocidadNueva) {
+        velocidadDeCaida = velocidadNueva
     }
 
     method añadirItemAlAzar() {
@@ -86,7 +96,7 @@ object fallingObjectsDelJuego {
         const probabilidad = 0.randomUpTo(100)
 
         juego.validarEstado()
-        if(probabilidad.between(0, 50)) {
+        if(probabilidad.between(0, probabilidadDeSpawneoBasura)) {
             basuraDelJuego.añadirBasuraAlAzar()
         }
         else {
@@ -95,15 +105,22 @@ object fallingObjectsDelJuego {
     }
 
     method aplicarGravedad() {
-        game.onTick(1000, "aplicar gravedad", 
+        game.onTick(self.tiempoPorVelocidadDeCaida(), "aplicar gravedad", 
             { self.fallingObjectsActivos().forEach({ item => item.caer() }) }
         )
     }
 
+    method tiempoPorVelocidadDeCaida() {
+        return 1000 / velocidadDeCaida
+    }
+
     method aplicarAnimaciones() {
-        game.onTick(250, "aplicar animaciones", 
+        game.onTick(self.tiempoDeCambioEnAnimacion(), "aplicar animaciones", 
             { self.fallingObjectsActivos().forEach({ item => item.cambiarAlSiguienteEstado() }) }
         )
+    }
+    method tiempoDeCambioEnAnimacion() {
+        return self.tiempoPorVelocidadDeCaida() / 4
     }
 
     method aplicarColisiones() {

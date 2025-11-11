@@ -20,6 +20,8 @@ object snorlaxCapturado {
         snorlax.cambiarEstadoA(self)
         self.aplicarAnimacion()
 
+        self.resetearTransicion()
+
         //Fin animación
         game.schedule(10000, {snorlax.cambiarEstadoA(snorlaxNormal) 
                               self.resetearTransicion()} )
@@ -101,3 +103,11 @@ object snorlaxAdormecido {
 
     method estaInmovilizado() { return false }
 }
+
+/*
+    14.times({
+            var cambioDeFotograma = 500
+            game.schedule(500, {etapaTransicion += 1})
+            cambioDeFotograma += 500
+        })
+*/

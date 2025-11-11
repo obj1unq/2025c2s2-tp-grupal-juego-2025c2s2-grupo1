@@ -2,6 +2,8 @@ import snorlax.*
 import extras.*
 import comida.*
 import basura.*
+import fondosDelJuego.*
+
 describe "snorlax puede moverse" {
     method initialize() {
         game.title("Snorlax")

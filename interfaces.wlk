@@ -3,10 +3,12 @@ import extras.*
 import fallingObjects.*
 import estadosDelJuego.*
 import gameSnorlax.configuraciones
+import fondosDelJuego.*
+import niveles.*
 
 object juego {
     var estado = juegoEnPausa
-    //var nivel = nivelFacil
+    var nivel = nivelFacil
 
     method cambiarEstadoA(estadoNuevo) {
         estado = estadoNuevo
@@ -16,15 +18,15 @@ object juego {
 
     method comenzar() {
         pantallaDeInicio.removerFondo()
-        configuraciones.cambiarEstadoA(self)
+        //configuraciones.cambiarEstadoA(self)
         self.configurarTeclas()
-        self.añadirFondo()
         self.inicializar()
     }
 
     method reiniciar() {
         snorlax.reiniciar()
         puntuacion.reiniciar()
+        self.cambiarNivelA(nivelFacil)
         pantallaDeFin.removerFondo()
         self.inicializar()
     }
@@ -38,12 +40,17 @@ object juego {
 
     method inicializar() {
         configuraciones.cambiarEstadoA(self)
+        nivel.inicializar()
         self.añadirVisuales()
         self.aplicarMecanicas()
         self.alternarEstado()
     }
 
     method alternarEstado() { estado.alternarEstado() }
+
+    method cambiarNivelA(_nivel) {
+        nivel = _nivel
+    }
 
     method configurarTeclas() { //detenerse cuando esta en pausa
         keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
@@ -65,8 +72,6 @@ object juego {
         game.removeVisual(vida)
         fallingObjectsDelJuego.removerTodo()
     }
-
-    method añadirFondo() {} //Varia segun el nivel
 
     method aplicarMecanicas() { //detenerse cuando esta en pausa
         fallingObjectsDelJuego.aplicarGravedad()
@@ -131,23 +136,4 @@ object pantallaDeFin inherits PantallaDelJuego {
     override method fondo() { return fondoDeGameOver }
 
     override method jugar() { juego.reiniciar() }
-}
-
-//Fondos de Pantalla
-class Fondo {
-    const property position = game.origin()
-
-    method chocasteConSnorlax() {} //En caso de que snorlax esté en la misma celda donde aparece una pantalla.
-
-    method image() { return self.fondo() }
-
-    method fondo()
-}
-
-object fondoDeInicio inherits Fondo {
-    override method fondo() { return "fondoGameStart.png" }
-}
-
-object fondoDeGameOver inherits Fondo {
-    override method fondo() { return "fondoGameOver.png" }
 }
