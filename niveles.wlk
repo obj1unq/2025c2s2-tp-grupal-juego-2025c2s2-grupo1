@@ -36,13 +36,13 @@ class Nivel {
 
     method probabilidad()  
 
-    method velocidadDeCaida()
+    method tiempo()
 }
 
 object nivelFacil inherits Nivel {
     override method probabilidad() { return 25 }
 
-    override method velocidadDeCaida() { return 1 }
+    override method tiempo() { return 0.5 }
 
     override method fondo() {
         return fondoNivelFacil //temporal
@@ -54,9 +54,9 @@ object nivelFacil inherits Nivel {
 }
 
 object nivelNormal inherits Nivel {
-    override method probabilidad() { return 50 }
+    override method probabilidad() { return 45 }
 
-    override method velocidadDeCaida() { return 2 }
+    override method tiempo() { return 1 }
 
     override method fondo() {
         return fondoNivelNormal //temporal
@@ -68,9 +68,9 @@ object nivelNormal inherits Nivel {
 }
 
 object nivelDificil inherits Nivel {
-    override method probabilidad() { return 75 }
+    override method probabilidad() { return 60 }
 
-    override method velocidadDeCaida() { return 3 }
+    override method tiempo() { return 1.5 }
 
     override method fondo() {
         return fondoNivelFacil //temporal
