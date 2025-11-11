@@ -1,8 +1,10 @@
+import niveles.*
 import snorlax.*
 import extras.*
 import comida.*
 import basura.*
 import fondosDelJuego.*
+import interfaces.*
 
 describe "snorlax puede moverse" {
     method initialize() {
@@ -46,6 +48,18 @@ describe "colisiones de snorlax" {
         game.height(11)
         game.width(7)
         game.cellSize(50)
+    }
+
+    test "nivel" {
+        assert.equals(0, puntuacion.puntos())
+        assert.equals(nivelFacil, juego.nivel())
+
+        puntuacion.puntos(1001)
+        assert.equals(1000, nivelFacil.umbralParaSiguienteNivel())
+        assert.that(nivelFacil.puedeSubirDeNivel())
+
+        juego.cambiarNivelA(juego.nivel().siguienteNivel())
+        assert.equals(nivelNormal, juego.nivel())
     }
 
     test "prueba : hayAlgoColisionando()" {

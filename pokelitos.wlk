@@ -9,8 +9,8 @@ class Pokelito inherits Comida {
     const property puntos = gusto.puntos()
 
     override method comer() {
-        puntuacion.incrementaPuntos(puntos)
         super()
+        puntuacion.incrementaPuntos(puntos)
     }
 
     method nombre() { return "pokelito-" + gusto.nombre() }

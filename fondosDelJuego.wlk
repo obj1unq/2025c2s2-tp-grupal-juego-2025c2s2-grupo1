@@ -31,7 +31,7 @@ object fondoNivelFacil inherits FondoNivel {
 }
 
 object fondoNivelNormal inherits FondoNivel {
-    override method nivel() { return "facil" }
+    override method nivel() { return "prueba" }
 }
 
 object fondoNivelDificil inherits FondoNivel {

@@ -23,7 +23,7 @@ object configuraciones {
         game.height(11)
         game.width(9) // expandir 2 celdas más
         game.cellSize(50)
-        game.boardGround("fondo-prueba.png")
+        game.boardGround("fondo-propuesta.png")
     }
 
     method inicializar() {

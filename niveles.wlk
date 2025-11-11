@@ -1,6 +1,7 @@
 import fallingObjects.*
 import fondosDelJuego.*
 import interfaces.*
+import snorlax.*
 
 class Nivel {
     method fondo() 
@@ -23,6 +24,14 @@ class Nivel {
         fallingObjectsDelJuego.modificarVelocidadDeCaida(self.velocidadDeCaida())
     }
 
+    method puedeSubirDeNivel() {
+        return puntuacion.puntos() > self.umbralParaSiguienteNivel()
+    }
+
+    method siguienteNivel()
+
+    method umbralParaSiguienteNivel()
+
     method probabilidad()  
 
     method velocidadDeCaida()
@@ -36,6 +45,10 @@ object nivelFacil inherits Nivel {
     override method fondo() {
         return fondoNivelFacil //temporal
     }
+
+    override method umbralParaSiguienteNivel() { return 1000 }
+
+    override method siguienteNivel() { return nivelNormal }
 }
 
 object nivelNormal inherits Nivel {
@@ -44,8 +57,12 @@ object nivelNormal inherits Nivel {
     override method velocidadDeCaida() { return 2 }
 
     override method fondo() {
-        return fondoNivelFacil //temporal
+        return fondoNivelNormal //temporal
     }
+
+    override method umbralParaSiguienteNivel() { return 2000 }
+
+    override method siguienteNivel() { return nivelDificil }
 }
 
 object nivelDificil inherits Nivel {
@@ -56,4 +73,8 @@ object nivelDificil inherits Nivel {
     override method fondo() {
         return fondoNivelFacil //temporal
     }
+
+    override method umbralParaSiguienteNivel() { return 10**(20) }
+    
+    override method siguienteNivel() { return nivelFacil }
 }

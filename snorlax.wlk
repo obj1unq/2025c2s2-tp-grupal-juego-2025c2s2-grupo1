@@ -124,9 +124,16 @@ object puntuacion{
     
     method incrementaPuntos(puntosFruta){
         puntos += puntosFruta
+        juego.subirDeNivel()
     } 
 
     method text() { return self.puntos().toString() }
 
     method reiniciar() { puntos = 0 }
+}
+
+object progressNivel {
+    var property position = game.at(7, 6)
+
+    method text() { return juego.nivel().toString() }
 }
