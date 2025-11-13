@@ -5,9 +5,9 @@ class Bota inherits Basura {
     const property puntos = -150
 
     override method dañar() { 
-        super()
         puntuacion.incrementaPuntos(self.puntos())
         snorlax.perderUnaVida()
+        super()
     }
 
     method nombre() { return "bota_" } 

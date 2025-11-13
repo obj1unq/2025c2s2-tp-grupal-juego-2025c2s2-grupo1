@@ -87,7 +87,7 @@ object snorlax{
     }
 
     method validarFaltanVidas() {
-        if (self.vidas() == 3) {
+        if (vidas == 3) {
             self.error("Snorlax tiene vidas suficientes.")
         }
     }

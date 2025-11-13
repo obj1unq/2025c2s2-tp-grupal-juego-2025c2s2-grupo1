@@ -19,7 +19,6 @@ object juego {
 
     method comenzar() {
         pantallaDeInicio.removerFondo()
-        //configuraciones.cambiarEstadoA(self)
         self.configurarTeclas()
         self.inicializar()
     }
@@ -28,6 +27,7 @@ object juego {
         snorlax.reiniciar()
         puntuacion.reiniciar()
         self.cambiarNivelA(nivelFacil)
+        nivel.removerFondo() // por alguna razón, tengo que remover el fondo del nivel facil pese a que se remueve al subir de nivel.
         pantallaDeFin.removerFondo()
         self.inicializar()
     }
@@ -81,7 +81,7 @@ object juego {
         nivel.removerFondo()
     }
 
-    method aplicarMecanicas() { //detenerse cuando esta en pausa
+    method aplicarMecanicas() {
         fallingObjectsDelJuego.aplicarGravedad()
         fallingObjectsDelJuego.aplicarAnimaciones()
         fallingObjectsDelJuego.aplicarColisiones()

@@ -16,7 +16,6 @@ class Basura inherits FallingObject {
     override method chocasteConSnorlax() { 
         self.validarChoque()
         snorlax.recibirDaño()
-        
     }
 
     method validarChoque() {
@@ -89,11 +88,18 @@ object basuraDelJuego {
     }
 
     method eliminarBasuraDelJuego(basura) {
+        self.validarExistencia(basura)
         basuraActiva.remove(basura)
         game.removeVisual(basura)
     }
 
     method removerTodo() {
         basuraActiva.forEach({basura => self.eliminarBasuraDelJuego(basura)})
+    }
+
+    method validarExistencia(basura) {
+        if (not basuraActiva.contains(basura)) {
+            self.error("No esta la basura en el juego.")
+        }
     }
 }
