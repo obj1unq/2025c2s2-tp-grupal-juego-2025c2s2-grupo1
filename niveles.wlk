@@ -45,7 +45,7 @@ object nivelFacil inherits Nivel {
     override method tiempo() { return 0.5 }
 
     override method fondo() {
-        return fondoNivelFacil //temporal
+        return fondoNivelFacil
     }
 
     override method umbralParaSiguienteNivel() { return 1000 }
@@ -59,7 +59,7 @@ object nivelNormal inherits Nivel {
     override method tiempo() { return 1 }
 
     override method fondo() {
-        return fondoNivelNormal //temporal
+        return fondoNivelNormal
     }
 
     override method umbralParaSiguienteNivel() { return 2000 }
@@ -73,7 +73,7 @@ object nivelDificil inherits Nivel {
     override method tiempo() { return 1.5 }
 
     override method fondo() {
-        return fondoNivelFacil //temporal
+        return fondoNivelDificil
     }
 
     override method umbralParaSiguienteNivel() { return 10**(20) }
