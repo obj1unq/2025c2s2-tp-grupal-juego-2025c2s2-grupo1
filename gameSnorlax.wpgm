@@ -4,7 +4,7 @@ import comida.*
 import snorlax.*
 import extras.*
 import basura.*
-import interfaces.*
+import fasesDelJuego.*
 
 program snorlaxGame{
     configuraciones.sobreElTablero()

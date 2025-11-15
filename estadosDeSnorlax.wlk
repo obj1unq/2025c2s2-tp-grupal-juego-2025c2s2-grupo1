@@ -58,10 +58,6 @@ object snorlaxComiendo inherits EstadoSimple {
     override method nombre() { return "come" }
 
     override method duracion() { return 500 }
-
-    method hayCelda(direccion) {
-        return direccion.siguiente(self).x().between(0, game.width()-2)
-    } //revisar
 }
 
 object snorlaxRecibiendoDaño inherits EstadoSimple {

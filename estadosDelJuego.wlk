@@ -1,5 +1,5 @@
 import fallingObjects.*
-import interfaces.*
+import fasesDelJuego.*
 import gameSnorlax.configuraciones
 
 object juegoInGame {

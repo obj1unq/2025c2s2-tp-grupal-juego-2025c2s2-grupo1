@@ -1,6 +1,6 @@
 import fallingObjects.*
 import fondosDelJuego.*
-import interfaces.*
+import fasesDelJuego.*
 import snorlax.*
 
 class Nivel {

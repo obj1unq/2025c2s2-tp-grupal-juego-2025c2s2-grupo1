@@ -11,7 +11,7 @@ import pokeBayas.*
 import pokebola.*
 import pokeflauta.*
 import pokelitos.*
-import interfaces.*
+import fasesDelJuego.*
 import randomizer.*
 import estadosDelJuego.*
 

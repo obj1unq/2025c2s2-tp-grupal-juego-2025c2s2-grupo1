@@ -3,7 +3,7 @@ import snorlax.*
 import basura.*
 import comida.*
 import randomizer.*
-import interfaces.*
+import fasesDelJuego.*
 
 class FallingObject {
     var property estado = primerEstado

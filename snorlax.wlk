@@ -2,7 +2,7 @@ import extras.*
 import comida.*
 import basura.*
 import estadosDeSnorlax.*
-import interfaces.*
+import fasesDelJuego.*
 
 
 object snorlax{
