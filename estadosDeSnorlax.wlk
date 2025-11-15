@@ -1,6 +1,6 @@
 import snorlax.*
 
-object snorlaxNormal {
+class EstadoBase {
     method nombre() { return "normal" }
 
     method animacion() {}
@@ -10,12 +10,23 @@ object snorlaxNormal {
     method estaInmovilizado() { return false }
 }
 
-object snorlaxCapturado {
+const snorlaxNormal = new EstadoBase()
+
+class EstadoSimple inherits EstadoBase {
+    override method animacion() {
+        snorlax.cambiarEstadoA(self)
+        game.schedule(self.duracion(), {snorlax.cambiarEstadoA(snorlaxNormal)})
+    }
+
+    method duracion()
+}
+
+object snorlaxCapturado inherits EstadoBase {
     var etapaTransicion = 0
 
-    method nombre() { return "capturado-_" + etapaTransicion + "" }
+    override method nombre() { return "capturado-_" + etapaTransicion + "" }
 
-    method animacion() {
+    override method animacion() {
         //Inicio animación
         snorlax.cambiarEstadoA(self)
         self.aplicarAnimacion()
@@ -40,69 +51,43 @@ object snorlaxCapturado {
         etapaTransicion = 0
     }
 
-    method validarAdormecimiento() {}
-
-    method estaInmovilizado() { return true }
+    override method estaInmovilizado() { return true }
 }
 
-object snorlaxComiendo {
-    method nombre() { return "come" }
+object snorlaxComiendo inherits EstadoSimple {
+    override method nombre() { return "come" }
 
-    method animacion() {
-        snorlax.cambiarEstadoA(self)
-        game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
-    }
-
-    method validarAdormecimiento() {}
+    override method duracion() { return 500 }
 
     method hayCelda(direccion) {
         return direccion.siguiente(self).x().between(0, game.width()-2)
-    }
-
-    method estaInmovilizado() { return false }
+    } //revisar
 }
 
-object snorlaxRecibiendoDaño {
-    method nombre() { return "daño" }
+object snorlaxRecibiendoDaño inherits EstadoSimple {
+    override method nombre() { return "daño" }
 
-    method animacion() {
-        snorlax.cambiarEstadoA(self)
-        game.schedule(1000, {snorlax.cambiarEstadoA(snorlaxNormal)})
-    }
-
-    method validarAdormecimiento() {}
-
-    method estaInmovilizado() { return false }
+    override method duracion() { return 1000 }
 }
 
-object snorlaxPerdedor {
-    method nombre() { return "perdedor" }
+object snorlaxPerdedor inherits EstadoSimple {
+    override method nombre() { return "perdedor" }
 
-    method animacion() {
-        snorlax.cambiarEstadoA(snorlaxRecibiendoDaño)
-        game.schedule(1000, {snorlax.cambiarEstadoA(self)})
-    }
-
-    method validarAdormecimiento() {}
-
-    method estaInmovilizado() { return false }
+    override method duracion() { return 1000 }
 }
 
+object snorlaxAdormecido inherits EstadoSimple {
+    override method nombre() { return "adormecido" }
 
-object snorlaxAdormecido {
-    method nombre() { return "adormecido" }
+    override method duracion() { return 8000 }
 
-    method animacion() {
-        snorlax.cambiarEstadoA(self)
-        game.schedule(8000, {snorlax.cambiarEstadoA(snorlaxNormal)})
-    }
-
-    method validarAdormecimiento() {
+    override method validarAdormecimiento() {
         self.error("No puede comer mientras esta con sueño.")
     }
-
-    method estaInmovilizado() { return false }
 }
+
+object snorlaxGanaNivel { }
+
 
 /*
     14.times({

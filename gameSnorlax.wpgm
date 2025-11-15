@@ -13,8 +13,6 @@ program snorlaxGame{
     game.start()
 }
 
-
-
 object configuraciones {
     var estado = pantallaDeInicio
 
@@ -34,7 +32,7 @@ object configuraciones {
         estado = _estado
     }
 
-    method iniciarJuego() {
+    method iniciarJuego() { //Se utilizar polimorfismo aquí para el botón ENTER.
         estado.jugar()
     }
 }

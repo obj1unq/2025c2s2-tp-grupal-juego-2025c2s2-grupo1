@@ -8,22 +8,26 @@ import niveles.*
 
 object juego {
     var estado = juegoEnPausa
-    var property nivel = nivelFacil
+    var nivel = nivelFacil
 
-    method cambiarEstadoA(estadoNuevo) {
-        estado = estadoNuevo
-    }
+    //metodos setter y getter
+    method cambiarEstadoA(estadoNuevo) { estado = estadoNuevo }
 
     method estado() { return estado }
     method nivel() { return nivel }
 
-    method comenzar() {
+    method alternarEstado() { estado.alternarEstado() }
+
+    method cambiarNivelA(_nivel) { nivel = _nivel }
+
+    //metodos de cambio de fase del juego.
+    method comenzar() { //Cambia de Pantalla de Inicio a Juego (inGame)
         pantallaDeInicio.removerFondo()
         self.configurarTeclas()
         self.inicializar()
     }
 
-    method reiniciar() {
+    method reiniciar() { //Cambia de Pantalla de GameOver a Juego (inGame)
         snorlax.reiniciar()
         puntuacion.reiniciar()
         self.cambiarNivelA(nivelFacil)
@@ -32,11 +36,22 @@ object juego {
         self.inicializar()
     }
 
-    method finalizar() {
+    method finalizar() { //Cambia de Juego(inGame) a Pantalla de GameOver (juegoEnPausa)
         self.alternarEstado()
         self.removerTodosLosVisuales()
         self.removerMecanicas()
         pantallaDeFin.inicializar()
+    }
+
+    method subirDeNivel() {
+        self.validarSubirDeNivel()
+        self.cambiarNivelA(nivel.siguienteNivel())
+        //self.alternarEstado()
+        self.removerVisualesActivos()
+        //game.schedule(1000, {nivel.inicializar()})
+        nivel.inicializar()
+        //self.alternarEstado()
+        game.addVisual(snorlax)
     }
 
     method inicializar() {
@@ -47,17 +62,12 @@ object juego {
         self.alternarEstado()
     }
 
-    method alternarEstado() { estado.alternarEstado() }
-
-    method cambiarNivelA(_nivel) {
-        nivel = _nivel
-    }
-
+    //configuraciones del juego
     method configurarTeclas() { //detenerse cuando esta en pausa
         keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
         keyboard.d().onPressDo({snorlax.mover(derecha)})
         keyboard.space().onPressDo({snorlax.comer()})
-        //Se intentó añadir boton de pausar y reanudar pero no se logró solucionar las bug con las animaciones.
+        //Se intentó añadir boton de pausar y reanudar pero no se logró solucionar el bug con las animaciones.
     }
 
     method añadirVisuales() {
@@ -93,16 +103,9 @@ object juego {
         game.removeTickEvent("añadir item al azar")
     }
 
+    //validaciones
     method jugar() { //No me convence pues ya está inicializar(). Este metodo lo añadí por polimorfismo.
         self.error("El juego ya está corriendo.")
-    }
-
-    method subirDeNivel() {
-        self.validarSubirDeNivel()
-        self.cambiarNivelA(nivel.siguienteNivel())
-        self.removerVisualesActivos()
-        nivel.inicializar()
-        game.addVisual(snorlax)
     }
 
     method validarEstado() {

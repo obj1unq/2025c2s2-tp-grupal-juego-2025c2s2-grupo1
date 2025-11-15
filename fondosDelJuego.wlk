@@ -7,33 +7,21 @@ class Fondo {
 }
 
 class FondoNivel inherits Fondo {
-    override method fondo() { return "nivel-" + self.nivel() }
+    const property nombreNivel
 
-    method nivel() //provisional facil
+    override method fondo() { return "nivel-" + nombreNivel }
 }
 
 class FondoPantalla inherits Fondo {
-    override method fondo() { return "game-" + self.pantalla() }
+    const property nombrePantalla
 
-    method pantalla()
+    override method fondo() { return "game-" + nombrePantalla }
 }
 
-object fondoDeInicio inherits FondoPantalla {
-    override method pantalla() { return "start" }
-}
+//Fondos del juego
+const fondoNivelFacil   = new FondoNivel( nombreNivel = "facil"   )
+const fondoNivelNormal  = new FondoNivel( nombreNivel = "normal"  )
+const fondoNivelDificil = new FondoNivel( nombreNivel = "dificil" )
 
-object fondoDeGameOver inherits FondoPantalla {
-    override method pantalla() { return "over" }
-}
-
-object fondoNivelFacil inherits FondoNivel {
-    override method nivel() { return "facil" }
-}
-
-object fondoNivelNormal inherits FondoNivel {
-    override method nivel() { return "normal" }
-}
-
-object fondoNivelDificil inherits FondoNivel {
-    override method nivel() { return "dificil" }
-}
+const fondoDeInicio     = new FondoPantalla( nombrePantalla = "start" )
+const fondoDeGameOver   = new FondoPantalla( nombrePantalla = "over"  )

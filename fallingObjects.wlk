@@ -76,9 +76,9 @@ object fallingObjectsDelJuego {
         basuraDelJuego.removerTodo()
     }
 
-    method tiempoDeCaida() { return 1000 / juego.nivel().tiempo() }
+    method tiempoDeCaida() { return 1000 / juego.nivel().tiempoCaida() }
 
-    method probabilidadDeSpawneoBasura() { return juego.nivel().probabilidad() }
+    method probabilidadDeSpawneoBasura() { return juego.nivel().probabilidadBasura() }
 
     method añadirItemAlAzar() {
         game.onTick(self.tiempoDeCaida(), "añadir item al azar", {

@@ -4,24 +4,33 @@ import interfaces.*
 import snorlax.*
 
 class Nivel {
-    method fondo() 
+    const property fondo
+    const property probabilidadBasura
+    const property tiempoCaida
+    const property siguienteNivel
+    const property puntosMinimosParaNextLevel
+    const property puedeSubirNivel = true
+    const property nombre
 
     method inicializar() {
         self.añadirFondo()
         self.actualizarDificultad()
     }
 
-
     method añadirFondo() {
-        game.addVisual(self.fondo())
+        game.addVisual(fondo)
     }
 
     method removerFondo() {
-        game.removeVisual(self.fondo())
+        game.removeVisual(fondo)
     }
 
     method puedeSubirDeNivel() {
-        return puntuacion.puntos() > self.umbralParaSiguienteNivel()
+        return puedeSubirNivel && self.hayMinimoDePuntos()
+    }
+
+    method hayMinimoDePuntos() {
+        return puntuacion.puntos() > puntosMinimosParaNextLevel
     }
 
     method actualizarDificultad() {
@@ -29,54 +38,33 @@ class Nivel {
         juego.aplicarMecanicas()
         fallingObjectsDelJuego.añadirItemAlAzar()
     }
-
-    method siguienteNivel()
-
-    method umbralParaSiguienteNivel()
-
-    method probabilidad()  
-
-    method tiempo()
 }
 
-object nivelFacil inherits Nivel {
-    override method probabilidad() { return 25 }
+//Niveles del juego
+const nivelFacil = new Nivel(
+    nombre =                        "Facil",
+    fondo =                 fondoNivelFacil, 
+    probabilidadBasura =                 25, 
+    tiempoCaida =                       0.5, 
+    siguienteNivel =            nivelNormal,
+    puntosMinimosParaNextLevel =       1000
+)
 
-    override method tiempo() { return 0.5 }
+const nivelNormal = new Nivel(
+    nombre =                       "Normal",
+    fondo =                fondoNivelNormal, 
+    probabilidadBasura =                 45, 
+    tiempoCaida =                         1, 
+    siguienteNivel =           nivelDificil,
+    puntosMinimosParaNextLevel =       2000
+)
 
-    override method fondo() {
-        return fondoNivelFacil
-    }
-
-    override method umbralParaSiguienteNivel() { return 1000 }
-
-    override method siguienteNivel() { return nivelNormal }
-}
-
-object nivelNormal inherits Nivel {
-    override method probabilidad() { return 45 }
-
-    override method tiempo() { return 1 }
-
-    override method fondo() {
-        return fondoNivelNormal
-    }
-
-    override method umbralParaSiguienteNivel() { return 2000 }
-
-    override method siguienteNivel() { return nivelDificil }
-}
-
-object nivelDificil inherits Nivel {
-    override method probabilidad() { return 60 }
-
-    override method tiempo() { return 1.5 }
-
-    override method fondo() {
-        return fondoNivelDificil
-    }
-
-    override method umbralParaSiguienteNivel() { return 10**(20) }
-    
-    override method siguienteNivel() { return nivelFacil }
-}
+const nivelDificil = new Nivel(
+    nombre =                      "Dificil",
+    fondo =               fondoNivelDificil, 
+    probabilidadBasura =                 60, 
+    tiempoCaida =                       1.5, 
+    siguienteNivel =             nivelFacil, // dado que no se puede subir de nivel, no tiene mucho sentido completar esto.
+    puntosMinimosParaNextLevel =   10**(20),
+    puedeSubirNivel =                 false
+)
