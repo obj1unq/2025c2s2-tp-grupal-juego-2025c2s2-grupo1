@@ -18,6 +18,7 @@ object snorlax{
     }
 
     method recibirDaño() {
+        juego.validarEstado()
         self.objetoEnColision().dañar()
         if (self.tieneVidas()) { // no se puede añadir validacion porque interrumpe el flujo.
             snorlaxRecibiendoDaño.animacion()
@@ -58,6 +59,12 @@ object snorlax{
         self.cambiarEstadoA(snorlaxNormal)
     }
     
+    method subirAlSiguienteNivel() {
+        game.schedule(1000, {
+            snorlaxGanaNivel.animacion()
+            juego.cambiarAlSiguienteNivel()
+        })
+    }
 
     //consultas
     method puedeMover(direccion){

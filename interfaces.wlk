@@ -5,6 +5,7 @@ import estadosDelJuego.*
 import gameSnorlax.configuraciones
 import fondosDelJuego.*
 import niveles.*
+import estadosDeSnorlax.*
 
 object juego {
     var estado = juegoEnPausa
@@ -19,6 +20,10 @@ object juego {
     method alternarEstado() { estado.alternarEstado() }
 
     method cambiarNivelA(_nivel) { nivel = _nivel }
+
+    method cambiarAlSiguienteNivel() {
+        self.cambiarNivelA(nivel.siguienteNivel())
+    }
 
     //metodos de cambio de fase del juego.
     method comenzar() { //Cambia de Pantalla de Inicio a Juego (inGame)
@@ -45,13 +50,19 @@ object juego {
 
     method subirDeNivel() {
         self.validarSubirDeNivel()
-        self.cambiarNivelA(nivel.siguienteNivel())
-        //self.alternarEstado()
-        self.removerVisualesActivos()
-        //game.schedule(1000, {nivel.inicializar()})
-        nivel.inicializar()
-        //self.alternarEstado()
-        game.addVisual(snorlax)
+        self.alternarEstado()
+        self.removerMecanicas()
+        snorlax.subirAlSiguienteNivel()
+        self.inicializarNivel()
+    }
+
+    method inicializarNivel() {
+        game.schedule(2000, {
+            self.removerVisualesActivos()
+            nivel.inicializar()
+            self.alternarEstado()
+            game.addVisual(snorlax)
+        })
     }
 
     method inicializar() {

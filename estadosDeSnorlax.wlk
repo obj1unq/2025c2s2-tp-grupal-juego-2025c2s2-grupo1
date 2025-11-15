@@ -86,13 +86,8 @@ object snorlaxAdormecido inherits EstadoSimple {
     }
 }
 
-object snorlaxGanaNivel { }
+object snorlaxGanaNivel inherits EstadoSimple { 
+    override method nombre() { return "gana" }
 
-
-/*
-    14.times({
-            var cambioDeFotograma = 500
-            game.schedule(500, {etapaTransicion += 1})
-            cambioDeFotograma += 500
-        })
-*/
+    override method duracion() { return 1000 }
+}
