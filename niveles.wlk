@@ -30,7 +30,7 @@ class Nivel {
     }
 
     method hayMinimoDePuntos() {
-        return puntuacion.puntos() > puntosMinimosParaNextLevel
+        return puntuacion.puntos() >= puntosMinimosParaNextLevel
     }
 
     method actualizarDificultad() {
@@ -47,7 +47,7 @@ const nivelFacil = new Nivel(
     probabilidadBasura =                 25, 
     tiempoCaida =                       0.5, 
     siguienteNivel =            nivelNormal,
-    puntosMinimosParaNextLevel =       1000
+    puntosMinimosParaNextLevel =       3000
 )
 
 const nivelNormal = new Nivel(
@@ -56,7 +56,7 @@ const nivelNormal = new Nivel(
     probabilidadBasura =                 45, 
     tiempoCaida =                         1, 
     siguienteNivel =           nivelDificil,
-    puntosMinimosParaNextLevel =       2000
+    puntosMinimosParaNextLevel =       6000
 )
 
 const nivelDificil = new Nivel(

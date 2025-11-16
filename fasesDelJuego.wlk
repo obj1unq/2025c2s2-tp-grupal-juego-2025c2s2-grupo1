@@ -85,7 +85,8 @@ object juego {
         game.addVisual(snorlax)
         game.addVisual(puntuacion)
         game.addVisual(vida)
-        game.addVisual(progressNivel)
+        game.addVisual(nivelActual)
+        game.addVisual(progressLevel)
         fallingObjectsDelJuego.añadirItemAlAzar() //detenerse cuando esta en pausa
     }
 
@@ -93,7 +94,8 @@ object juego {
         self.removerVisualesActivos()
         game.removeVisual(puntuacion)
         game.removeVisual(vida)
-        game.removeVisual(progressNivel)
+        game.removeVisual(nivelActual)
+        game.removeVisual(progressLevel)
     }
 
     method removerVisualesActivos() {

@@ -62,6 +62,7 @@ object snorlax{
     method subirAlSiguienteNivel() {
         game.schedule(1000, {
             snorlaxGanaNivel.animacion()
+            progressLevel.reiniciar()
             juego.cambiarAlSiguienteNivel()
         })
     }
@@ -115,6 +116,8 @@ object snorlax{
 
 // Visualizador de vidas
 
+const colorTexto = "FFFFFFFF"
+
 object vida {
     var property position = game.at(7,9)
 
@@ -129,18 +132,50 @@ object puntuacion{
     var property puntos = 0
     var property position = game.at(7,8) 
     
-    method incrementaPuntos(puntosFruta){
-        puntos += puntosFruta
+    method incrementaPuntos(puntosObjetenidos){
+        puntos += puntosObjetenidos
+        progressLevel.incrementarPuntos(puntosObjetenidos)
         juego.subirDeNivel()
     } 
 
     method text() { return self.puntos().toString() }
 
+    method textColor() {return colorTexto }
+
     method reiniciar() { puntos = 0 }
 }
 
-object progressNivel {
-    var property position = game.at(7, 6)
+object nivelActual {
+    var property position = game.at(7, 7)
 
     method text() { return juego.nivel().nombre() }
+
+    method textColor() {return colorTexto }
+}
+
+object progressLevel {
+    var property position = game.at(8, 7)
+    var property puntos = 0
+
+    method text() { return self.progresoActual().toString() + "%" }
+
+    method textColor() {return colorTexto }
+
+    method progresoActual() {
+        return self.porcentajeActual().min(100)
+    }
+
+    method porcentajeActual() {
+        return ((puntos / self.puntosParaSiguienteNivel()) *100).round()
+    }
+
+    method puntosParaSiguienteNivel() {
+        return juego.nivel().puntosMinimosParaNextLevel()
+    }
+
+    method incrementarPuntos(puntosObjetenidos) {
+        puntos += puntosObjetenidos
+    }
+
+    method reiniciar() { puntos = 0 }
 }
