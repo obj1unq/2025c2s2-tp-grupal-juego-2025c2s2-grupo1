@@ -4,7 +4,7 @@ import basura.*
 
 class Pokeflauta inherits Basura {
 
-    method adormecer() { snorlaxAdormecido.animacion() }
+    method adormecer() { snorlaxAdormecido.animar() }
 
     override method chocasteConSnorlax() { 
         self.validarChoque()

@@ -3,7 +3,7 @@ import snorlax.*
 class EstadoBase {
     method nombre() { return "normal" }
 
-    method animacion() {}
+    method animar() {}
 
     method validarAdormecimiento() {}
 
@@ -13,10 +13,17 @@ class EstadoBase {
 const snorlaxNormal = new EstadoBase()
 
 class EstadoSimple inherits EstadoBase {
-    override method animacion() {
-        snorlax.cambiarEstadoA(self)
-        game.schedule(self.duracion(), {snorlax.cambiarEstadoA(snorlaxNormal)})
+    override method animar() {
+        snorlax.cambiarEstadoA(self.estadoAlIniciar())
+        game.schedule(
+            self.duracion(), 
+            {snorlax.cambiarEstadoA( self.estadoAlFinalizar() )}
+        )
     }
+
+    method estadoAlIniciar() { return self }
+
+    method estadoAlFinalizar() { return snorlaxNormal }
 
     method duracion()
 }
@@ -26,7 +33,7 @@ object snorlaxCapturado inherits EstadoBase {
 
     override method nombre() { return "capturado-_" + etapaTransicion + "" }
 
-    override method animacion() {
+    override method animar() {
         //Inicio animación
         snorlax.cambiarEstadoA(self)
         self.aplicarAnimacion()
@@ -70,6 +77,10 @@ object snorlaxPerdedor inherits EstadoSimple {
     override method nombre() { return "perdedor" }
 
     override method duracion() { return 1000 }
+
+    override method estadoAlIniciar() { return snorlaxRecibiendoDaño }
+
+    override method estadoAlFinalizar() { return self }
 }
 
 object snorlaxAdormecido inherits EstadoSimple {

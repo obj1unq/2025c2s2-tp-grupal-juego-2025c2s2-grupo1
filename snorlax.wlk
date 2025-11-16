@@ -13,21 +13,23 @@ object snorlax{
     //acciones
     method mover(direccion){
         juego.validarEstado()
+        self.validarInvencibilidad()
         self.validarMover(direccion)
         position = direccion.siguiente(self)
     }
 
     method recibirDaño() {
         juego.validarEstado()
+        self.validarInvencibilidad()
         self.objetoEnColision().dañar()
         if (self.tieneVidas()) { // no se puede añadir validacion porque interrumpe el flujo.
-            snorlaxRecibiendoDaño.animacion()
+            snorlaxRecibiendoDaño.animar()
         }
         else { self.terminarJuego() }
     }
 
     method terminarJuego() { 
-        snorlaxPerdedor.animacion()
+        snorlaxPerdedor.animar()
         game.schedule(2000, { juego.finalizar() }) 
     }
 
@@ -50,6 +52,8 @@ object snorlax{
 
     method levantarComida(comida) {
         estado.validarAdormecimiento()
+        self.validarInvencibilidad()
+
         comida.cambiarEstadoA(primerEstado)
     }
 
@@ -61,7 +65,7 @@ object snorlax{
     
     method subirAlSiguienteNivel() {
         game.schedule(1000, {
-            snorlaxGanaNivel.animacion()
+            snorlaxGanaNivel.animar()
             progressLevel.reiniciar()
             juego.cambiarAlSiguienteNivel()
         })
@@ -101,7 +105,7 @@ object snorlax{
     }
 
     method validarMover(direccion) {
-        if (not self.puedeMover(direccion) || estado.estaInmovilizado()) {
+        if (not self.puedeMover(direccion)) {
             self.error("No puedo mover.")
         }
     }
@@ -110,6 +114,12 @@ object snorlax{
         estado.validarAdormecimiento()
         if (not self.hayComidaColisionando()) {
             self.error("No hay nada para comer.")
+        }
+    }
+
+    method validarInvencibilidad() {
+        if (self.esInvencible()) {
+            self.error("Soy invencible.")
         }
     }
 }

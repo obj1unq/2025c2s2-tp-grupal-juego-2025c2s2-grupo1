@@ -35,6 +35,7 @@ object juego {
     method reiniciar() { //Cambia de Pantalla de GameOver a Juego (inGame)
         snorlax.reiniciar()
         puntuacion.reiniciar()
+        progressLevel.reiniciar()
         self.cambiarNivelA(nivelFacil)
         nivel.removerFondo() // por alguna razón, tengo que remover el fondo del nivel facil pese a que se remueve al subir de nivel.
         pantallaDeFin.removerFondo()

@@ -65,6 +65,6 @@ const nivelDificil = new Nivel(
     probabilidadBasura =                 60, 
     tiempoCaida =                       1.5, 
     siguienteNivel =             nivelFacil, // dado que no se puede subir de nivel, no tiene mucho sentido completar esto.
-    puntosMinimosParaNextLevel =   10**(20),
+    puntosMinimosParaNextLevel =          1,
     puedeSubirNivel =                 false
 )
