@@ -223,10 +223,49 @@ describe "animaciones" {
         game.width(7)
         game.cellSize(50)
     }
-/*
+
     test "snorlax recibiendo daño" {
         snorlax.cambiarEstadoA(snorlaxRecibiendoDaño)
         assert.equals("snorlax-daño.png", snorlax.image())
     }
-*/
+    test "snorlax comiendo"{
+        snorlax.cambiarEstadoA(snorlaxComiendo)
+        assert.equals("snorlax-come.png", snorlax.image())
+    }
+    test "snorlax capturado"{
+        snorlax.cambiarEstadoA(snorlaxCapturado)
+        assert.equals("snorlax-capturado-_0.png", snorlax.image())
+        snorlaxCapturado.animacion()
+        game.schedule(20000, {assert.equals("snorlax-normal.png", snorlax.image())})
+    }
+    test "snorlax normal" {
+        snorlax.cambiarEstadoA(snorlaxNormal)
+        assert.equals("snorlax-normal.png", snorlax.image())
+    }
+    test "snorlax perdedor"{
+        snorlax.cambiarEstadoA(snorlaxPerdedor)
+        assert.equals("snorlax-perdedor.png", snorlax.image())
+    }
+    test "snorlax adormecido"{
+        snorlax.cambiarEstadoA(snorlaxAdormecido)
+        assert.equals("snorlax-adormecido.png", snorlax.image())
+        game.schedule (8000, {assert.equals("snorlax-normal.png", snorlax.image())})
+    }
+}
+describe "levantar comida" {
+  test "levantar comida" {
+        const comidaALevantar = new Pokelito (position = snorlax.position(), gusto = naranja)
+        
+        comidaALevantar.cambiarEstadoA(segundoEstado)
+        snorlax.levantarComida(comidaALevantar)
+
+        assert.equals(primerEstado, comidaALevantar.estado())
+        assert.equals("pokelito-naranja_0.png", comidaALevantar.image())
+  }
+}
+describe "efectos a snorlax"{
+    test "adormercer"{
+        snorlax.cambiarEstadoA(snorlaxAdormecido)
+        assert.throwsException({ snorlax.estado.validarAdormecimiento() })
+    }
 }
