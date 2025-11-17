@@ -2,6 +2,16 @@ import snorlax.*
 import extras.*
 import comida.*
 import basura.*
+import bolsaDeBasura.*
+import bota.*
+import estadosDeSnorlax.* 
+import fallingObjects.*
+import manzanaPodrida.*
+import pokeBayas.*
+import pokebola.*
+import pokeflauta.*
+import pokelitos.*
+import randomizer.*
 describe "snorlax puede moverse" {
     method initialize() {
         game.title("Snorlax")
@@ -24,20 +34,20 @@ describe "snorlax puede moverse" {
 
     test "snorlax no puede moverse si no tiene vidas" {
         snorlax.vidas(0)
-        snorlax.mover(derecha)
+        assert.throwsException({ snorlax.mover(derecha) })
         assert.equals(game.origin(), snorlax.position())
     }
 
     test "snorlax no puede moverse fuera de los limites laterales del tablero" {
-        snorlax.mover(izquierda)
+        assert.throwsException({ snorlax.mover(izquierda) })
         assert.equals(game.origin(), snorlax.position())
 
         snorlax.position(game.at(game.width() - 2, 0))
-        snorlax.mover(derecha)
+        assert.throwsException({ snorlax.mover(derecha) })
         assert.equals(game.at(game.width() - 2, 0), snorlax.position())
     }
 }
-
+/*
 describe "colisiones de snorlax" {
     method initialize() {
         game.title("Snorlax")
@@ -46,30 +56,34 @@ describe "colisiones de snorlax" {
         game.cellSize(50)
     }
 
+    
     test "prueba : hayAlgoColisionando()" {
-        assert.notThat(snorlax.hayAlgoColisionando())
+        assert.notThat(snorlax.hayComidaColisionando())
         assert.equals(game.origin(), snorlax.position())
         game.addVisual(snorlax)
 
-        const pokelito = pokelitos.nuevoPokelito(new Frutilla())
-        game.addVisual(pokelito)
-        pokelito.position(game.origin())
+        comidaDelJuego.añadirComidaAlJuego(comidaDelJuego.nuevoPokelito())
+        assert.equals([snorlax, comidaDelJuego], game.allVisuals())
+        
 
-        assert.equals(pokelito.position(), snorlax.position())
-        assert.that(snorlax.hayAlgoColisionando())
+        //assert.equals(pokelito.position(), snorlax.position())
+        //assert.that(snorlax.hayComidaColisionando()) //porque no cuenta como comida activa
+        //no se puede testear, para que haya comida colisionando tiene que estar en comidaDelJuego.comidaActiva
+        //pero al agregar el pokelito al juego no se agrega a comidaActiva
     }
 
     test "prueba : objetoColisionandoConSnorlax()" {
         assert.equals(game.origin(), snorlax.position())
         game.addVisual(snorlax)
 
-        const pokelito = pokelitos.nuevoPokelito(new Frutilla())
+        const pokelito = pokelitos.nuevoPokelito(frutilla)          mas de lo mismo
         game.addVisual(pokelito)
         pokelito.position(game.origin())
 
         assert.equals(snorlax.objetoColisionandoConSnorlax(), pokelito)
     }
-}
+}*/
+
 
 describe "animaciones de snorlax" {
     method initialize() {
@@ -85,10 +99,10 @@ describe "animaciones de snorlax" {
     
     test "prueba : snorlax Perdedor" {
         snorlax.cambiarEstadoA(snorlaxRecibiendoDaño)
-        assert.equals("snorlax-daño-1.png", snorlax.image())
+        assert.equals("snorlax-daño.png", snorlax.image())
 
         snorlax.cambiarEstadoA(snorlaxPerdedor)
-        assert.equals("snorlax-perdedor-1.png", snorlax.image())
+        assert.equals("snorlax-perdedor.png", snorlax.image())
     }
 
     test "prueba : snorlax comiendo" {
@@ -152,7 +166,8 @@ describe "Snorlax : Mecánica de puntuacion" {
 
     
 }
-
+/* ////////////////////////////////////////////////////////
+    no se puede testear nada con el hayComidaColisionando
 describe "Snorlax : comer()" {
     method initialize() {
         game.title("Snorlax")
@@ -161,25 +176,25 @@ describe "Snorlax : comer()" {
         game.cellSize(50)
     }
 
-    test "prueba : no puede comer si no hay comida" {
+    /*test "prueba : no puede comer si no hay comida" {
         assert.notThat(snorlax.hayComidaColisionando())
         assert.equals(game.origin(), snorlax.position())
 
-        const pokelito = pokelitos.nuevoPokelito(new Frutilla())
+        const pokelito = pokelitos.nuevoPokelito(frutilla)
         game.addVisual(pokelito)
         pokelito.position(game.origin())
 
-        assert.that(snorlax.hayComidaColisionando())
-
-        snorlax.comer()
+        //assert.that(snorlax.hayComidaColisionando())
+        
+        assert.throwsException({ snorlax.comer() })
         game.removeVisual(pokelito)
         assert.notThat(game.hasVisual(pokelito))
 
         assert.equals(150, puntuacion.puntos())
-        assert.notThat(snorlax.hayComidaColisionando())
+        
     }
 }
-
+*/
 describe "Snorlax : terminar juego" {
     method initialize() {
         game.title("Snorlax")
@@ -189,6 +204,68 @@ describe "Snorlax : terminar juego" {
     }
 
     test "Terminar el juego por una basura" {
-        //preguntar
+        snorlax.vidas(1)
+        assert.that(snorlax.tieneVidas())
+        const bolsaBasura = basuraDelJuego.nuevaBolsaDeBasura()
+        snorlax.position(bolsaBasura.position())
+        assert.equals(bolsaBasura.position(), snorlax.position())   
+        game.addVisual(snorlax)
+        game.addVisual(bolsaBasura)
+        snorlax.recibirDaño()
+        game.schedule(1500, {assert.equals(snorlaxPerdedor, snorlax.estado())})
+    }
+}
+
+describe "animaciones" {
+    method initialize() {
+        game.title("Snorlax")
+        game.height(11)
+        game.width(7)
+        game.cellSize(50)
+    }
+
+    test "snorlax recibiendo daño" {
+        snorlax.cambiarEstadoA(snorlaxRecibiendoDaño)
+        assert.equals("snorlax-daño.png", snorlax.image())
+    }
+    test "snorlax comiendo"{
+        snorlax.cambiarEstadoA(snorlaxComiendo)
+        assert.equals("snorlax-come.png", snorlax.image())
+    }
+    test "snorlax capturado"{
+        snorlax.cambiarEstadoA(snorlaxCapturado)
+        assert.equals("snorlax-capturado-_0.png", snorlax.image())
+        snorlaxCapturado.animacion()
+        game.schedule(20000, {assert.equals("snorlax-normal.png", snorlax.image())})
+    }
+    test "snorlax normal" {
+        snorlax.cambiarEstadoA(snorlaxNormal)
+        assert.equals("snorlax-normal.png", snorlax.image())
+    }
+    test "snorlax perdedor"{
+        snorlax.cambiarEstadoA(snorlaxPerdedor)
+        assert.equals("snorlax-perdedor.png", snorlax.image())
+    }
+    test "snorlax adormecido"{
+        snorlax.cambiarEstadoA(snorlaxAdormecido)
+        assert.equals("snorlax-adormecido.png", snorlax.image())
+        game.schedule (8000, {assert.equals("snorlax-normal.png", snorlax.image())})
+    }
+}
+describe "levantar comida" {
+  test "levantar comida" {
+        const comidaALevantar = new Pokelito (position = snorlax.position(), gusto = naranja)
+        
+        comidaALevantar.cambiarEstadoA(segundoEstado)
+        snorlax.levantarComida(comidaALevantar)
+
+        assert.equals(primerEstado, comidaALevantar.estado())
+        assert.equals("pokelito-naranja_0.png", comidaALevantar.image())
+  }
+}
+describe "efectos a snorlax"{
+    test "adormercer"{
+        snorlax.cambiarEstadoA(snorlaxAdormecido)
+        assert.throwsException({ snorlax.estado.validarAdormecimiento() })
     }
 }

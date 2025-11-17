@@ -17,7 +17,7 @@ class Pokelito inherits Comida {
 
     override method image() { return self.nombre() + estado.nivel() + ".png" }
 }
-
+// gustos de pokelitos
 object frutilla {
     const property puntos = 150
 
