@@ -7,10 +7,10 @@ class Baya inherits Comida {
     const property gusto
     const property puntos = gusto.puntos()
 
-    override method comer() {
-        super()
-        puntuacion.incrementaPuntos(puntos)
+    override method comer() { //No alterar la secuencia dado que puede generar Bug.
         snorlax.ganarUnaVida()
+        super()
+        puntuacion.incrementaPuntos(self.puntos())
     }
 
     method nombre() { return "baya-" + gusto.nombre() }
