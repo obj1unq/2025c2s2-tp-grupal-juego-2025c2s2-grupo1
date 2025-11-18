@@ -15,6 +15,7 @@ import fasesDelJuego.*
 import randomizer.*
 import estadosDelJuego.*
 import score.*
+import variantesComida.*
 
 describe "snorlax puede moverse" {
     method initialize() {
@@ -281,7 +282,7 @@ describe "animaciones" {
 }
 describe "levantar comida" {
   test "levantar comida" {
-        const comidaALevantar = new Pokelito (position = snorlax.position(), gusto = naranja)
+        const comidaALevantar = new Pokelito (position = snorlax.position(), variante = gustoNaranja)
         
         comidaALevantar.cambiarEstadoA(segundoEstado)
         snorlax.levantarComida(comidaALevantar)

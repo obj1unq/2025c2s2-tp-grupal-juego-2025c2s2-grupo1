@@ -17,7 +17,7 @@ class FallingObject {
     }
 
     method cambiarAlSiguienteEstado() {
-        self.validarVidas()
+        snorlax.validarVidas()
         estado.proximoEstado(self) 
     }
 
@@ -55,12 +55,6 @@ class FallingObject {
             self.eliminarDelJuegoEn(1500)
         }
     }
-
-    method validarVidas() {
-        if (!snorlax.tieneVidas()) {
-            self.error("Snorlax no tiene mas vidas.")
-        }
-    }
 }
 
 object fallingObjectsDelJuego {
@@ -88,6 +82,7 @@ object fallingObjectsDelJuego {
         const probabilidad = 0.randomUpTo(100)
 
         juego.validarEstado()
+        snorlax.validarVidas()
         if(probabilidad.between(0, self.probabilidadDeSpawneoBasura())) {
             basuraDelJuego.añadirBasuraAlAzar()
         }

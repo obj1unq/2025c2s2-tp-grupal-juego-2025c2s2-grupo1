@@ -1,6 +1,8 @@
 import snorlax.*
 import fasesDelJuego.*
 
+const colorTexto = "FFFFFFFF"
+
 //Visualizadores relacionados a la puntuación
 object puntuacion {
     var property puntos = 0
