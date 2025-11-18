@@ -33,7 +33,7 @@ object snorlax{
         game.schedule(2000, { juego.finalizar() }) 
     }
 
-    method comer(){
+    method comer() {
         juego.validarEstado()
         self.validarComer()
         self.objetoEnColision().comer()
@@ -41,9 +41,8 @@ object snorlax{
 
     method perderUnaVida() { vidas -= 1 }
     
-    method ganarUnaVida() { 
-        self.validarFaltanVidas()
-        vidas += 1
+    method ganarUnaVida() { //No se puede añadir validacion dado que interrumpe flujo en comer()
+        if (not self.tieneVidaLlena()) { vidas += 1 }
     }
 
     method cambiarEstadoA(estadoNuevo) { 
@@ -90,6 +89,10 @@ object snorlax{
 
     method image() {
         return "snorlax-" + estado.nombre() + ".png"
+    }
+
+    method tieneVidaLlena() {
+        return vidas == 3
     }
 
     method validarVidas() {
