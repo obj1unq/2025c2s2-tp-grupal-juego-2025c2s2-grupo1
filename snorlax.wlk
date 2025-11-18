@@ -102,12 +102,6 @@ object snorlax{
         }
     }
 
-    method validarFaltanVidas() {
-        if (vidas == 3) {
-            self.error("Snorlax tiene vidas suficientes.")
-        }
-    }
-
     method validarMover(direccion) {
         if (not self.puedeMover(direccion)) {
             self.error("No puedo mover.")

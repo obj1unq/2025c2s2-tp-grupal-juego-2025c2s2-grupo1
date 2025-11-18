@@ -159,6 +159,14 @@ describe "Snorlax : Mecánica de vida" {
 
         assert.equals(3, snorlax.vidas())
     }
+
+    test "Limite maximo de 3 vidas" {
+        assert.that(snorlax.tieneVidaLlena())
+        
+        snorlax.ganarUnaVida()
+        
+        assert.that(snorlax.tieneVidaLlena())
+    }
 }
 
 describe "Snorlax : Mecánica de puntuacion" {
@@ -209,6 +217,7 @@ describe "Snorlax : comer()" {
     }
 }
 */
+
 describe "Snorlax : terminar juego" {
     const bolsaBasura = basuraDelJuego.nuevaBolsaDeBasura()
     
