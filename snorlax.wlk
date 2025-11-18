@@ -98,7 +98,7 @@ object snorlax{
 
     method validarVidas() {
         if (not self.tieneVidas()) {
-            self.terminarJuego()
+            self.error("Snorlax no tiene vidas.")
         }
     }
 
@@ -129,9 +129,6 @@ object snorlax{
 }
 
 // Visualizador de vidas
-
-const colorTexto = "FFFFFFFF"
-
 object vida {
     var property position = game.at(7,9)
 

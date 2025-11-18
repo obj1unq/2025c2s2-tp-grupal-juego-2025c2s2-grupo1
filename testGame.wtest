@@ -15,6 +15,7 @@ import fasesDelJuego.*
 import randomizer.*
 import estadosDelJuego.*
 import score.*
+import variantesComida.*
 
 describe "snorlax puede moverse" {
     method initialize() {
@@ -90,7 +91,7 @@ describe "colisiones de snorlax" {
 
 
 describe "Comida : Comer Pokebayas" {
-    const pokebaya = new Baya( gusto = frambu, position = game.at(0,0) )
+    const pokebaya = new Baya( variante = varianteFrambu, position = game.at(0,0) )
     
     method initialize() {
         game.title("Snorlax")
