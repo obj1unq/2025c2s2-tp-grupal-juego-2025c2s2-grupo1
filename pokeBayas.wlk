@@ -2,6 +2,7 @@ import snorlax.*
 import extras.*
 import comida.*
 import randomizer.*
+import score.*
 
 class Baya inherits Comida {
     const property gusto

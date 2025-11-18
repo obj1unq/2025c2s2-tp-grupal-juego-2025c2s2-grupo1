@@ -6,6 +6,7 @@ import gameSnorlax.configuraciones
 import fondosDelJuego.*
 import niveles.*
 import estadosDeSnorlax.*
+import score.*
 
 object juego {
     var estado = juegoEnPausa
@@ -34,6 +35,7 @@ object juego {
 
     method reiniciar() { //Cambia de Pantalla de GameOver a Juego (inGame)
         snorlax.reiniciar()
+        highscore.actualizar()
         puntuacion.reiniciar()
         progressLevel.reiniciar()
         self.cambiarNivelA(nivelFacil)
@@ -88,6 +90,7 @@ object juego {
         game.addVisual(vida)
         game.addVisual(nivelActual)
         game.addVisual(progressLevel)
+        game.addVisual(highscore)
         fallingObjectsDelJuego.añadirItemAlAzar() //detenerse cuando esta en pausa
     }
 
@@ -97,6 +100,7 @@ object juego {
         game.removeVisual(vida)
         game.removeVisual(nivelActual)
         game.removeVisual(progressLevel)
+        game.removeVisual(highscore)
     }
 
     method removerVisualesActivos() {

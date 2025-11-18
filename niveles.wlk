@@ -2,6 +2,7 @@ import fallingObjects.*
 import fondosDelJuego.*
 import fasesDelJuego.*
 import snorlax.*
+import score.*
 
 class Nivel {
     const property fondo
