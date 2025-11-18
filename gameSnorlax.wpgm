@@ -1,0 +1,38 @@
+import fallingObjects.*
+import pokelitos.*
+import comida.*
+import snorlax.*
+import extras.*
+import basura.*
+import fasesDelJuego.*
+
+program snorlaxGame{
+    configuraciones.sobreElTablero()
+    configuraciones.inicializar()
+
+    game.start()
+}
+
+object configuraciones {
+    var estado = pantallaDeInicio
+
+    method sobreElTablero() {
+        game.title("Snack Attack")
+        game.height(11)
+        game.width(9) // expandir 2 celdas más
+        game.cellSize(50)
+        game.boardGround("fondo-propuesta.png")
+    }
+    
+    method inicializar() {
+        estado.inicializar()
+    }
+
+    method cambiarEstadoA(_estado) {
+        estado = _estado
+    }
+
+    method iniciarJuego() { //Se utilizar polimorfismo aquí para el botón ENTER.
+        estado.jugar()
+    }
+}
