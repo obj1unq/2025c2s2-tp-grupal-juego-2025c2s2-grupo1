@@ -23,7 +23,7 @@ object configuraciones {
         game.cellSize(50)
         game.boardGround("fondo-propuesta.png")
     }
-
+    
     method inicializar() {
         estado.inicializar()
     }
