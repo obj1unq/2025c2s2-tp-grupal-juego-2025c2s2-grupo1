@@ -4,8 +4,8 @@ import basura.*
 class ManzanaPodrida inherits Basura {
 
     override method dañar() {
-        super()
         snorlax.perderUnaVida()
+        super()
     }
 
     method nombre() { return "manzana-podrida_" } 

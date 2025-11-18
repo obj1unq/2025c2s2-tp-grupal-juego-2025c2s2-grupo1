@@ -2,6 +2,7 @@ import snorlax.*
 import extras.*
 import comida.*
 import randomizer.*
+import score.*
 
 //pokelitos
 class Pokelito inherits Comida {
@@ -9,8 +10,8 @@ class Pokelito inherits Comida {
     const property puntos = gusto.puntos()
 
     override method comer() {
-        puntuacion.incrementaPuntos(puntos)
         super()
+        puntuacion.incrementaPuntos(puntos)
     }
 
     method nombre() { return "pokelito-" + gusto.nombre() }

@@ -9,7 +9,7 @@ import pokeBayas.*
 class Comida inherits FallingObject {
     //acciones
     method comer() {
-        snorlaxComiendo.animacion()
+        snorlaxComiendo.animar()
         self.eliminarDelJuegoEn(500)
     }
 

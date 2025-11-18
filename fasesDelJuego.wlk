@@ -3,72 +3,113 @@ import extras.*
 import fallingObjects.*
 import estadosDelJuego.*
 import gameSnorlax.configuraciones
+import fondosDelJuego.*
+import niveles.*
+import estadosDeSnorlax.*
+import score.*
 
 object juego {
     var estado = juegoEnPausa
-    //var nivel = nivelFacil
+    var nivel = nivelFacil
 
-    method cambiarEstadoA(estadoNuevo) {
-        estado = estadoNuevo
-    }
+    //metodos setter y getter
+    method cambiarEstadoA(estadoNuevo) { estado = estadoNuevo }
 
     method estado() { return estado }
+    method nivel() { return nivel }
 
-    method comenzar() {
+    method alternarEstado() { estado.alternarEstado() }
+
+    method cambiarNivelA(_nivel) { nivel = _nivel }
+
+    method cambiarAlSiguienteNivel() {
+        self.cambiarNivelA(nivel.siguienteNivel())
+    }
+
+    //metodos de cambio de fase del juego.
+    method comenzar() { //Cambia de Pantalla de Inicio a Juego (inGame)
         pantallaDeInicio.removerFondo()
-        configuraciones.cambiarEstadoA(self)
         self.configurarTeclas()
-        self.añadirFondo()
         self.inicializar()
     }
 
-    method reiniciar() {
+    method reiniciar() { //Cambia de Pantalla de GameOver a Juego (inGame)
         snorlax.reiniciar()
+        highscore.actualizar()
         puntuacion.reiniciar()
+        progressLevel.reiniciar()
+        self.cambiarNivelA(nivelFacil)
+        nivel.removerFondo() // por alguna razón, tengo que remover el fondo del nivel facil pese a que se remueve al subir de nivel.
         pantallaDeFin.removerFondo()
         self.inicializar()
     }
 
-    method finalizar() {
+    method finalizar() { //Cambia de Juego(inGame) a Pantalla de GameOver (juegoEnPausa)
         self.alternarEstado()
-        self.removerVisuales()
+        self.removerTodosLosVisuales()
         self.removerMecanicas()
         pantallaDeFin.inicializar()
     }
 
+    method subirDeNivel() {
+        self.validarSubirDeNivel()
+        self.alternarEstado()
+        self.removerMecanicas()
+        snorlax.subirAlSiguienteNivel()
+        self.inicializarNivel()
+    }
+
+    method inicializarNivel() {
+        game.schedule(2000, {
+            self.removerVisualesActivos()
+            nivel.inicializar()
+            self.alternarEstado()
+            game.addVisual(snorlax)
+        })
+    }
+
     method inicializar() {
         configuraciones.cambiarEstadoA(self)
+        nivel.añadirFondo()
         self.añadirVisuales()
         self.aplicarMecanicas()
         self.alternarEstado()
     }
 
-    method alternarEstado() { estado.alternarEstado() }
-
+    //configuraciones del juego
     method configurarTeclas() { //detenerse cuando esta en pausa
         keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
         keyboard.d().onPressDo({snorlax.mover(derecha)})
         keyboard.space().onPressDo({snorlax.comer()})
-        //Se intentó añadir boton de pausar y reanudar pero no se logró solucionar las bug con las animaciones.
+        //Se intentó añadir boton de pausar y reanudar pero no se logró solucionar el bug con las animaciones.
     }
 
     method añadirVisuales() {
         game.addVisual(snorlax)
         game.addVisual(puntuacion)
         game.addVisual(vida)
+        game.addVisual(nivelActual)
+        game.addVisual(progressLevel)
+        game.addVisual(highscore)
         fallingObjectsDelJuego.añadirItemAlAzar() //detenerse cuando esta en pausa
     }
 
-    method removerVisuales() {
-        game.removeVisual(snorlax)
+    method removerTodosLosVisuales() {
+        self.removerVisualesActivos()
         game.removeVisual(puntuacion)
         game.removeVisual(vida)
-        fallingObjectsDelJuego.removerTodo()
+        game.removeVisual(nivelActual)
+        game.removeVisual(progressLevel)
+        game.removeVisual(highscore)
     }
 
-    method añadirFondo() {} //Varia segun el nivel
+    method removerVisualesActivos() {
+        game.removeVisual(snorlax)
+        fallingObjectsDelJuego.removerTodo()
+        nivel.removerFondo()
+    }
 
-    method aplicarMecanicas() { //detenerse cuando esta en pausa
+    method aplicarMecanicas() {
         fallingObjectsDelJuego.aplicarGravedad()
         fallingObjectsDelJuego.aplicarAnimaciones()
         fallingObjectsDelJuego.aplicarColisiones()
@@ -80,12 +121,19 @@ object juego {
         game.removeTickEvent("añadir item al azar")
     }
 
+    //validaciones
     method jugar() { //No me convence pues ya está inicializar(). Este metodo lo añadí por polimorfismo.
         self.error("El juego ya está corriendo.")
     }
 
     method validarEstado() {
         estado.validarEstado()
+    }
+
+    method validarSubirDeNivel() {
+        if (not nivel.puedeSubirDeNivel()) {
+            self.error("No se puede subir de nivel.")
+        }
     }
 
     method validarFaseDelJuego() {} //no ocurre nada
@@ -131,23 +179,4 @@ object pantallaDeFin inherits PantallaDelJuego {
     override method fondo() { return fondoDeGameOver }
 
     override method jugar() { juego.reiniciar() }
-}
-
-//Fondos de Pantalla
-class Fondo {
-    const property position = game.origin()
-
-    method chocasteConSnorlax() {} //En caso de que snorlax esté en la misma celda donde aparece una pantalla.
-
-    method image() { return self.fondo() }
-
-    method fondo()
-}
-
-object fondoDeInicio inherits Fondo {
-    override method fondo() { return "fondoGameStart.png" }
-}
-
-object fondoDeGameOver inherits Fondo {
-    override method fondo() { return "fondoGameOver.png" }
 }

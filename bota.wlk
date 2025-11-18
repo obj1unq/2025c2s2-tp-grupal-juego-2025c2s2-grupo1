@@ -2,13 +2,10 @@ import snorlax.*
 import basura.*
 
 class Bota inherits Basura {
-    const property puntos = -150
-
     override method dañar() { 
-        super()
-        puntuacion.incrementaPuntos(self.puntos())
         snorlax.perderUnaVida()
-    }
+        super()
+    } //Se elimina atributo puntos por falta de solución.
 
     method nombre() { return "bota_" } 
 

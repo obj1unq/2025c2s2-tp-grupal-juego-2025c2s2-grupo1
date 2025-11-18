@@ -3,7 +3,7 @@ import snorlax.*
 import basura.*
 import comida.*
 import randomizer.*
-import interfaces.*
+import fasesDelJuego.*
 
 class FallingObject {
     var property estado = primerEstado
@@ -11,14 +11,12 @@ class FallingObject {
 
     //acciones
     method caer() {
-        //juego.validarEstado()
         self.validarExistencia()
         self.validarCaida()
         position = position.down(2)
     }
 
     method cambiarAlSiguienteEstado() {
-        //juego.validarEstado()
         self.validarVidas()
         estado.proximoEstado(self) 
     }
@@ -76,8 +74,12 @@ object fallingObjectsDelJuego {
         basuraDelJuego.removerTodo()
     }
 
+    method tiempoDeCaida() { return 1000 / juego.nivel().tiempoCaida() }
+
+    method probabilidadDeSpawneoBasura() { return juego.nivel().probabilidadBasura() }
+
     method añadirItemAlAzar() {
-        game.onTick(1000, "añadir item al azar", {
+        game.onTick(self.tiempoDeCaida(), "añadir item al azar", {
             self.añadirItemSegunProbabilidad()
         })
     }
@@ -86,7 +88,7 @@ object fallingObjectsDelJuego {
         const probabilidad = 0.randomUpTo(100)
 
         juego.validarEstado()
-        if(probabilidad.between(0, 50)) {
+        if(probabilidad.between(0, self.probabilidadDeSpawneoBasura())) {
             basuraDelJuego.añadirBasuraAlAzar()
         }
         else {
@@ -95,16 +97,18 @@ object fallingObjectsDelJuego {
     }
 
     method aplicarGravedad() {
-        game.onTick(1000, "aplicar gravedad", 
+        game.onTick(self.tiempoDeCaida(), "aplicar gravedad", 
             { self.fallingObjectsActivos().forEach({ item => item.caer() }) }
         )
     }
 
     method aplicarAnimaciones() {
-        game.onTick(250, "aplicar animaciones", 
+        game.onTick(self.tiempoDeCambioEnAnimacion(), "aplicar animaciones", 
             { self.fallingObjectsActivos().forEach({ item => item.cambiarAlSiguienteEstado() }) }
         )
     }
+    
+    method tiempoDeCambioEnAnimacion() { return self.tiempoDeCaida() / 4 }
 
     method aplicarColisiones() {
         game.whenCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})

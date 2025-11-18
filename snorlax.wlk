@@ -2,7 +2,8 @@ import extras.*
 import comida.*
 import basura.*
 import estadosDeSnorlax.*
-import interfaces.*
+import fasesDelJuego.*
+import score.*
 
 
 object snorlax{
@@ -13,24 +14,27 @@ object snorlax{
     //acciones
     method mover(direccion){
         juego.validarEstado()
+        self.validarInvencibilidad()
         self.validarMover(direccion)
         position = direccion.siguiente(self)
     }
 
     method recibirDaño() {
+        juego.validarEstado()
+        self.validarInvencibilidad()
         self.objetoEnColision().dañar()
         if (self.tieneVidas()) { // no se puede añadir validacion porque interrumpe el flujo.
-            snorlaxRecibiendoDaño.animacion()
+            snorlaxRecibiendoDaño.animar()
         }
         else { self.terminarJuego() }
     }
 
     method terminarJuego() { 
-        snorlaxPerdedor.animacion()
+        snorlaxPerdedor.animar()
         game.schedule(2000, { juego.finalizar() }) 
     }
 
-    method comer(){
+    method comer() {
         juego.validarEstado()
         self.validarComer()
         self.objetoEnColision().comer()
@@ -38,9 +42,8 @@ object snorlax{
 
     method perderUnaVida() { vidas -= 1 }
     
-    method ganarUnaVida() { 
-        self.validarFaltanVidas()
-        vidas += 1
+    method ganarUnaVida() { //No se puede añadir validacion dado que interrumpe flujo en comer()
+        if (not self.tieneVidaLlena()) { vidas += 1 }
     }
 
     method cambiarEstadoA(estadoNuevo) { 
@@ -49,6 +52,8 @@ object snorlax{
 
     method levantarComida(comida) {
         estado.validarAdormecimiento()
+        self.validarInvencibilidad()
+
         comida.cambiarEstadoA(primerEstado)
     }
 
@@ -58,6 +63,13 @@ object snorlax{
         self.cambiarEstadoA(snorlaxNormal)
     }
     
+    method subirAlSiguienteNivel() {
+        game.schedule(1000, {
+            snorlaxGanaNivel.animar()
+            progressLevel.reiniciar()
+            juego.cambiarAlSiguienteNivel()
+        })
+    }
 
     //consultas
     method puedeMover(direccion){
@@ -80,20 +92,18 @@ object snorlax{
         return "snorlax-" + estado.nombre() + ".png"
     }
 
+    method tieneVidaLlena() {
+        return vidas == 3
+    }
+
     method validarVidas() {
         if (not self.tieneVidas()) {
             self.terminarJuego()
         }
     }
 
-    method validarFaltanVidas() {
-        if (self.vidas() == 3) {
-            self.error("Snorlax tiene vidas suficientes.")
-        }
-    }
-
     method validarMover(direccion) {
-        if (not self.puedeMover(direccion) || estado.estaInmovilizado()) {
+        if (not self.puedeMover(direccion)) {
             self.error("No puedo mover.")
         }
     }
@@ -104,9 +114,17 @@ object snorlax{
             self.error("No hay nada para comer.")
         }
     }
+
+    method validarInvencibilidad() {
+        if (self.esInvencible()) {
+            self.error("Soy invencible.")
+        }
+    }
 }
 
 // Visualizador de vidas
+
+const colorTexto = "FFFFFFFF"
 
 object vida {
     var property position = game.at(7,9)
@@ -114,19 +132,4 @@ object vida {
     method image() {
         return "vidas_" + snorlax.vidas() + ".png"
     }
-}
-
-// puntuacion de snorlax
-
-object puntuacion{
-    var property puntos = 0
-    var property position = game.at(7,8) 
-    
-    method incrementaPuntos(puntosFruta){
-        puntos += puntosFruta
-    } 
-
-    method text() { return self.puntos().toString() }
-
-    method reiniciar() { puntos = 0 }
 }

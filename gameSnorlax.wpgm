@@ -4,7 +4,7 @@ import comida.*
 import snorlax.*
 import extras.*
 import basura.*
-import interfaces.*
+import fasesDelJuego.*
 
 program snorlaxGame{
     configuraciones.sobreElTablero()
@@ -12,8 +12,6 @@ program snorlaxGame{
 
     game.start()
 }
-
-
 
 object configuraciones {
     var estado = pantallaDeInicio
@@ -25,7 +23,7 @@ object configuraciones {
         game.cellSize(50)
         game.boardGround("fondo-propuesta.png")
     }
-
+    
     method inicializar() {
         estado.inicializar()
     }
@@ -34,7 +32,7 @@ object configuraciones {
         estado = _estado
     }
 
-    method iniciarJuego() {
+    method iniciarJuego() { //Se utilizar polimorfismo aquí para el botón ENTER.
         estado.jugar()
     }
 }
