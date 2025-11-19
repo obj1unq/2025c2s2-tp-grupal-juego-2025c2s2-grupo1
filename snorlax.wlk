@@ -25,8 +25,13 @@ object snorlax{
         self.objetoEnColision().dañar()
         if (self.tieneVidas()) { // no se puede añadir validacion porque interrumpe el flujo.
             snorlaxRecibiendoDaño.animar()
+            game.sound("death-sound.mp3").play()
         }
-        else { self.terminarJuego() }
+        else { 
+            self.terminarJuego()
+            game.sound("death-sound.mp3").play()
+            game.sound("game-over.mp3").play()
+         }
     }
 
     method terminarJuego() { 

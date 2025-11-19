@@ -31,6 +31,7 @@ object juego {
         pantallaDeInicio.removerFondo()
         self.configurarTeclas()
         self.inicializar()
+        game.sound("")
     }
 
     method reiniciar() { //Cambia de Pantalla de GameOver a Juego (inGame)
