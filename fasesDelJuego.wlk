@@ -7,6 +7,7 @@ import fondosDelJuego.*
 import niveles.*
 import estadosDeSnorlax.*
 import score.*
+import sonido.*
 
 object juego {
     var estado = juegoEnPausa
@@ -31,10 +32,10 @@ object juego {
         pantallaDeInicio.removerFondo()
         self.configurarTeclas()
         self.inicializar()
-        game.sound("")
     }
 
     method reiniciar() { //Cambia de Pantalla de GameOver a Juego (inGame)
+        gameOver.detener()
         snorlax.reiniciar()
         highscore.actualizar()
         puntuacion.reiniciar()
@@ -46,6 +47,8 @@ object juego {
     }
 
     method finalizar() { //Cambia de Juego(inGame) a Pantalla de GameOver (juegoEnPausa)
+        musicJuego.detener()
+        gameOver.reproducir()
         self.alternarEstado()
         self.removerTodosLosVisuales()
         self.removerMecanicas()
@@ -75,6 +78,7 @@ object juego {
         self.añadirVisuales()
         self.aplicarMecanicas()
         self.alternarEstado()
+        musicJuego.reproducir()
     }
 
     //configuraciones del juego
