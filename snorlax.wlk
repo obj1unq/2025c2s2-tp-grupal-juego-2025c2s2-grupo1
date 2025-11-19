@@ -1,4 +1,4 @@
-import sonido.*
+import sound.*
 import extras.*
 import comida.*
 import basura.*
@@ -24,14 +24,11 @@ object snorlax{
         juego.validarEstado()
         self.validarInvencibilidad()
         self.objetoEnColision().dañar()
+        musicDeathSound.reproducir()
         if (self.tieneVidas()) { // no se puede añadir validacion porque interrumpe el flujo.
             snorlaxRecibiendoDaño.animar()
-            deathSound.reproducir()
         }
-        else { 
-            self.terminarJuego()
-            deathSound.reproducir()
-         }
+        else { self.terminarJuego() }
     }
 
     method terminarJuego() { 

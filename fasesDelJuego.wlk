@@ -7,7 +7,7 @@ import fondosDelJuego.*
 import niveles.*
 import estadosDeSnorlax.*
 import score.*
-import sonido.*
+import sound.*
 
 object juego {
     var estado = juegoEnPausa
@@ -27,26 +27,34 @@ object juego {
         self.cambiarNivelA(nivel.siguienteNivel())
     }
 
+    /*method cambiarMusicaAInGame() {
+        configuraciones.musicaActual().detener()
+        musicJuego.reproducir()
+    }*/
+
     //metodos de cambio de fase del juego.
     method comenzar() { //Cambia de Pantalla de Inicio a Juego (inGame)
         pantallaDeInicio.removerFondo()
         self.configurarTeclas()
+        musicJuego.reproducir()
         self.inicializar()
     }
 
     method reiniciar() { //Cambia de Pantalla de GameOver a Juego (inGame)
-        sonidos.reproducirMusicJuegoDespuesDe(musicGameOver)
         highscore.actualizar()
         puntuacion.reiniciar()
         progressLevel.reiniciar()
         self.cambiarNivelA(nivelFacil)
         nivel.removerFondo() // por alguna razón, tengo que remover el fondo del nivel facil pese a que se remueve al subir de nivel.
         pantallaDeFin.removerFondo()
+        musicGameOver.detener()
+        musicJuego.reproducir()
         self.inicializar()
     }
 
     method finalizar() { //Cambia de Juego(inGame) a Pantalla de GameOver (juegoEnPausa)
-        sonidos.reproducirMusicFinal()
+        musicJuego.detener()
+        musicGameOver.reproducir()
         self.alternarEstado()
         self.removerTodosLosVisuales()
         self.removerMecanicas()
@@ -83,7 +91,7 @@ object juego {
         keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
         keyboard.d().onPressDo({snorlax.mover(derecha)})
         keyboard.space().onPressDo({snorlax.comer()})
-        keyboard.m().onPressDo({ snorlax.mutear() })
+        //keyboard.m().onPressDo({ snorlax.mutear() })
         //Se intentó añadir boton de pausar y reanudar pero no se logró solucionar el bug con las animaciones.
     }
 
@@ -140,6 +148,8 @@ object juego {
     }
 
     method validarFaseDelJuego() {} //no ocurre nada
+
+    method musica() { musicJuego }
 }
 
 //Pantallas del juego
@@ -169,17 +179,22 @@ class PantallaDelJuego {
 
     //Metodos Hook
     method fondo()
+
+    method musica() { return musicJuego }
 }
 
 object pantallaDeInicio inherits PantallaDelJuego {
     override method fondo() { return fondoDeInicio }
 
     override method jugar() { juego.comenzar() }
-    
+
+    override method musica() { return musicGameOver } //temporal
 }
 
 object pantallaDeFin inherits PantallaDelJuego {
     override method fondo() { return fondoDeGameOver }
 
     override method jugar() { juego.reiniciar() }
+
+    override method musica() { return musicGameOver }
 }

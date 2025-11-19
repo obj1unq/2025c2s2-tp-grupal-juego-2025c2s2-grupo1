@@ -4,6 +4,7 @@ import comida.*
 import snorlax.*
 import extras.*
 import basura.*
+import sound.*
 import fasesDelJuego.*
 
 program snorlaxGame{
@@ -15,7 +16,6 @@ program snorlaxGame{
 
 object configuraciones {
     var estado = pantallaDeInicio
-    var sonido = musicJuego
 
     method sobreElTablero() {
         game.title("Snack Attack")
@@ -33,7 +33,11 @@ object configuraciones {
         estado = _estado
     }
 
+    method musicaActual() { 
+        return estado.musica()
+    }
+
     method iniciarJuego() { //Se utilizar polimorfismo aquí para el botón ENTER.
-        estado.jugar()
+            estado.jugar()
     }
 }

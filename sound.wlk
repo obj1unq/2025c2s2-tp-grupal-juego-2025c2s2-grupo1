@@ -5,9 +5,7 @@ import snorlax.*
 import extras.*
 import basura.*
 import fasesDelJuego.*
-
-
-
+import gameSnorlax.*
 
 class Sonido {
     const nombre
@@ -44,22 +42,19 @@ class SonidoBackground inherits Sonido {
     }
 }
 
-object sonidos{ 
-    method reproducirMusicFinal() {
-        musicJuego.detener()
-        musicGameOver.reproducir()
-    }
-
-    method reproducirMusicJuegoDespuesDe(musica) {
-        musica.detener()
-        musicJuego.reproducir()
+object sonidos { 
+    method playMusicDespuesDe(musicInicial, musicFinal) {
+        musicInicial.detener()
+        musicFinal.reproducir()
     }
 }
 
 /*
     musicInicio => musicJuego => musicFin => musicJuego => musicFinal
 
-*/
+    musicInicio => musicJuego    inicializar en pantalla de inicio
+    musicFin => musicJuego       inicializar en pantalla de fin
+*/  
 
 
 const musicGameOver =   new SonidoBackground(nombre = "game-over.mp3")
