@@ -35,8 +35,7 @@ object juego {
     }
 
     method reiniciar() { //Cambia de Pantalla de GameOver a Juego (inGame)
-        gameOver.detener()
-        snorlax.reiniciar()
+        sonidos.reproducirMusicJuegoDespuesDe(musicGameOver)
         highscore.actualizar()
         puntuacion.reiniciar()
         progressLevel.reiniciar()
@@ -47,8 +46,7 @@ object juego {
     }
 
     method finalizar() { //Cambia de Juego(inGame) a Pantalla de GameOver (juegoEnPausa)
-        musicJuego.detener()
-        gameOver.reproducir()
+        sonidos.reproducirMusicFinal()
         self.alternarEstado()
         self.removerTodosLosVisuales()
         self.removerMecanicas()
@@ -78,7 +76,6 @@ object juego {
         self.añadirVisuales()
         self.aplicarMecanicas()
         self.alternarEstado()
-        musicJuego.reproducir()
     }
 
     //configuraciones del juego
@@ -86,6 +83,7 @@ object juego {
         keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
         keyboard.d().onPressDo({snorlax.mover(derecha)})
         keyboard.space().onPressDo({snorlax.comer()})
+        keyboard.m().onPressDo({ snorlax.mutear() })
         //Se intentó añadir boton de pausar y reanudar pero no se logró solucionar el bug con las animaciones.
     }
 

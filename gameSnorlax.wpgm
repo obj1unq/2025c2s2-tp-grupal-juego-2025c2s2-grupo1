@@ -15,6 +15,7 @@ program snorlaxGame{
 
 object configuraciones {
     var estado = pantallaDeInicio
+    var sonido = musicJuego
 
     method sobreElTablero() {
         game.title("Snack Attack")
