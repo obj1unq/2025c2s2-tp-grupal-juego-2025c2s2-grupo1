@@ -6,7 +6,7 @@ class Pokebola inherits Basura {
 
     override method chocasteConSnorlax() { 
         self.eliminarDelJuegoEn(250)
-        snorlaxCapturado.animar()
+        snorlaxCapturado.iniciar()
     }
  
     method nombre() { return "pokebola_" } 

@@ -263,7 +263,7 @@ describe "animaciones" {
     test "snorlax capturado"{
         snorlax.cambiarEstadoA(snorlaxCapturado)
         assert.equals("snorlax-capturado-_0.png", snorlax.image())
-        snorlaxCapturado.animar()
+        snorlaxCapturado.iniciar()
         game.schedule(20000, {assert.equals("snorlax-normal.png", snorlax.image())})
     }
     test "snorlax normal" {
