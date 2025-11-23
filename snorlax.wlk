@@ -24,7 +24,7 @@ object snorlax{
         juego.validarEstado()
         self.validarInvencibilidad()
         self.objetoEnColision().dañar()
-        musicDeathSound.reproducir()
+        harmSound.reproducir()
         if (self.tieneVidas()) { // no se puede añadir validacion porque interrumpe el flujo.
             snorlaxRecibiendoDaño.animar()
         }
@@ -39,6 +39,7 @@ object snorlax{
     method comer() {
         juego.validarEstado()
         self.validarComer()
+        eatSound.reproducir()
         self.objetoEnColision().comer()
     }
 

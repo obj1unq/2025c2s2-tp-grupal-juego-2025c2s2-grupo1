@@ -29,9 +29,11 @@ class SonidoEfecto inherits Sonido {
 
 class SonidoBackground inherits Sonido {
     var musica = null
+    const volumen
 
     override method reproducir(){
         musica = self.sonido()
+        musica.volume(volumen)
         musica.shouldLoop(true)
         musica.play()
     }
@@ -42,25 +44,12 @@ class SonidoBackground inherits Sonido {
     }
 }
 
-object sonidos { 
-    method playMusicDespuesDe(musicInicial, musicFinal) {
-        musicInicial.detener()
-        musicFinal.reproducir()
-    }
-}
 
-/*
-    musicInicio => musicJuego => musicFin => musicJuego => musicFinal
-
-    musicInicio => musicJuego    inicializar en pantalla de inicio
-    musicFin => musicJuego       inicializar en pantalla de fin
-*/  
-
-
-const musicGameOver =   new SonidoBackground(nombre = "game-over.mp3")
-const musicDeathSound = new SonidoEfecto(nombre = "death-sound.mp3")
-const musicJuego = new SonidoBackground(nombre = "musica-juego.mp3")
-
+const gameStartMusic = new SonidoBackground( nombre = "musica-inicio.mp3", volumen = 1 )
+const gameOverMusic  = new SonidoBackground( nombre = "musica-fin.mp3", volumen = 1) //demasiado corto
+const inGameMusic    = new SonidoBackground( nombre = "musica-juego.mp3", volumen = 0.3)
+const harmSound      = new SonidoEfecto( nombre = "harming-sound.mp3" )
+const eatSound       = new SonidoEfecto( nombre = "eating-sound.mp3" )
 
 
 /*

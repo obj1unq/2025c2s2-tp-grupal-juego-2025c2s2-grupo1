@@ -27,34 +27,32 @@ object juego {
         self.cambiarNivelA(nivel.siguienteNivel())
     }
 
-    /*method cambiarMusicaAInGame() {
-        configuraciones.musicaActual().detener()
-        musicJuego.reproducir()
-    }*/
-
     //metodos de cambio de fase del juego.
     method comenzar() { //Cambia de Pantalla de Inicio a Juego (inGame)
         pantallaDeInicio.removerFondo()
         self.configurarTeclas()
-        musicJuego.reproducir()
+        inGameMusic.reproducir()
         self.inicializar()
     }
 
     method reiniciar() { //Cambia de Pantalla de GameOver a Juego (inGame)
+        snorlax.reiniciar()
         highscore.actualizar()
         puntuacion.reiniciar()
         progressLevel.reiniciar()
         self.cambiarNivelA(nivelFacil)
         nivel.removerFondo() // por alguna razón, tengo que remover el fondo del nivel facil pese a que se remueve al subir de nivel.
         pantallaDeFin.removerFondo()
-        musicGameOver.detener()
-        musicJuego.reproducir()
+        configuraciones.cambiarASiguienteCancion()
+        //gameOverMusic.detener()
+        //inGameMusic.reproducir()
         self.inicializar()
     }
 
     method finalizar() { //Cambia de Juego(inGame) a Pantalla de GameOver (juegoEnPausa)
-        musicJuego.detener()
-        musicGameOver.reproducir()
+        configuraciones.cambiarASiguienteCancion()
+        //inGameMusic.detener()
+        //gameOverMusic.reproducir()
         self.alternarEstado()
         self.removerTodosLosVisuales()
         self.removerMecanicas()
@@ -149,7 +147,9 @@ object juego {
 
     method validarFaseDelJuego() {} //no ocurre nada
 
-    method musica() { musicJuego }
+    method musica() { return inGameMusic }
+
+    method nextMusic() { return gameOverMusic }
 }
 
 //Pantallas del juego
@@ -180,7 +180,9 @@ class PantallaDelJuego {
     //Metodos Hook
     method fondo()
 
-    method musica() { return musicJuego }
+    method musica()
+
+    method nextMusic()
 }
 
 object pantallaDeInicio inherits PantallaDelJuego {
@@ -188,7 +190,9 @@ object pantallaDeInicio inherits PantallaDelJuego {
 
     override method jugar() { juego.comenzar() }
 
-    override method musica() { return musicGameOver } //temporal
+    override method musica() { return gameStartMusic }
+
+    override method nextMusic() { return inGameMusic }
 }
 
 object pantallaDeFin inherits PantallaDelJuego {
@@ -196,5 +200,7 @@ object pantallaDeFin inherits PantallaDelJuego {
 
     override method jugar() { juego.reiniciar() }
 
-    override method musica() { return musicGameOver }
+    override method musica() { return gameOverMusic }
+
+    override method nextMusic() { return inGameMusic }
 }

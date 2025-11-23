@@ -7,11 +7,13 @@ import basura.*
 import sound.*
 import fasesDelJuego.*
 
+
 program snorlaxGame{
     configuraciones.sobreElTablero()
     configuraciones.inicializar()
 
     game.start()
+    //gameStartMusic.reproducir() // preguntar como podria hacer para que se ejecute
 }
 
 object configuraciones {
@@ -33,11 +35,14 @@ object configuraciones {
         estado = _estado
     }
 
-    method musicaActual() { 
-        return estado.musica()
-    }
-
     method iniciarJuego() { //Se utilizar polimorfismo aquí para el botón ENTER.
             estado.jugar()
     }
+
+    method cambiarASiguienteCancion() {
+        self.musicaActual().detener()
+        estado.nextMusic().reproducir()
+    }
+
+    method musicaActual() { return estado.musica() }
 }
