@@ -31,7 +31,8 @@ object juego {
     method comenzar() { //Cambia de Pantalla de Inicio a Juego (inGame)
         pantallaDeInicio.removerFondo()
         self.configurarTeclas()
-        inGameMusic.reproducir()
+        //gestorMusica.cambiarASiguienteCancion()
+        gestorMusica.reproducir(inGameMusic)
         self.inicializar()
     }
 
@@ -43,16 +44,12 @@ object juego {
         self.cambiarNivelA(nivelFacil)
         nivel.removerFondo() // por alguna razón, tengo que remover el fondo del nivel facil pese a que se remueve al subir de nivel.
         pantallaDeFin.removerFondo()
-        configuraciones.cambiarASiguienteCancion()
-        //gameOverMusic.detener()
-        //inGameMusic.reproducir()
+        gestorMusica.cambiarASiguienteCancion()
         self.inicializar()
     }
 
     method finalizar() { //Cambia de Juego(inGame) a Pantalla de GameOver (juegoEnPausa)
-        configuraciones.cambiarASiguienteCancion()
-        //inGameMusic.detener()
-        //gameOverMusic.reproducir()
+        gestorMusica.cambiarASiguienteCancion()
         self.alternarEstado()
         self.removerTodosLosVisuales()
         self.removerMecanicas()
@@ -89,7 +86,6 @@ object juego {
         keyboard.a().onPressDo({snorlax.mover(izquierda)}) 
         keyboard.d().onPressDo({snorlax.mover(derecha)})
         keyboard.space().onPressDo({snorlax.comer()})
-        //keyboard.m().onPressDo({ snorlax.mutear() })
         //Se intentó añadir boton de pausar y reanudar pero no se logró solucionar el bug con las animaciones.
     }
 
@@ -164,6 +160,10 @@ class PantallaDelJuego {
     }
 
     method configurarTeclas() {
+        self.configurarTeclaEnter()
+    }
+
+    method configurarTeclaEnter() {
         keyboard.enter().onPressDo({
             configuraciones.iniciarJuego()
         })
@@ -182,7 +182,7 @@ class PantallaDelJuego {
 
     method musica()
 
-    method nextMusic()
+    method nextMusic() { return inGameMusic }
 }
 
 object pantallaDeInicio inherits PantallaDelJuego {
@@ -191,8 +191,6 @@ object pantallaDeInicio inherits PantallaDelJuego {
     override method jugar() { juego.comenzar() }
 
     override method musica() { return gameStartMusic }
-
-    override method nextMusic() { return inGameMusic }
 }
 
 object pantallaDeFin inherits PantallaDelJuego {
@@ -201,6 +199,4 @@ object pantallaDeFin inherits PantallaDelJuego {
     override method jugar() { juego.reiniciar() }
 
     override method musica() { return gameOverMusic }
-
-    override method nextMusic() { return inGameMusic }
 }

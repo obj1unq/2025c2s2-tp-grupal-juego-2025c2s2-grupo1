@@ -5,92 +5,85 @@ import snorlax.*
 import extras.*
 import basura.*
 import fasesDelJuego.*
-import gameSnorlax.*
+import gameSnorlax.configuraciones
 
-class Sonido {
-    const nombre
-    
-    method reproducir()
+object gestorMusica {
+    var temaActual = gameStartMusic
+    var musicaActual = self.audio(temaActual)
 
-    method detener()
-
-    method sonido() { return game.sound(nombre) }
-}
-
-class SonidoEfecto inherits Sonido {
-    override method reproducir(){
-        self.sonido().play()
+    method cambiarASiguienteCancion() {
+        self.quitarMuteSiHay() //Si no se quita la pausa durante el cambio de fase se rompe el juego.
+        self.detenerActual()
+        self.reproducirNextMusic()
     }
 
-    override method detener(){
-        self.sonido().stop()
-    }
-}
-
-class SonidoBackground inherits Sonido {
-    var musica = null
-    const volumen
-
-    override method reproducir(){
-        musica = self.sonido()
-        musica.volume(volumen)
-        musica.shouldLoop(true)
-        musica.play()
+    method configurarTeclaMute() {
+        keyboard.m().onPressDo({self.mutear()})
     }
 
-    override method detener(){
-        musica.shouldLoop(false)
-        musica.stop()
-    }
-}
-
-
-const gameStartMusic = new SonidoBackground( nombre = "musica-inicio.mp3", volumen = 1 )
-const gameOverMusic  = new SonidoBackground( nombre = "musica-fin.mp3", volumen = 1) //demasiado corto
-const inGameMusic    = new SonidoBackground( nombre = "musica-juego.mp3", volumen = 0.3)
-const harmSound      = new SonidoEfecto( nombre = "harming-sound.mp3" )
-const eatSound       = new SonidoEfecto( nombre = "eating-sound.mp3" )
-
-
-/*
-object gameOver{
-    var property musica = null
-    const property nombre = "game-over.mp3"
-    
-    method reproducir(){
-        musica = self.sonido()
-        musica.shouldLoop(true)
-        musica.play()
-    }
-    method detener(){
-        musica.shouldLoop(false)
-        musica.stop()
+    method mutear() {
+        if (self.estaPausado()) {
+            self.validarMute() //Tuve que añadir una validación dado que extrañamente se ejecutan ambos flujos al ejecutarlo
+            self.resumir()
+        }
+        else {
+            self.pausar()
+        }
     }
 
-    method sonido() { return game.sound(nombre) }
-}
-
-object deathSound{
-    const musica = game.sound("death-sound.mp3")
-    
-    method reproducir(){
-        musica.play()
+    method quitarMuteSiHay() {
+        if (self.estaPausado()) { self.mutear() }
     }
-    method detener(){
-        musica.stop()
+
+    method estaPausado() {
+        return musicaActual.paused()
+    }
+
+    method pausar() { musicaActual.pause() }
+
+    method resumir() { musicaActual.resume() }
+
+
+    method reproducirNextMusic() {
+        self.reproducir(configuraciones.nextMusic())
+    }
+
+    method audio(tema) {
+        return game.sound(tema.nombre())
+    }
+
+    method reproducir(tema) {
+        musicaActual = self.audio(tema)
+        musicaActual.volume(tema.volumen())
+        musicaActual.shouldLoop(true)
+        musicaActual.play()
+    }
+
+    method detenerActual() {
+        musicaActual.shouldLoop(false)
+        musicaActual.stop()
+    }
+
+    method reproducirSonido(sonido) {
+        self.audio(sonido).play()
+    }
+
+    method validarMute() {
+        if (not self.estaPausado()) {
+            self.error("La musica ya esta corriendo.")
+        }
     }
 }
 
-object musicJuego{
-    var property musica = game.sound("musica-juego.mp3")
-    
-    method reproducir(){
-        musica = game.sound("musica-juego.mp3")
-        musica.shouldLoop(true)
-        musica.play()
-    }
-    method detener(){
-        musica.shouldLoop(false)
-        musica.stop()
-    }
-}*/
+
+class Audio {
+    const property nombre
+    const property volumen = 1
+}
+
+const gameStartMusic = new Audio( nombre = "musica-inicio.mp3")
+const gameOverMusic  = new Audio( nombre = "musica-fin.mp3") //demasiado corto
+const inGameMusic    = new Audio( nombre = "musica-juego.mp3", volumen = 0.3)
+const harmSound      = new Audio( nombre = "harming-sound.mp3" )
+const eatSound       = new Audio( nombre = "eating-sound.mp3" )
+

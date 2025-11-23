@@ -7,7 +7,6 @@ import basura.*
 import sound.*
 import fasesDelJuego.*
 
-
 program snorlaxGame{
     configuraciones.sobreElTablero()
     configuraciones.inicializar()
@@ -28,6 +27,7 @@ object configuraciones {
     }
     
     method inicializar() {
+        gestorMusica.configurarTeclaMute()
         estado.inicializar()
     }
 
@@ -39,9 +39,10 @@ object configuraciones {
             estado.jugar()
     }
 
-    method cambiarASiguienteCancion() {
-        self.musicaActual().detener()
-        estado.nextMusic().reproducir()
+    method estado() { return estado }    
+
+    method nextMusic() {
+        return estado.nextMusic()
     }
 
     method musicaActual() { return estado.musica() }
