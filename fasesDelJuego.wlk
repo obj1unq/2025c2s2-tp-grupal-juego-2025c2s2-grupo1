@@ -31,8 +31,7 @@ object juego {
     method comenzar() { //Cambia de Pantalla de Inicio a Juego (inGame)
         pantallaDeInicio.removerFondo()
         self.configurarTeclas()
-        //gestorMusica.cambiarASiguienteCancion()
-        gestorMusica.reproducir(inGameMusic)
+        gestorMusica.cambiarASiguienteCancion()
         self.inicializar()
     }
 
