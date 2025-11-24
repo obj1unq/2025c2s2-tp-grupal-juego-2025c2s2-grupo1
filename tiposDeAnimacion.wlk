@@ -1,7 +1,12 @@
 import estadosDeSnorlax.*
 
 class TipoAnimacion {
-    method iniciar(estado)
+    method iniciar(estado) {
+        gestorDeEstados.recordarEstadoActual(estado)
+        self.animar(estado)
+    }
+
+    method animar(estado)
 
     method extension()
 
@@ -15,7 +20,7 @@ class AnimacionGif inherits TipoAnimacion {
         return ".gif"
     }
 
-    override method iniciar(estado) {
+    override method animar(estado) {
         gestorDeEstados.iniciarGif(estado)
     }
 }
@@ -24,7 +29,7 @@ class SecuenciaPng inherits TipoAnimacion {
     const property cantSprites
     var property etapaActual = 0
 
-    override method iniciar(estado) {
+    override method animar(estado) {
         gestorDeEstados.iniciarAnimacionPng(estado)
     }
 

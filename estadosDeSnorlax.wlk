@@ -3,6 +3,8 @@ import tiposDeAnimacion.*
 
 object gestorDeEstados {
     var duracionEstadoActual = 0
+    var hayInterrupcion = false
+    var interrupcion = null
 
     method iniciarGif(estado) {
         duracionEstadoActual = estado.duracion()
@@ -28,7 +30,7 @@ object gestorDeEstados {
     }
 
     method decrementarTimer(estado) {
-        self.validarEfectoActual(estado)
+        //self.validarEfectoActual(estado)
         duracionEstadoActual = (duracionEstadoActual - 500).max(0)
         self.validarTimer(estado)
     }
@@ -70,18 +72,14 @@ object gestorDeEstados {
         }
     }
 
-    method interrumpirEfectoCon(estadoEntrante) {
+    method recordarEstadoActual(estadoEntrante) {
         const efecto = [self.estadoActual(), duracionEstadoActual]
-        self.iniciarEstadoSegunAnimacion(estadoEntrante)
-        game.schedule(estadoEntrante.duracion(), {
-                self.validarEfectoActual(estadoEntrante)
-                self.continuarEfecto(efecto)
-            }
-        )
+        self.estadoActual().finalizarAnimacion()
+        game.schedule( estadoEntrante.duracion(), { self.continuarEfecto(efecto) } )
     }
 
-    method iniciarEstadoSegunAnimacion(estado) {
-        estado.tipoAnimacion().iniciar(estado)
+    method extenderEstado(estado) {
+        duracionEstadoActual = estado.duracion()
     }
 }
 
@@ -91,7 +89,9 @@ class EstadoBase {
     const property tipoAnimacion
     const property estaInmovilizado = false
 
-    method iniciar() {}
+    method iniciar() {
+        tipoAnimacion.iniciar(self)
+    }
 
     method validarAdormecimiento() {}
 
@@ -100,55 +100,43 @@ class EstadoBase {
     method nombre() { return nombre + tipoAnimacion.extension() }
 }
 
-class EstadoDuradero inherits EstadoBase {
-    override method iniciar() {
-        tipoAnimacion.iniciar(self)
-    }
-}
-
-class EstadoTemporal inherits EstadoBase {
-    override method iniciar() {
-        gestorDeEstados.interrumpirEfectoCon(self)
-    }
-}
-
 const snorlaxNormal = new EstadoBase (
     nombre = "normal",
     tipoAnimacion = new AnimacionGif()
 )
 
-const snorlaxCapturado = new EstadoDuradero ( //No se pudo resolver problema con snorlax-capturado.gif
+const snorlaxCapturado = new EstadoBase ( //No se pudo resolver problema con snorlax-capturado.gif
     nombre = "capturado",
     duracion = 18000,
     tipoAnimacion = new SecuenciaPng(cantSprites = 33),
     estaInmovilizado = true
 )
 
-const snorlaxComiendo = new EstadoTemporal (
+const snorlaxComiendo = new EstadoBase (
     nombre = "come",
     duracion = 500,
     tipoAnimacion = new AnimacionGif()
 )
 
-const snorlaxRecibiendoDaño = new EstadoTemporal (
+const snorlaxRecibiendoDaño = new EstadoBase (
     nombre = "daño",
     duracion = 1000,
     tipoAnimacion = new AnimacionGif()
 )
 
-const snorlaxPerdedor = new EstadoDuradero (
+const snorlaxPerdedor = new EstadoBase (
     nombre = "perdedor",
     duracion = 3000,
     tipoAnimacion = new AnimacionGif()
 )
 
-const snorlaxGanaNivel = new EstadoDuradero (
+const snorlaxGanaNivel = new EstadoBase (
     nombre = "gana",
     duracion = 1000,
     tipoAnimacion = new AnimacionGif()
 )
 
-object snorlaxAdormecido inherits EstadoDuradero(
+object snorlaxAdormecido inherits EstadoBase(
     nombre = "adormecido", duracion = 8000, tipoAnimacion = new AnimacionGif()) {
 
     override method validarAdormecimiento() {
