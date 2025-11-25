@@ -4,9 +4,10 @@ import estadosDeSnorlax.*
 
 class Pokebola inherits Basura {
 
-    override method chocasteConSnorlax() { 
-        self.eliminarDelJuegoEn(250)
-        snorlaxCapturado.iniciar()
+    override method chocasteConSnorlax() {
+        basuraDelJuego.eliminarBasuraDelJuego(self)
+        snorlax.validarInvencibilidad()
+        snorlaxCapturado.animar()
     }
  
     method nombre() { return "pokebola_" } 

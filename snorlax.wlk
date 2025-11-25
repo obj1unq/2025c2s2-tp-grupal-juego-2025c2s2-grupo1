@@ -24,13 +24,13 @@ object snorlax{
         self.validarInvencibilidad()
         self.objetoEnColision().dañar()
         if (self.tieneVidas()) { // no se puede añadir validacion porque interrumpe el flujo.
-            snorlaxRecibiendoDaño.iniciar()
+            snorlaxRecibiendoDaño.animar()
         }
         else { self.terminarJuego() }
     }
 
     method terminarJuego() { 
-        snorlaxPerdedor.iniciar()
+        snorlaxPerdedor.animar()
         game.schedule(2000, { juego.finalizar() }) 
     }
 
@@ -65,7 +65,7 @@ object snorlax{
     
     method subirAlSiguienteNivel() {
         game.schedule(1000, {
-            snorlaxGanaNivel.iniciar()
+            snorlaxGanaNivel.animar()
             progressLevel.reiniciar()
             juego.cambiarAlSiguienteNivel()
         })
@@ -88,7 +88,7 @@ object snorlax{
 
     method objetoEnColision() { return game.uniqueCollider(self) }
 
-    method image() { return "snorlax-" + estado.nombre() }
+    method image() { return "snorlax-" + estado.nombre() + estado.extension() }
 
     method tieneVidaLlena() {
         return vidas == 3

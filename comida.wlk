@@ -13,7 +13,7 @@ class Comida inherits FallingObject {
 
     //acciones
     method comer() {
-        snorlaxComiendo.iniciar()
+        snorlaxComiendo.animar()
         self.eliminarDelJuegoEn(500)
         puntuacion.incrementaPuntos(puntos)
     }
