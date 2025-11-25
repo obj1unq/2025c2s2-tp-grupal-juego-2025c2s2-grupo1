@@ -3,6 +3,18 @@ import snorlax.*
 object gestorDeEstados {
     var duracionRestante = 0
 
+    method iniciarSecuenciaPNGs(estado) {
+        self.animar(estado)
+        self.comenzarSecuencia(estado)
+    }
+
+    method comenzarSecuencia(estado) {
+        game.onTick(estado.cantFramesPorSegundo(), "Secuencia de PNGs", { 
+            estado.avanzarASiguienteEtapa()
+            self.verificarTimer()
+        })
+    }
+
     method animar(estado) {
         snorlax.cambiarEstadoA(estado)
         estado.activar()
@@ -37,7 +49,7 @@ object gestorDeEstados {
     }
 
     method verificarTimer() {
-        if (self.seAgotoLaDuracion()) { self.finalizarEstadoActual() }
+        if (self.seAgotoLaDuracion()) { self.estadoActual().finalizarAnimacion() }
     }
 
     method determinarFinalizacion() {
@@ -46,9 +58,8 @@ object gestorDeEstados {
         } else { self.terminar() } 
     }
 
-    method finalizarEstadoActual() {
-        self.finalizarTimerActual()
-        self.determinarFinalizacion()
+    method finalizarSecuenciaActual() {
+        game.removeTickEvent("Secuencia de PNGs")
     }
 
     method finalizarTimerActual() {
@@ -121,49 +132,39 @@ class EstadoSimple {
     }
 
     method extension() { return ".gif" } //por defecto
+
+    method finalizarAnimacion() {
+        gestorDeEstados.finalizarTimerActual()
+        gestorDeEstados.determinarFinalizacion()
+    }
 }
 
 class EstadoCompuesto inherits EstadoSimple {
-    var cantEtapas
+    const cantEtapas
     var etapaActual = 0
-    var FPS
+    const fps
 
     override method animar() {
-        super()
-        self.comenzar()
+        gestorDeEstados.iniciarSecuenciaPNGs(self)
     }
 
-    method comenzar() {
-        game.onTick(self.cantFramesPorSegundo(), "Animacion", { 
-            self.avanzarASiguienteEtapa()
-            self.validarFinalizacion()
-        })
-    }
+    method cantFramesPorSegundo() { return 1000 / fps }
 
-    method cantFramesPorSegundo() {
-        return 1000 / FPS
-    }
+    override method nombre() { return nombre + "_" + etapaActual }
 
-    method validarFinalizacion() {
-        if (gestorDeEstados.seAgotoLaDuracion()) { self.finalizar() }
-    }
-
-    override method nombre() {
-        return nombre + "_" + etapaActual
-    }
-
-    method finalizar() {
-        self.terminarAnimacion()
-        self.resetear()
-    }
-
-    method terminarAnimacion() {
-        game.removeTickEvent("Animacion")
+    override method finalizarAnimacion() {
+        gestorDeEstados.finalizarSecuenciaActual()
+        super() 
     }
 
     override method extension() { return ".png" }
 
     method avanzarASiguienteEtapa() { etapaActual += 1 }
+
+    override method desactivar() {
+        super()
+        self.resetear()
+    }
 
     method resetear() { etapaActual = 0 }
 
@@ -176,7 +177,7 @@ const snorlaxCapturado = new EstadoCompuesto (
     nombre = "capturado",
     estaInmovilizado = true,
     cantEtapas = 35,
-    FPS = 5
+    fps = 5
 )
 
 const snorlaxComiendo = new EstadoSimple (
