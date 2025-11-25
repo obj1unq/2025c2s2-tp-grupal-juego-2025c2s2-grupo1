@@ -3,8 +3,8 @@ import snorlax.*
 object gestorDeEstados {
     var duracionRestante = 0
 
-    method iniciarSecuenciaPNGs(estado) {
-        self.animar(estado)
+    method animarSecuenciaPNGs(estado) {
+        self.prepararEstado(estado)
         self.comenzarSecuencia(estado)
     }
 
@@ -15,7 +15,7 @@ object gestorDeEstados {
         })
     }
 
-    method animar(estado) {
+    method prepararEstado(estado) {
         snorlax.cambiarEstadoA(estado)
         estado.activar()
         self.finalizarTimerActual()
@@ -29,6 +29,7 @@ object gestorDeEstados {
     method verificarSiHayInterrupcion() {
         if (not self.seAgotoLaDuracion()) {
             gestorInterrupciones.crearInterrupcion(duracionRestante)
+            self.estadoActual().desactivar()
         }
     }
 
@@ -92,6 +93,7 @@ object gestorInterrupciones {
 
     method continuarEstadoInterrumpido() {
         self.ultimaInterrupcion().continuar()
+        self.eliminarTodo()
     }
 
     method ultimaInterrupcion() { return interrupciones.last() }
@@ -103,10 +105,10 @@ class Interrupcion {
     const property estadoInterrumpido
     const property duracionRestante
 
-    method continuar() { 
+    method continuar() {
         snorlax.validarInvencibilidad()
-        snorlax.cambiarEstadoA(estadoInterrumpido)
-        gestorInterrupciones.eliminarTodo()
+            snorlax.cambiarEstadoA(estadoInterrumpido)
+            estadoInterrumpido.activar()
         gestorDeEstados.iniciarTimer(duracionRestante) 
     }
 }
@@ -118,6 +120,10 @@ class EstadoSimple {
     var property modo = desactivado
 
     method animar() { modo.animar(self) }
+
+    method iniciarAnimacion() {
+        gestorDeEstados.prepararEstado(self)
+    }
 
     method validarAdormecimiento() {}
 
@@ -144,8 +150,8 @@ class EstadoCompuesto inherits EstadoSimple {
     var etapaActual = 0
     const fps
 
-    override method animar() {
-        gestorDeEstados.iniciarSecuenciaPNGs(self)
+    override method iniciarAnimacion() {
+        gestorDeEstados.animarSecuenciaPNGs(self)
     }
 
     method cantFramesPorSegundo() { return 1000 / fps }
@@ -228,7 +234,7 @@ object activado inherits ModosDeEstado {
 object desactivado inherits ModosDeEstado {
     override method animar(estado) {
         gestorDeEstados.verificarSiHayInterrupcion()
-        gestorDeEstados.animar(estado)
+        estado.iniciarAnimacion()
     }
 
     override method validarDesactivacion() {

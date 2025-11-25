@@ -90,9 +90,7 @@ object snorlax{
 
     method image() { return "snorlax-" + estado.nombre() + estado.extension() }
 
-    method tieneVidaLlena() {
-        return vidas == 3
-    }
+    method tieneVidaLlena() { return vidas == 3 }
 
     method validarVidas() {
         if (not self.tieneVidas()) {
@@ -108,6 +106,7 @@ object snorlax{
 
     method validarComer() {
         estado.validarAdormecimiento()
+        estado.validarComer()
         if (not self.hayComidaColisionando()) {
             self.error("No hay nada para comer.")
         }
