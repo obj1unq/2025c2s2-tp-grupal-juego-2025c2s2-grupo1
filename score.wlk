@@ -1,6 +1,7 @@
 import snorlax.*
 import fasesDelJuego.*
 import estadosDeSnorlax.*
+import gestorEstadosDeSnorlax.*
 
 const colorTexto = "FFFFFFFF"
 
@@ -53,8 +54,12 @@ object nivelActual {
 object timer {
     var property position = game.at(8,5)
 
-    method text() { return gestorDeEstados.duracion().toString() }
+    method text() { return self.segundosRestantes().toString() + "s" }
     method textColor() {return colorTexto }
+
+    method segundosRestantes() { 
+        return  gestorDeEstados.duracion() / 1000
+    }
 }
 
 object progressLevel {
