@@ -6,7 +6,7 @@ class Pokebola inherits Basura {
 
     override method chocasteConSnorlax() {
         basuraDelJuego.eliminarBasuraDelJuego(self)
-        snorlax.validarInvencibilidad()
+        snorlax.validarEstadoActual()
         snorlaxCapturado.animar()
     }
  

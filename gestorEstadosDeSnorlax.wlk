@@ -78,6 +78,10 @@ object gestorDeEstados {
     method duracion() { return duracionRestante }
 
     method seAgotoLaDuracion() { return duracionRestante == 0 }
+    
+    method validarCooldown() {
+        if (not self.seAgotoLaDuracion()) { self.error("Aún no terminó el estado actual.") }
+    }
 }
 
 object gestorInterrupciones {
@@ -111,7 +115,7 @@ class Interrupcion {
     const property duracionRestante
 
     method continuar() {
-        snorlax.validarInvencibilidad()
+        snorlax.validarEstadoActual()
             snorlax.cambiarEstadoA(estadoInterrumpido)
             estadoInterrumpido.activar()
         gestorDeEstados.iniciarTimer(duracionRestante) 

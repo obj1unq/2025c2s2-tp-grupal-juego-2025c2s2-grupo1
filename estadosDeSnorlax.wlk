@@ -4,7 +4,9 @@ import gestorEstadosDeSnorlax.*
 class EstadoSimple {
     const property nombre
     const property duracion = 0
-    const property estaInmovilizado = false
+    const property puedeMoverse = true
+    const property puedeComer = true
+    const property puedeRecibirDaño = true
     var property modo = desactivado
 
     method animar() { modo.animar(self) }
@@ -13,9 +15,29 @@ class EstadoSimple {
         gestorDeEstados.prepararEstado(self)
     }
 
-    method validarAdormecimiento() {}
+    method validarComer() {
+        if (not puedeComer) { 
+            self.error( "Snorlax no puede comer dado que es/está " + nombre ) 
+        }
+    }
 
-    method validarComer() {}
+    method validarMover() {
+        if (not puedeMoverse) { 
+            self.error( "Snorlax no se puede mover dado que es/está " + nombre ) 
+        }
+    }
+
+    method validarRecibirDaño() {
+        if (not puedeRecibirDaño) { 
+            self.error( "Snorlax es invulnerable dado que es/está " + nombre ) 
+        }
+    }
+
+    method validarEstado() {
+        self.validarMover()
+        self.validarComer()
+        self.validarRecibirDaño()
+    }
 
     method activar() {
         modo.validarActivacion()
@@ -71,7 +93,9 @@ const snorlaxNormal = new EstadoSimple ( nombre = "normal" )
 
 const snorlaxCapturado = new EstadoCompuesto ( 
     nombre = "capturado",
-    estaInmovilizado = true,
+    puedeComer = false,
+    puedeMoverse = false,
+    puedeRecibirDaño = false,
     cantEtapas = 35,
     fps = 5
 )
@@ -91,15 +115,13 @@ const snorlaxGanaNivel = new EstadoSimple (
     duracion = 1000
 )
 
-object snorlaxComiendo inherits EstadoSimple ( nombre = "come", duracion = 500 ) {
-    override method validarComer() {
-        self.error("Estás comiendo ahora mismo.")
-    }
-}
+const snorlaxComiendo = new EstadoSimple ( 
+    nombre = "comiendo", 
+    duracion = 500
+)
 
-object snorlaxAdormecido inherits EstadoSimple( nombre = "adormecido", duracion = 8000 ) {
-
-    override method validarAdormecimiento() {
-        self.error("No puede comer mientras esta con sueño.")
-    }
-}
+const snorlaxAdormecido = new EstadoSimple ( 
+    nombre = "adormecido", 
+    duracion = 8000,
+    puedeComer = false 
+)

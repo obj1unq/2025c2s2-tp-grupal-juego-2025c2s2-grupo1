@@ -1,3 +1,4 @@
+import gestorEstadosDeSnorlax.*
 import extras.*
 import comida.*
 import basura.*
@@ -9,35 +10,28 @@ import score.*
 object snorlax{
     var property position = game.at(0, 0) 
     var property estado = snorlaxNormal
-    var property vidas = 3 //Comienza con 3 vidas
+    var property vidas = 3
     
     //acciones
     method mover(direccion){
-        juego.validarEstado()
-        self.validarInvencibilidad()
         self.validarMover(direccion)
         position = direccion.siguiente(self)
     }
 
     method recibirDaño() {
-        juego.validarEstado()
-        self.validarInvencibilidad()
+        self.validarEstadoActual()
         self.objetoEnColision().dañar()
-        if (self.tieneVidas()) { // no se puede añadir validacion porque interrumpe el flujo.
-            snorlaxRecibiendoDaño.animar()
-        }
-        else { self.terminarJuego() }
-    }
-
-    method terminarJuego() { 
-        snorlaxPerdedor.animar()
-        game.schedule(2000, { juego.finalizar() }) 
+        self.verificarFinDelJuego()
     }
 
     method comer() {
-        juego.validarEstado()
         self.validarComer()
         self.objetoEnColision().comer()
+    }
+
+    method levantarComida(comida) {
+        self.validarEstadoActual()
+        comida.cambiarEstadoA(primerEstado)
     }
 
     method perderUnaVida() { vidas -= 1 }
@@ -46,16 +40,7 @@ object snorlax{
         if (not self.tieneVidaLlena()) { vidas += 1 }
     }
 
-    method cambiarEstadoA(estadoNuevo) { 
-        estado = estadoNuevo 
-    }
-
-    method levantarComida(comida) {
-        estado.validarAdormecimiento()
-        self.validarInvencibilidad()
-
-        comida.cambiarEstadoA(primerEstado)
-    }
+    method cambiarEstadoA(estadoNuevo) { estado = estadoNuevo }
 
     method reiniciar() {
         position = game.at(0, 0)
@@ -71,6 +56,18 @@ object snorlax{
         })
     }
 
+    method terminarJuego() { 
+        snorlaxPerdedor.animar()
+        game.schedule(2000, { juego.finalizar() }) 
+    }
+
+    method verificarFinDelJuego() {
+        if (self.tieneVidas()) {
+            snorlaxRecibiendoDaño.animar()
+        }
+        else { self.terminarJuego() }
+    }
+
     //consultas
     method puedeMover(direccion){
         return self.hayCelda(direccion) && self.tieneVidas()
@@ -82,8 +79,6 @@ object snorlax{
 
     method tieneVidas() { return vidas > 0 }
 
-    method esInvencible() { return estado.estaInmovilizado() }
-
     method hayComidaColisionando() { return comidaDelJuego.hayComidaEn(position) }
 
     method objetoEnColision() { return game.uniqueCollider(self) }
@@ -93,29 +88,29 @@ object snorlax{
     method tieneVidaLlena() { return vidas == 3 }
 
     method validarVidas() {
-        if (not self.tieneVidas()) {
-            self.error("Snorlax no tiene vidas.")
-        }
+        if (not self.tieneVidas()) { self.error("No tengo vidas.") }
     }
 
     method validarMover(direccion) {
-        if (not self.puedeMover(direccion)) {
-            self.error("No puedo mover.")
+        self.validarEstadoActual()
+        if (not self.puedeMover(direccion)) { 
+            self.error("No me puedo mover.") 
         }
     }
 
     method validarComer() {
-        estado.validarAdormecimiento()
-        estado.validarComer()
-        if (not self.hayComidaColisionando()) {
-            self.error("No hay nada para comer.")
-        }
+        self.validarEstadoActual()
+        gestorDeEstados.validarCooldown()
+        self.validarHayComida()
     }
 
-    method validarInvencibilidad() {
-        if (self.esInvencible()) {
-            self.error("Soy invencible.")
-        }
+    method validarHayComida() {
+        if (not self.hayComidaColisionando()) { self.error("No hay nada para comer.") }
+    }
+
+    method validarEstadoActual() {
+        juego.validarEstado()
+        estado.validarMover()
     }
 }
 
