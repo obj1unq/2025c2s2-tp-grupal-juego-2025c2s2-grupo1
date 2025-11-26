@@ -19,7 +19,8 @@ object snorlax{
     }
 
     method recibirDaño() {
-        self.validarEstadoActual()
+        juego.validarEstado()
+        self.validarEfecto(invulnerabilidad)
         self.objetoEnColision().dañar()
         self.verificarFinDelJuego()
     }
@@ -30,7 +31,8 @@ object snorlax{
     }
 
     method levantarComida(comida) {
-        self.validarEstadoActual()
+        juego.validarEstado()
+        self.validarEfecto(desgano)
         comida.cambiarEstadoA(primerEstado)
     }
 
@@ -92,14 +94,16 @@ object snorlax{
     }
 
     method validarMover(direccion) {
-        self.validarEstadoActual()
+        juego.validarEstado()
+        self.validarEfecto(inmovilidad)
         if (not self.puedeMover(direccion)) { 
             self.error("No me puedo mover.") 
         }
     }
 
     method validarComer() {
-        self.validarEstadoActual()
+        juego.validarEstado()
+        self.validarEfecto(desgano)
         gestorDeEstados.validarCooldown()
         self.validarHayComida()
     }
@@ -108,9 +112,10 @@ object snorlax{
         if (not self.hayComidaColisionando()) { self.error("No hay nada para comer.") }
     }
 
-    method validarEstadoActual() {
-        juego.validarEstado()
-        estado.validarMover()
+    method validarEfecto(efecto) {
+        if (estado.tieneEfecto(efecto)) {
+            self.error("Tengo el efecto " + efecto.toString())
+        }
     }
 }
 

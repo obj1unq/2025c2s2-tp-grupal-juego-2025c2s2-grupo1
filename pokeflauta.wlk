@@ -8,7 +8,6 @@ class Pokeflauta inherits Basura {
 
     override method chocasteConSnorlax() { 
         basuraDelJuego.eliminarBasuraDelJuego(self)
-        snorlax.validarEstadoActual()
         self.adormecer()
     }
 

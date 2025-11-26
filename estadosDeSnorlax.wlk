@@ -4,39 +4,13 @@ import gestorEstadosDeSnorlax.*
 class EstadoSimple {
     const property nombre
     const property duracion = 0
-    const property puedeMoverse = true
-    const property puedeComer = true
-    const property puedeRecibirDaño = true
+    const property efectos = #{}
     var property modo = desactivado
 
     method animar() { modo.animar(self) }
 
     method iniciarAnimacion() {
         gestorDeEstados.prepararEstado(self)
-    }
-
-    method validarComer() {
-        if (not puedeComer) { 
-            self.error( "Snorlax no puede comer dado que es/está " + nombre ) 
-        }
-    }
-
-    method validarMover() {
-        if (not puedeMoverse) { 
-            self.error( "Snorlax no se puede mover dado que es/está " + nombre ) 
-        }
-    }
-
-    method validarRecibirDaño() {
-        if (not puedeRecibirDaño) { 
-            self.error( "Snorlax es invulnerable dado que es/está " + nombre ) 
-        }
-    }
-
-    method validarEstado() {
-        self.validarMover()
-        self.validarComer()
-        self.validarRecibirDaño()
     }
 
     method activar() {
@@ -47,6 +21,10 @@ class EstadoSimple {
     method desactivar() {
         modo.validarDesactivacion()
         modo = desactivado
+    }
+
+    method tieneEfecto(efecto) {
+        return efectos.contains(efecto)
     }
 
     method extension() { return ".gif" } //por defecto
@@ -89,13 +67,12 @@ class EstadoCompuesto inherits EstadoSimple {
     override method duracion() { return cantEtapas * self.cantFramesPorSegundo() }
 }
 
+//estados de snorlax
 const snorlaxNormal = new EstadoSimple ( nombre = "normal" )
 
 const snorlaxCapturado = new EstadoCompuesto ( 
     nombre = "capturado",
-    puedeComer = false,
-    puedeMoverse = false,
-    puedeRecibirDaño = false,
+    efectos = #{invulnerabilidad, inmovilidad, desgano },
     cantEtapas = 35,
     fps = 5
 )
@@ -117,11 +94,19 @@ const snorlaxGanaNivel = new EstadoSimple (
 
 const snorlaxComiendo = new EstadoSimple ( 
     nombre = "comiendo", 
-    duracion = 500
+    duracion = 500,
+    efectos = #{ inmovilidad }
 )
 
 const snorlaxAdormecido = new EstadoSimple ( 
     nombre = "adormecido", 
     duracion = 8000,
-    puedeComer = false 
+    efectos = #{ desgano } 
 )
+
+//efectos
+object inmovilidad {}
+
+object desgano {}
+
+object invulnerabilidad {}

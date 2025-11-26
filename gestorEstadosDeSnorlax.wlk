@@ -55,9 +55,10 @@ object gestorDeEstados {
     }
 
     method determinarFinalizacion() {
+        self.terminar()
         if (gestorInterrupciones.hayInterrupciones()) {
             gestorInterrupciones.continuarEstadoInterrumpido()
-        } else { self.terminar() } 
+        } 
     }
 
     method finalizarSecuenciaActual() {
@@ -115,9 +116,8 @@ class Interrupcion {
     const property duracionRestante
 
     method continuar() {
-        snorlax.validarEstadoActual()
-            snorlax.cambiarEstadoA(estadoInterrumpido)
-            estadoInterrumpido.activar()
+        snorlax.cambiarEstadoA(estadoInterrumpido)
+        estadoInterrumpido.activar()
         gestorDeEstados.iniciarTimer(duracionRestante) 
     }
 }
