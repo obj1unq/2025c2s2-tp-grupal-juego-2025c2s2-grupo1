@@ -82,8 +82,8 @@ class Audio {
 }
 
 const gameStartMusic = new Audio( nombre = "musica-inicio.mp3", volumen = 0.3)
-const gameOverMusic  = new Audio( nombre = "musica-fin.mp3") //demasiado corto
+const gameOverMusic  = new Audio( nombre = "musica-fin.mp3"    ) //demasiado corto
 const inGameMusic    = new Audio( nombre = "musica-juego.mp3", volumen = 0.3)
 const harmSound      = new Audio( nombre = "harming-sound.mp3" )
-const eatSound       = new Audio( nombre = "eating-sound.mp3" )
-
+const eatSound       = new Audio( nombre = "eating-sound.mp3"  )
+const levelUpSound   = new Audio( nombre = "levelUp-sound.mp3" )

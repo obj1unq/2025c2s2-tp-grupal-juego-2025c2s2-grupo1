@@ -69,6 +69,7 @@ object snorlax{
     method subirAlSiguienteNivel() {
         game.schedule(1000, {
             snorlaxGanaNivel.animar()
+            gestorMusica.reproducirSonido(levelUpSound)
             progressLevel.reiniciar()
             juego.cambiarAlSiguienteNivel()
         })

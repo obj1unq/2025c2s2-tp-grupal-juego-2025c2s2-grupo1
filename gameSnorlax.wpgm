@@ -12,7 +12,7 @@ program snorlaxGame{
     configuraciones.inicializar()
 
     game.start()
-    gestorMusica.reproducir(gameStartMusic)
+    gestorMusica.reproducir(gameStartMusic) //Si no funciona, sacar comando y volver a ponerlo  
 }
 
 object configuraciones {
