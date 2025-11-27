@@ -36,10 +36,7 @@ object juego {
     }
 
     method reiniciar() { //Cambia de Pantalla de GameOver a Juego (inGame)
-        snorlax.reiniciar()
-        highscore.actualizar()
-        puntuacion.reiniciar()
-        progressLevel.reiniciar()
+        self.reiniciarVisualesPrincipales()
         self.cambiarNivelA(nivelFacil)
         nivel.removerFondo() // por alguna razón, tengo que remover el fondo del nivel facil pese a que se remueve al subir de nivel.
         pantallaDeFin.removerFondo()
@@ -88,6 +85,13 @@ object juego {
         //Se intentó añadir boton de pausar y reanudar pero no se logró solucionar el bug con las animaciones.
     }
 
+    method reiniciarVisualesPrincipales() {
+        snorlax.reiniciar()
+        highscore.actualizar()
+        puntuacion.reiniciar()
+        progressLevel.reiniciar()
+    }
+
     method añadirVisuales() {
         game.addVisual(snorlax)
         game.addVisual(puntuacion)
@@ -95,6 +99,7 @@ object juego {
         game.addVisual(nivelActual)
         game.addVisual(progressLevel)
         game.addVisual(highscore)
+        game.addVisual(timer)
         fallingObjectsDelJuego.añadirItemAlAzar() //detenerse cuando esta en pausa
     }
 
@@ -105,6 +110,7 @@ object juego {
         game.removeVisual(nivelActual)
         game.removeVisual(progressLevel)
         game.removeVisual(highscore)
+        game.removeVisual(timer)
     }
 
     method removerVisualesActivos() {

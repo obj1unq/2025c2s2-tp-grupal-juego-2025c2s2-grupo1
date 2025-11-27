@@ -1,100 +1,131 @@
 import snorlax.*
+import gestorEstadosDeSnorlax.*
 
-class EstadoBase {
-    method nombre() { return "normal" }
+class EstadoSimple {
+    const property nombre
+    const property duracion = 0
+    const property efectos = #{}
+    var property modo = desactivado
+    const property tipoDeArchivo
 
-    method animar() {}
+    method animar() { modo.animar(self) }
 
-    method validarAdormecimiento() {}
-
-    method estaInmovilizado() { return false }
-}
-
-const snorlaxNormal = new EstadoBase()
-
-class EstadoSimple inherits EstadoBase {
-    override method animar() {
-        snorlax.cambiarEstadoA(self.estadoAlIniciar())
-        game.schedule(
-            self.duracion(), 
-            {snorlax.cambiarEstadoA( self.estadoAlFinalizar() )}
-        )
+    method iniciarAnimacion() {
+        gestorDeEstados.prepararEstado(self)
     }
 
-    method estadoAlIniciar() { return self }
-
-    method estadoAlFinalizar() { return snorlaxNormal }
-
-    method duracion()
-}
-
-object snorlaxCapturado inherits EstadoBase {
-    var etapaTransicion = 0
-
-    override method nombre() { return "capturado-_" + etapaTransicion + "" }
-
-    override method animar() {
-        //Inicio animación
-        snorlax.cambiarEstadoA(self)
-        self.aplicarAnimacion()
-
-        self.resetearTransicion()
-
-        //Fin animación
-        game.schedule(10000, {snorlax.cambiarEstadoA(snorlaxNormal) 
-                              self.resetearTransicion()} )
-        game.schedule(8000, {game.removeTickEvent("animacion")})
-    }
-    
-    method aplicarAnimacion() { 
-        game.onTick(500, "animacion", {self.realizarTransicion()}) 
+    method activar() {
+        modo.validarActivacion()
+        modo = activado
     }
 
-    method realizarTransicion() {
-        etapaTransicion = (etapaTransicion + 1).min(14)
+    method desactivar() {
+        modo.validarDesactivacion()
+        modo = desactivado
     }
 
-    method resetearTransicion() {
-        etapaTransicion = 0
+    method tieneEfecto(efecto) {
+        return efectos.contains(efecto)
     }
 
-    override method estaInmovilizado() { return true }
-}
+    method extension() { return tipoDeArchivo.extension() } //por defecto
 
-object snorlaxComiendo inherits EstadoSimple {
-    override method nombre() { return "come" }
-
-    override method duracion() { return 500 }
-}
-
-object snorlaxRecibiendoDaño inherits EstadoSimple {
-    override method nombre() { return "daño" }
-
-    override method duracion() { return 1000 }
-}
-
-object snorlaxPerdedor inherits EstadoSimple {
-    override method nombre() { return "perdedor" }
-
-    override method duracion() { return 1000 }
-
-    override method estadoAlIniciar() { return snorlaxRecibiendoDaño }
-
-    override method estadoAlFinalizar() { return self }
-}
-
-object snorlaxAdormecido inherits EstadoSimple {
-    override method nombre() { return "adormecido" }
-
-    override method duracion() { return 8000 }
-
-    override method validarAdormecimiento() {
-        self.error("No puede comer mientras esta con sueño.")
+    method finalizarAnimacion() {
+        gestorDeEstados.finalizarTimerActual()
+        gestorDeEstados.determinarFinalizacion()
     }
 }
 
-object snorlaxGanaNivel inherits EstadoSimple { 
-    override method nombre() { return "gana" }
+class EstadoCompuesto inherits EstadoSimple {
+    const cantEtapas
+    var etapaActual = 0
+    const fps
 
-    override method duracion() { return 1000 }
+    override method iniciarAnimacion() {
+        gestorDeEstados.animarSecuencia(self)
+    }
+
+    method cantFramesPorSegundo() { return 1000 / fps }
+
+    override method nombre() { return nombre + "_" + etapaActual }
+
+    override method finalizarAnimacion() {
+        gestorDeEstados.finalizarSecuenciaActual()
+        super() 
+    }
+
+    method avanzarASiguienteEtapa() { etapaActual += 1 }
+
+    override method desactivar() {
+        super()
+        self.resetear()
+    }
+
+    method resetear() { etapaActual = 0 }
+
+    override method duracion() { return cantEtapas * self.cantFramesPorSegundo() }
+}
+
+//estados de snorlax
+const snorlaxNormal = new EstadoSimple ( 
+    nombre = "normal",
+    tipoDeArchivo = new ArchivoGIF() 
+)
+
+const snorlaxCapturado = new EstadoCompuesto ( 
+    nombre = "capturado",
+    efectos = #{invulnerabilidad, inmovilidad, desgano },
+    cantEtapas = 35,
+    fps = 5,
+    tipoDeArchivo = new ArchivoPNG()
+)
+
+const snorlaxRecibiendoDaño = new EstadoSimple (
+    nombre = "daño",
+    duracion = 1000,
+    tipoDeArchivo = new ArchivoGIF() 
+)
+
+const snorlaxPerdedor = new EstadoSimple (
+    nombre = "perdedor",
+    duracion = 3000,
+    tipoDeArchivo = new ArchivoGIF() 
+)
+
+const snorlaxGanaNivel = new EstadoSimple (
+    nombre = "gana",
+    duracion = 1000,
+    tipoDeArchivo = new ArchivoGIF() 
+)
+
+const snorlaxComiendo = new EstadoSimple ( 
+    nombre = "comiendo", 
+    duracion = 500,
+    tipoDeArchivo = new ArchivoGIF() ,
+    efectos = #{ inmovilidad }
+)
+
+const snorlaxAdormecido = new EstadoSimple ( 
+    nombre = "adormecido", 
+    duracion = 8000,
+    tipoDeArchivo = new ArchivoGIF() ,
+    efectos = #{ desgano } 
+)
+
+//efectos
+object inmovilidad {}
+
+object desgano {}
+
+object invulnerabilidad {}
+
+//Tipo de archivo admitidos
+class TipoDeArchivo { method extension() }
+
+class ArchivoPNG inherits TipoDeArchivo {
+    override method extension() { return ".png" }
+}
+
+class ArchivoGIF inherits TipoDeArchivo {
+    override method extension() { return ".gif" }
 }

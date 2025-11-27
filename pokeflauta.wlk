@@ -1,10 +1,14 @@
 import estadosDeSnorlax.*
 import snorlax.*
 import basura.*
+import sound.*
 
 class Pokeflauta inherits Basura {
 
-    method adormecer() { snorlaxAdormecido.animar() }
+    method adormecer() { 
+        snorlaxAdormecido.animar() 
+        gestorMusica.reproducirSonido(sleepSound)
+    }
 
     override method chocasteConSnorlax() { 
         basuraDelJuego.eliminarBasuraDelJuego(self)

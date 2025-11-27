@@ -83,6 +83,7 @@ object fallingObjectsDelJuego {
 
         juego.validarEstado()
         snorlax.validarVidas()
+        //basuraDelJuego.añadirBasuraAlAzar()
         if(probabilidad.between(0, self.probabilidadDeSpawneoBasura())) {
             basuraDelJuego.añadirBasuraAlAzar()
         }

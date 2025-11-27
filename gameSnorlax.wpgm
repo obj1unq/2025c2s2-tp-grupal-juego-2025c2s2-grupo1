@@ -7,6 +7,7 @@ import basura.*
 import sound.*
 import fasesDelJuego.*
 
+
 program snorlaxGame{
     configuraciones.sobreElTablero()
     configuraciones.inicializar()
