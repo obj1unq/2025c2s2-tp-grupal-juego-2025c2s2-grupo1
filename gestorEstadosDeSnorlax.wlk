@@ -4,13 +4,13 @@ import estadosDeSnorlax.*
 object gestorDeEstados {
     var duracionRestante = 0
 
-    method animarSecuenciaPNGs(estado) {
+    method animarSecuencia(estado) {
         self.prepararEstado(estado)
         self.comenzarSecuencia(estado)
     }
 
     method comenzarSecuencia(estado) {
-        game.onTick(estado.cantFramesPorSegundo(), "Secuencia de PNGs", { 
+        game.onTick(estado.cantFramesPorSegundo(), "Secuencia", { 
             estado.avanzarASiguienteEtapa()
             self.verificarTimer()
         })
@@ -62,7 +62,7 @@ object gestorDeEstados {
     }
 
     method finalizarSecuenciaActual() {
-        game.removeTickEvent("Secuencia de PNGs")
+        game.removeTickEvent("Secuencia")
     }
 
     method finalizarTimerActual() {

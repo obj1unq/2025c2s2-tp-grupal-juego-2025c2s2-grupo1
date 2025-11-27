@@ -6,6 +6,7 @@ class EstadoSimple {
     const property duracion = 0
     const property efectos = #{}
     var property modo = desactivado
+    const property tipoDeArchivo
 
     method animar() { modo.animar(self) }
 
@@ -27,7 +28,7 @@ class EstadoSimple {
         return efectos.contains(efecto)
     }
 
-    method extension() { return ".gif" } //por defecto
+    method extension() { return tipoDeArchivo.extension() } //por defecto
 
     method finalizarAnimacion() {
         gestorDeEstados.finalizarTimerActual()
@@ -41,7 +42,7 @@ class EstadoCompuesto inherits EstadoSimple {
     const fps
 
     override method iniciarAnimacion() {
-        gestorDeEstados.animarSecuenciaPNGs(self)
+        gestorDeEstados.animarSecuencia(self)
     }
 
     method cantFramesPorSegundo() { return 1000 / fps }
@@ -52,8 +53,6 @@ class EstadoCompuesto inherits EstadoSimple {
         gestorDeEstados.finalizarSecuenciaActual()
         super() 
     }
-
-    override method extension() { return ".png" }
 
     method avanzarASiguienteEtapa() { etapaActual += 1 }
 
@@ -68,39 +67,48 @@ class EstadoCompuesto inherits EstadoSimple {
 }
 
 //estados de snorlax
-const snorlaxNormal = new EstadoSimple ( nombre = "normal" )
+const snorlaxNormal = new EstadoSimple ( 
+    nombre = "normal",
+    tipoDeArchivo = new ArchivoGIF() 
+)
 
 const snorlaxCapturado = new EstadoCompuesto ( 
     nombre = "capturado",
     efectos = #{invulnerabilidad, inmovilidad, desgano },
     cantEtapas = 35,
-    fps = 5
+    fps = 5,
+    tipoDeArchivo = new ArchivoPNG()
 )
 
 const snorlaxRecibiendoDaño = new EstadoSimple (
     nombre = "daño",
-    duracion = 1000
+    duracion = 1000,
+    tipoDeArchivo = new ArchivoGIF() 
 )
 
 const snorlaxPerdedor = new EstadoSimple (
     nombre = "perdedor",
-    duracion = 3000
+    duracion = 3000,
+    tipoDeArchivo = new ArchivoGIF() 
 )
 
 const snorlaxGanaNivel = new EstadoSimple (
     nombre = "gana",
-    duracion = 1000
+    duracion = 1000,
+    tipoDeArchivo = new ArchivoGIF() 
 )
 
 const snorlaxComiendo = new EstadoSimple ( 
     nombre = "comiendo", 
     duracion = 500,
+    tipoDeArchivo = new ArchivoGIF() ,
     efectos = #{ inmovilidad }
 )
 
 const snorlaxAdormecido = new EstadoSimple ( 
     nombre = "adormecido", 
     duracion = 8000,
+    tipoDeArchivo = new ArchivoGIF() ,
     efectos = #{ desgano } 
 )
 
@@ -110,3 +118,14 @@ object inmovilidad {}
 object desgano {}
 
 object invulnerabilidad {}
+
+//Tipo de archivo admitidos
+class TipoDeArchivo { method extension() }
+
+class ArchivoPNG inherits TipoDeArchivo {
+    override method extension() { return ".png" }
+}
+
+class ArchivoGIF inherits TipoDeArchivo {
+    override method extension() { return ".gif" }
+}
