@@ -4,6 +4,7 @@ import comida.*
 import snorlax.*
 import extras.*
 import basura.*
+import sound.*
 import fasesDelJuego.*
 
 
@@ -12,6 +13,7 @@ program snorlaxGame{
     configuraciones.inicializar()
 
     game.start()
+    gestorMusica.reproducir(gameStartMusic) //Si no funciona, sacar comando y volver a ponerlo  
 }
 
 object configuraciones {
@@ -26,6 +28,7 @@ object configuraciones {
     }
     
     method inicializar() {
+        gestorMusica.configurarTeclaMute()
         estado.inicializar()
     }
 
@@ -34,6 +37,14 @@ object configuraciones {
     }
 
     method iniciarJuego() { //Se utilizar polimorfismo aquí para el botón ENTER.
-        estado.jugar()
+            estado.jugar()
     }
+
+    method estado() { return estado }    
+
+    method nextMusic() {
+        return estado.nextMusic()
+    }
+
+    method musicaActual() { return estado.musica() }
 }

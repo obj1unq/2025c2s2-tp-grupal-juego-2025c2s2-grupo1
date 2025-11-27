@@ -7,6 +7,7 @@ import fondosDelJuego.*
 import niveles.*
 import estadosDeSnorlax.*
 import score.*
+import sound.*
 
 object juego {
     var estado = juegoEnPausa
@@ -30,21 +31,21 @@ object juego {
     method comenzar() { //Cambia de Pantalla de Inicio a Juego (inGame)
         pantallaDeInicio.removerFondo()
         self.configurarTeclas()
+        gestorMusica.cambiarASiguienteCancion()
         self.inicializar()
     }
 
     method reiniciar() { //Cambia de Pantalla de GameOver a Juego (inGame)
-        snorlax.reiniciar()
-        highscore.actualizar()
-        puntuacion.reiniciar()
-        progressLevel.reiniciar()
+        self.reiniciarVisualesPrincipales()
         self.cambiarNivelA(nivelFacil)
         nivel.removerFondo() // por alguna razón, tengo que remover el fondo del nivel facil pese a que se remueve al subir de nivel.
         pantallaDeFin.removerFondo()
+        gestorMusica.cambiarASiguienteCancion()
         self.inicializar()
     }
 
     method finalizar() { //Cambia de Juego(inGame) a Pantalla de GameOver (juegoEnPausa)
+        gestorMusica.cambiarASiguienteCancion()
         self.alternarEstado()
         self.removerTodosLosVisuales()
         self.removerMecanicas()
@@ -82,6 +83,13 @@ object juego {
         keyboard.d().onPressDo({snorlax.mover(derecha)})
         keyboard.space().onPressDo({snorlax.comer()})
         //Se intentó añadir boton de pausar y reanudar pero no se logró solucionar el bug con las animaciones.
+    }
+
+    method reiniciarVisualesPrincipales() {
+        snorlax.reiniciar()
+        highscore.actualizar()
+        puntuacion.reiniciar()
+        progressLevel.reiniciar()
     }
 
     method añadirVisuales() {
@@ -139,6 +147,10 @@ object juego {
     }
 
     method validarFaseDelJuego() {} //no ocurre nada
+
+    method musica() { return inGameMusic }
+
+    method nextMusic() { return gameOverMusic }
 }
 
 //Pantallas del juego
@@ -153,6 +165,10 @@ class PantallaDelJuego {
     }
 
     method configurarTeclas() {
+        self.configurarTeclaEnter()
+    }
+
+    method configurarTeclaEnter() {
         keyboard.enter().onPressDo({
             configuraciones.iniciarJuego()
         })
@@ -168,17 +184,24 @@ class PantallaDelJuego {
 
     //Metodos Hook
     method fondo()
+
+    method musica()
+
+    method nextMusic() { return inGameMusic }
 }
 
 object pantallaDeInicio inherits PantallaDelJuego {
     override method fondo() { return fondoDeInicio }
 
     override method jugar() { juego.comenzar() }
-    
+
+    override method musica() { return gameStartMusic }
 }
 
 object pantallaDeFin inherits PantallaDelJuego {
     override method fondo() { return fondoDeGameOver }
 
     override method jugar() { juego.reiniciar() }
+
+    override method musica() { return gameOverMusic }
 }

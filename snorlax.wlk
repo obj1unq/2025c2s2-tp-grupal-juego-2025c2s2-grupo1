@@ -1,3 +1,4 @@
+import sound.*
 import gestorEstadosDeSnorlax.*
 import extras.*
 import comida.*
@@ -27,6 +28,7 @@ object snorlax{
 
     method comer() {
         self.validarComer()
+        gestorMusica.reproducirSonido(eatSound)
         self.objetoEnColision().comer()
     }
 
@@ -53,6 +55,7 @@ object snorlax{
     method subirAlSiguienteNivel() {
         game.schedule(1000, {
             snorlaxGanaNivel.animar()
+            gestorMusica.reproducirSonido(levelUpSound)
             progressLevel.reiniciar()
             juego.cambiarAlSiguienteNivel()
         })
@@ -66,6 +69,7 @@ object snorlax{
     method verificarFinDelJuego() {
         if (self.tieneVidas()) {
             snorlaxRecibiendoDaño.animar()
+            gestorMusica.reproducirSonido(harmSound)
         }
         else { self.terminarJuego() }
     }
