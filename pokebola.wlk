@@ -4,8 +4,8 @@ import estadosDeSnorlax.*
 
 class Pokebola inherits Basura {
 
-    override method chocasteConSnorlax() { 
-        self.eliminarDelJuegoEn(250)
+    override method chocasteConSnorlax() {
+        basuraDelJuego.eliminarBasuraDelJuego(self)
         snorlaxCapturado.animar()
     }
  

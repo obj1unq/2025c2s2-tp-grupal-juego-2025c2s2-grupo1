@@ -91,6 +91,7 @@ object juego {
         game.addVisual(nivelActual)
         game.addVisual(progressLevel)
         game.addVisual(highscore)
+        game.addVisual(timer)
         fallingObjectsDelJuego.añadirItemAlAzar() //detenerse cuando esta en pausa
     }
 
@@ -101,6 +102,7 @@ object juego {
         game.removeVisual(nivelActual)
         game.removeVisual(progressLevel)
         game.removeVisual(highscore)
+        game.removeVisual(timer)
     }
 
     method removerVisualesActivos() {
