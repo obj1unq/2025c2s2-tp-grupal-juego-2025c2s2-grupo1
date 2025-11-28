@@ -4,6 +4,52 @@ import basura.*
 import comida.*
 import randomizer.*
 import fasesDelJuego.*
+import factories.*
+
+object fallingObjectsDelJuego {
+    method fallingObjectsActivos() {
+        return self.factories().map({factory => factory.itemsActivos() }).flatten()
+    }
+
+    method removerTodo() {
+        self.factories().forEach({ factory => factory.removerTodo() })
+    }
+
+    method tiempoDeCaida() { return 1000 / juego.nivel().tiempoCaida() }
+
+    method añadirItemAlAzar() {
+        game.onTick(self.tiempoDeCaida(), "añadir item al azar", { self.añadirItemSegunProbabilidad() })
+    }
+
+    method añadirItemSegunProbabilidad() {
+        const gestorElegido = self.factories().anyOne()
+
+        juego.validarEstado()
+        snorlax.validarVidas()
+        //basuraDelJuego.añadirBasuraAlAzar()
+        gestorElegido.añadirAlAzar()
+    }
+
+    method factories() { return [basuraDelJuego, comidaDelJuego] }
+
+    method aplicarGravedad() {
+        game.onTick(self.tiempoDeCaida(), "aplicar gravedad", 
+            { self.fallingObjectsActivos().forEach({ item => item.caer() }) }
+        )
+    }
+
+    method aplicarAnimaciones() {
+        game.onTick(self.tiempoDeCambioEnAnimacion(), "aplicar animaciones", 
+            { self.fallingObjectsActivos().forEach({ item => item.cambiarAlSiguienteEstado() }) }
+        )
+    }
+    
+    method tiempoDeCambioEnAnimacion() { return self.tiempoDeCaida() / 4 }
+
+    method aplicarColisiones() {
+        game.whenCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
+    }//Debe ser whenCollideDo dado que levantarComida() debe estar ejecutandose continuamente. No afecta a basura.
+}
 
 class FallingObject {
     var property estado = primerEstado
@@ -55,58 +101,4 @@ class FallingObject {
             self.eliminarDelJuegoEn(1500)
         }
     }
-}
-
-object fallingObjectsDelJuego {
-
-    method fallingObjectsActivos() {
-        return comidaDelJuego.comidaActiva() + basuraDelJuego.basuraActiva()
-    }
-
-    method removerTodo() {
-        comidaDelJuego.removerTodo()
-        basuraDelJuego.removerTodo()
-    }
-
-    method tiempoDeCaida() { return 1000 / juego.nivel().tiempoCaida() }
-
-    method probabilidadDeSpawneoBasura() { return juego.nivel().probabilidadBasura() }
-
-    method añadirItemAlAzar() {
-        game.onTick(self.tiempoDeCaida(), "añadir item al azar", {
-            self.añadirItemSegunProbabilidad()
-        })
-    }
-
-    method añadirItemSegunProbabilidad() {
-        const probabilidad = 0.randomUpTo(100)
-
-        juego.validarEstado()
-        snorlax.validarVidas()
-        //basuraDelJuego.añadirBasuraAlAzar()
-        if(probabilidad.between(0, self.probabilidadDeSpawneoBasura())) {
-            basuraDelJuego.añadirBasuraAlAzar()
-        }
-        else {
-            comidaDelJuego.añadirComidaAlAzar()
-        }
-    }
-
-    method aplicarGravedad() {
-        game.onTick(self.tiempoDeCaida(), "aplicar gravedad", 
-            { self.fallingObjectsActivos().forEach({ item => item.caer() }) }
-        )
-    }
-
-    method aplicarAnimaciones() {
-        game.onTick(self.tiempoDeCambioEnAnimacion(), "aplicar animaciones", 
-            { self.fallingObjectsActivos().forEach({ item => item.cambiarAlSiguienteEstado() }) }
-        )
-    }
-    
-    method tiempoDeCambioEnAnimacion() { return self.tiempoDeCaida() / 4 }
-
-    method aplicarColisiones() {
-        game.whenCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
-    }//Debe ser whenCollideDo dado que levantarComida() debe estar ejecutandose continuamente. No afecta a basura.
 }

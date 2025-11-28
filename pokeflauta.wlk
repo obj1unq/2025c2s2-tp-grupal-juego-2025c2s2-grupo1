@@ -2,6 +2,7 @@ import estadosDeSnorlax.*
 import snorlax.*
 import basura.*
 import sound.*
+import factories.*
 
 class Pokeflauta inherits Basura {
 
@@ -11,7 +12,7 @@ class Pokeflauta inherits Basura {
     }
 
     override method chocasteConSnorlax() { 
-        basuraDelJuego.eliminarBasuraDelJuego(self)
+        basuraDelJuego.eliminarDelJuego(self)
         self.adormecer()
     }
 

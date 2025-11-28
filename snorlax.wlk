@@ -6,6 +6,7 @@ import basura.*
 import estadosDeSnorlax.*
 import fasesDelJuego.*
 import score.*
+import factories.*
 
 
 object snorlax{

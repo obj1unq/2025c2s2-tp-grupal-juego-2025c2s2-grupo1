@@ -2,11 +2,12 @@ import gestorEstadosDeSnorlax.*
 import snorlax.*
 import basura.*
 import estadosDeSnorlax.*
+import factories.*
 
 class Pokebola inherits Basura {
 
     override method chocasteConSnorlax() {
-        basuraDelJuego.eliminarBasuraDelJuego(self)
+        basuraDelJuego.eliminarDelJuego(self)
         snorlax.validarEfecto(invulnerabilidad)
         snorlaxCapturado.animar()
     }
