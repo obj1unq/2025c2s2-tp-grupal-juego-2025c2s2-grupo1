@@ -1,56 +1,37 @@
 import extras.*
 import snorlax.*
 import estadosDeSnorlax.*
-import pokelitos.*
 import randomizer.*
 import fallingObjects.*
-import pokeBayas.*
+import score.*
+import factories.*
 
 class Comida inherits FallingObject {
+    const property puntos = variante.puntos()
+
     //acciones
     method comer() {
-        snorlaxComiendo.animacion()
+        snorlaxComiendo.animar()
         self.eliminarDelJuegoEn(500)
+        puntuacion.incrementaPuntos(puntos)
     }
 
     override method eliminarDelJuegoEn(ticks) {
-         game.schedule(ticks, {comidaDelJuego.eliminarComidaDelJuego(self)})
+         game.schedule(ticks, {comidaDelJuego.eliminarDelJuego(self)})
     }
 
     override method chocasteConSnorlax() { snorlax.levantarComida(self) }
 }
 
-object comidaDelJuego {
-    const property comidaActiva = []
-	
-    method nuevoPokelito() {
-        return pokelitos.crearPokelito()
-    }
-    method nuevaBayalita(){
-        return bayalitas.crearBayalita()
-    }
+class Pokelito inherits Comida {
+    override method nombre() { return "pokelito-" + variante.nombre() }
+}
 
-	method crearComida() {
-		const comidaElegida = [{self.nuevoPokelito()}, {self.nuevaBayalita()}].anyOne()
-
-		return comidaElegida.apply()
-	}
-
-    method añadirComidaAlAzar() {
-		self.añadirComidaAlJuego(self.crearComida())
-	}
-    
-    method añadirComidaAlJuego(comida) {
-        comidaActiva.add(comida)
-        game.addVisual(comida)
+class Baya inherits Comida {
+    override method comer() {
+        snorlax.ganarUnaVida()
+        super()
     }
 
-    method eliminarComidaDelJuego(comida) {
-        comidaActiva.remove(comida)
-        game.removeVisual(comida)
-    }
-
-    method hayComidaEn(_position) {
-        return comidaActiva.any({comida => comida.position() == _position })
-    }
+    override method nombre() { return "baya-" + variante.nombre() }
 }

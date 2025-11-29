@@ -1,89 +1,71 @@
 import snorlax.*
 import fallingObjects.*
-import bolsaDeBasura.*
-import pokeflauta.*
-import pokebola.*
-import bota.*
-import manzanaPodrida.*
 import randomizer.*
+import factories.*
+import estadosDeSnorlax.*
+import sound.*
 
 class Basura inherits FallingObject {
     //acciones
-    method dañar() {
-        basuraDelJuego.eliminarBasuraDelJuego(self)
-    }
-    
     override method chocasteConSnorlax() { 
-        if (not snorlax.esInvencible()) {
-            snorlax.recibirDaño()
-        } 
+        snorlax.validarEfecto(invulnerabilidad)
+        basuraDelJuego.eliminarDelJuego(self)
+        variante.aplicarEfecto()
     }
 
     override method eliminarDelJuegoEn(ticks) {
-        game.schedule(ticks, {basuraDelJuego.eliminarBasuraDelJuego(self)})
+        game.schedule(ticks, {basuraDelJuego.eliminarDelJuego(self)})
+    }
+
+    override method nombre() { return variante.nombre() }
+}
+
+class VarianteBasura {
+    const property nombre
+    method aplicarEfecto() { snorlax.recibirDaño() }
+}
+
+class VarianteBasuraEspecial inherits VarianteBasura {
+    const property estadoEspecial 
+    const admiteSonido = false
+    const sonidoEfecto = null
+
+    override method aplicarEfecto() {
+        estadoEspecial.animar()
+        self.reproducirSonido()
+    }
+
+    method reproducirSonido() {
+        self.validarSonido()
+        gestorMusica.reproducirSonido(sonidoEfecto)
+    }
+
+    method validarSonido() {
+        if (not admiteSonido) { self.error("No se puede reproducir dado que no admite sonido.") }
     }
 }
 
-object basuraDelJuego {
-    const property basuraActiva = []
+//Variantes de la basura
+const bolsaDeBasura = new VarianteBasura(
+    nombre = "bolsaDeBasura_"
+)
 
-    method nuevaPokeflauta() {
-        return new Pokeflauta( position = randomizer.emptyPosition() )
-    }
+const manzanaPodrida = new VarianteBasura(
+    nombre = "manzana-podrida_"
+)
 
-    method nuevaPokebola() {
-        return new Pokebola( position = randomizer.emptyPosition() )
-    }
+const bota = new VarianteBasura(
+    nombre = "bota_"
+)
 
-    method nuevaBota() {
-        return new Bota( position = randomizer.emptyPosition() )
-    }
+const pokebola = new VarianteBasuraEspecial (
+    nombre = "pokebola_",
+    estadoEspecial = snorlaxCapturado
+) 
 
-    method nuevaBolsaDeBasura() {
-        return new BolsaDeBasura( position = randomizer.emptyPosition() )
-    }
-
-    method nuevaManzanaPodrida() {
-        return new ManzanaPodrida( position = randomizer.emptyPosition() )
-    }
-
-	method añadirBasuraAlAzar() {
-		self.añadirBasuraAlJuego(self.crearBasura())
-	}
-
-	method crearBasura() {
-        const basuraElegida = self.elegirSegunProbabilidad()
-
-		return basuraElegida.apply()
-	}
-
-    method elegirSegunProbabilidad() { 
-        const probabilidad = 0.randomUpTo(100)
-
-        if(probabilidad.between(0, 25)) {
-            return {self.nuevaPokeflauta()}
-        }
-        else if(probabilidad.between(25, 45)) {
-            return {self.nuevaPokebola()}
-        }
-        else if(probabilidad.between(45, 70)){
-            return {self.nuevaBota()}
-        }
-        else if(probabilidad.between(70, 85)) {
-            return {self.nuevaBolsaDeBasura()}
-        } 
-        else {
-            return {self.nuevaManzanaPodrida()}
-        }
-    }
-
-    method añadirBasuraAlJuego(basura) {
-        basuraActiva.add(basura)
-        game.addVisual(basura)
-    }
-
-    method eliminarBasuraDelJuego(basura) {
-        basuraActiva.remove(basura)
-        game.removeVisual(basura)
-    }
-}
+const pokeflauta = new VarianteBasuraEspecial (
+    nombre = "pokeflauta_",
+    estadoEspecial = snorlaxAdormecido,
+    admiteSonido = true,
+    sonidoEfecto = sleepSound
+)

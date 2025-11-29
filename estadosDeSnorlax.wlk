@@ -1,91 +1,131 @@
 import snorlax.*
+import gestorEstadosDeSnorlax.*
 
-object snorlaxNormal {
-    method nombre() { return "normal" }
+class EstadoSimple {
+    const property nombre
+    const property duracion = 0
+    const property efectos = #{}
+    var property modo = desactivado
+    const property tipoDeArchivo
 
-    method animacion() {}
+    method animar() { modo.animar(self) }
 
-    method validarAdormecimiento() {}
-}
-
-object snorlaxCapturado {
-    var etapaTransicion = 0
-
-    method nombre() { return "capturado-_" + etapaTransicion + "" }
-
-    method animacion() {
-        //Inicio animación
-        snorlax.cambiarEstadoA(self)
-        self.aplicarAnimacion()
-
-        //Fin animación
-        game.schedule(10000, {snorlax.cambiarEstadoA(snorlaxNormal) 
-                              self.resetearTransicion()} )
-        game.schedule(8000, {game.removeTickEvent("animacion")})
-    }
-    
-    method aplicarAnimacion() { 
-        game.onTick(500, "animacion", {self.realizarTransicion()}) 
+    method iniciarAnimacion() {
+        gestorDeEstados.prepararEstado(self)
     }
 
-    method realizarTransicion() {
-        etapaTransicion = (etapaTransicion + 1).min(14)
+    method activar() {
+        modo.validarActivacion()
+        modo = activado
     }
 
-    method resetearTransicion() {
-        etapaTransicion = 0
+    method desactivar() {
+        modo.validarDesactivacion()
+        modo = desactivado
     }
 
-    method validarAdormecimiento() {}
-}
-
-object snorlaxComiendo {
-    method nombre() { return "come" }
-
-    method animacion() {
-        snorlax.cambiarEstadoA(self)
-        game.schedule(500, {snorlax.cambiarEstadoA(snorlaxNormal)})
+    method tieneEfecto(efecto) {
+        return efectos.contains(efecto)
     }
 
-    method validarAdormecimiento() {}
+    method extension() { return tipoDeArchivo.extension() } //por defecto
 
-    method hayCelda(direccion) {
-        return direccion.siguiente(self).x().between(0, game.width()-2)
+    method finalizarAnimacion() {
+        gestorDeEstados.finalizarTimerActual()
+        gestorDeEstados.determinarFinalizacion()
     }
 }
 
-object snorlaxRecibiendoDaño {
-    method nombre() { return "daño" }
+class EstadoCompuesto inherits EstadoSimple {
+    const cantEtapas
+    var etapaActual = 0
+    const fps
 
-    method animacion() {
-        snorlax.cambiarEstadoA(self)
-        game.schedule(1000, {snorlax.cambiarEstadoA(snorlaxNormal)})
+    override method iniciarAnimacion() {
+        gestorDeEstados.animarSecuencia(self)
     }
 
-    method validarAdormecimiento() {}
+    method cantFramesPorSegundo() { return 1000 / fps }
+
+    override method nombre() { return nombre + "_" + etapaActual }
+
+    override method finalizarAnimacion() {
+        gestorDeEstados.finalizarSecuenciaActual()
+        super() 
+    }
+
+    method avanzarASiguienteEtapa() { etapaActual += 1 }
+
+    override method desactivar() {
+        super()
+        self.resetear()
+    }
+
+    method resetear() { etapaActual = 0 }
+
+    override method duracion() { return cantEtapas * self.cantFramesPorSegundo() }
 }
 
-object snorlaxPerdedor {
-    method nombre() { return "perdedor" }
+//estados de snorlax
+const snorlaxNormal = new EstadoSimple ( 
+    nombre = "normal",
+    tipoDeArchivo = new ArchivoGIF() 
+)
 
-    method animacion() {
-        snorlax.cambiarEstadoA(snorlaxRecibiendoDaño)
-        game.schedule(1000, {snorlax.cambiarEstadoA(self)})
-    }
+const snorlaxCapturado = new EstadoCompuesto ( 
+    nombre = "capturado",
+    efectos = #{invulnerabilidad, inmovilidad, desgano },
+    cantEtapas = 35,
+    fps = 5,
+    tipoDeArchivo = new ArchivoPNG()
+)
 
-    method validarAdormecimiento() {}
+const snorlaxRecibiendoDaño = new EstadoSimple (
+    nombre = "daño",
+    duracion = 1000,
+    tipoDeArchivo = new ArchivoGIF() 
+)
+
+const snorlaxPerdedor = new EstadoSimple (
+    nombre = "perdedor",
+    duracion = 2000,
+    tipoDeArchivo = new ArchivoGIF() 
+)
+
+const snorlaxGanaNivel = new EstadoSimple (
+    nombre = "gana",
+    duracion = 1000,
+    tipoDeArchivo = new ArchivoGIF() 
+)
+
+const snorlaxComiendo = new EstadoSimple ( 
+    nombre = "comiendo", 
+    duracion = 500,
+    tipoDeArchivo = new ArchivoGIF() ,
+    efectos = #{ inmovilidad }
+)
+
+const snorlaxAdormecido = new EstadoSimple ( 
+    nombre = "adormecido", 
+    duracion = 8000,
+    tipoDeArchivo = new ArchivoGIF() ,
+    efectos = #{ desgano } 
+)
+
+//efectos
+object inmovilidad {}
+
+object desgano {}
+
+object invulnerabilidad {}
+
+//Tipo de archivo admitidos
+class TipoDeArchivo { method extension() }
+
+class ArchivoPNG inherits TipoDeArchivo {
+    override method extension() { return ".png" }
 }
 
-
-object snorlaxAdormecido {
-    method nombre() { return "adormecido" }
-
-    method animacion() {
-        snorlax.cambiarEstadoA(self)
-        game.schedule(8000, {snorlax.cambiarEstadoA(snorlaxNormal)})
-    }
-
-    method validarAdormecimiento() {
-        self.error("No puede comer mientras esta con sueño.")
-    }
+class ArchivoGIF inherits TipoDeArchivo {
+    override method extension() { return ".gif" }
 }

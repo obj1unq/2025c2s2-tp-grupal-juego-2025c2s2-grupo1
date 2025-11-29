@@ -166,18 +166,27 @@ describe "Snorlax : Mecánica de vida" {
         assert.equals("vidas_0.png", vida.image())
     }
 
-    test "ganar una vida" {
-        assert.that(snorlax.tieneVidaLlena())
-
+    test "ganar 1 vida" {
+        assert.equals(3, snorlax.vidas())
         snorlax.ganarUnaVida()
 
         assert.equals(3, snorlax.vidas())
 
         snorlax.perderUnaVida()
+
         assert.equals(2, snorlax.vidas())
+
+        snorlax.ganarUnaVida()
+
+        assert.equals(3, snorlax.vidas())
+    }
+
+    test "Limite maximo de 3 vidas" {
+        assert.that(snorlax.tieneVidaLlena())
         
         snorlax.ganarUnaVida()
-        assert.equals(3, snorlax.vidas())
+        
+        assert.that(snorlax.tieneVidaLlena())
     }
 }
 
@@ -249,19 +258,19 @@ describe "Animaciones especiales de Snorlax" {
         game.cellSize(50)
     }
 
-    test "snorlax capturado"{
+    test "snorlax capturado" {
         snorlax.cambiarEstadoA(snorlaxCapturado)
         assert.equals("snorlax-capturado_0.png", snorlax.image())
         snorlaxCapturado.animar()
         game.schedule(7000, {assert.equals("snorlax-normal.gif", snorlax.image())})
     }
-    test "snorlax adormecido"{
+    test "snorlax adormecido" {
         snorlax.cambiarEstadoA(snorlaxAdormecido)
         assert.equals("snorlax-adormecido.gif", snorlax.image())
         game.schedule (8000, {assert.equals("snorlax-normal.gif", snorlax.image())})
     }
 }
-describe "levantar comida" {
+describe "Levantar comida" {
   test "levantar comida" {
         juego.alternarEstado()
         const comidaALevantar = factoryPokelitos.crear(limon)
@@ -274,7 +283,7 @@ describe "levantar comida" {
   }
 }
 
-describe "Efectos de snorlax"{
+describe "Efectos de snorlax" {
     test "Desgano" {
         snorlax.cambiarEstadoA(snorlaxAdormecido)
         assert.that(snorlaxCapturado.tieneEfecto(desgano))

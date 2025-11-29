@@ -1,14 +1,18 @@
+import sound.*
+import gestorEstadosDeSnorlax.*
 import extras.*
 import comida.*
 import basura.*
 import estadosDeSnorlax.*
+import fasesDelJuego.*
+import score.*
+import factories.*
 
 
 object snorlax{
     var property position = game.at(0, 0) 
     var property estado = snorlaxNormal
-    var property estaInmovilizado = false  
-    var property vidas = 3 //Comienza con 3 vidas
+    var property vidas = 3
     
     //acciones
     method mover(direccion){
@@ -17,37 +21,57 @@ object snorlax{
     }
 
     method recibirDaño() {
-        self.objetoEnColision().dañar()
-        if (self.tieneVidas()) { // no se puede añadir validacion porque interrumpe el flujo.
-            snorlaxRecibiendoDaño.animacion()
-        }
-        else { self.terminarJuego() }
+        juego.validarEstado()
+        self.perderUnaVida()
+        self.verificarFinDelJuego()
     }
 
-    method terminarJuego() { 
-        snorlaxPerdedor.animacion()
-        game.schedule(1000, { game.stop() }) 
-    }
-
-    method comer(){
+    method comer() {
         self.validarComer()
+        gestorMusica.reproducirSonido(eatSound)
         self.objetoEnColision().comer()
+    }
+
+    method levantarComida(comida) {
+        juego.validarEstado()
+        self.validarEfecto(desgano)
+        comida.cambiarEstadoA(primerEstado)
     }
 
     method perderUnaVida() { vidas -= 1 }
     
-    method ganarUnaVida() { 
-        self.validarFaltanVidas()
-        vidas += 1
+    method ganarUnaVida() { //No se puede añadir validacion dado que interrumpe flujo en comer()
+        if (not self.tieneVidaLlena()) { vidas += 1 }
     }
 
-    method cambiarEstadoA(estadoNuevo) { 
-        estado = estadoNuevo 
+    method cambiarEstadoA(estadoNuevo) { estado = estadoNuevo }
+
+    method reiniciar() {
+        position = game.at(0, 0)
+        vidas = 3
+        self.cambiarEstadoA(snorlaxNormal)
+    }
+    
+    method subirAlSiguienteNivel() {
+        game.schedule(1000, {
+            snorlaxGanaNivel.animar()
+            gestorMusica.reproducirSonido(levelUpSound)
+            progressLevel.reiniciar()
+            juego.cambiarAlSiguienteNivel()
+        })
     }
 
-    method levantarComida(comida) {
-        estado.validarAdormecimiento()
-        comida.cambiarEstadoA(primerEstado)
+    method terminarJuego() { 
+        snorlaxPerdedor.animar()
+        game.schedule(2000, { juego.finalizar() }) 
+    }
+
+    method verificarFinDelJuego() {
+        if (self.tieneVidas()) {
+            snorlaxRecibiendoDaño.animar()
+            gestorMusica.reproducirSonido(harmSound)
+        }
+        else { self.terminarJuego() }
     }
 
     //consultas
@@ -56,66 +80,54 @@ object snorlax{
     }
 
     method hayCelda(direccion) {
-        return direccion.siguiente(self).x().between(0, game.width()-2)
+        return direccion.siguiente(self).x().between(0, game.width()-4)
     }
 
     method tieneVidas() { return vidas > 0 }
-
-    method esInvencible() { return estaInmovilizado }
 
     method hayComidaColisionando() { return comidaDelJuego.hayComidaEn(position) }
 
     method objetoEnColision() { return game.uniqueCollider(self) }
 
-    method image() {
-        return "snorlax-" + estado.nombre() + ".png"
-    }
+    method image() { return "snorlax-" + estado.nombre() + estado.extension() }
+
+    method tieneVidaLlena() { return vidas == 3 }
 
     method validarVidas() {
-        if (not self.tieneVidas()) {
-            self.terminarJuego()
-        }
-    }
-
-    method validarFaltanVidas() {
-        if (self.vidas() == 3) {
-            self.error("Snorlax tiene vidas suficientes.")
-        }
+        if (not self.tieneVidas()) { self.error("No tengo vidas.") }
     }
 
     method validarMover(direccion) {
-        if (not self.puedeMover(direccion) || self.estaInmovilizado()) {
-            self.error("No puedo mover.")
+        juego.validarEstado()
+        self.validarEfecto(inmovilidad)
+        if (not self.puedeMover(direccion)) { 
+            self.error("No me puedo mover.") 
         }
     }
 
     method validarComer() {
-        estado.validarAdormecimiento()
-        if (not self.hayComidaColisionando()) {
-            self.error("No hay nada para comer.")
+        juego.validarEstado()
+        self.validarEfecto(desgano)
+        gestorDeEstados.validarCooldown()
+        self.validarHayComida()
+    }
+
+    method validarHayComida() {
+        if (not self.hayComidaColisionando()) { self.error("No hay nada para comer.") }
+    }
+
+    method validarEfecto(efecto) {
+        if (estado.tieneEfecto(efecto)) {
+            self.error("Tengo el efecto " + efecto.toString())
         }
     }
 }
 
 // Visualizador de vidas
-
 object vida {
-    var property position = game.at(4,9)
+    var property position = game.at(7,9)
 
     method image() {
-        return "icono-" + snorlax.vidas() + "-vidas.png"
+        return "vidas_" + snorlax.vidas() + ".png"
     }
-}
-
-// puntuacion de snorlax
-
-object puntuacion{
-    var property puntos = 0
-    var property position = game.at(1,10) 
-    
-    method incrementaPuntos(puntosFruta){
-        puntos += puntosFruta
-    } 
-
-    method text() { return self.puntos().toString() }
 }
