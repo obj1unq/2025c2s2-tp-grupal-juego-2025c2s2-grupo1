@@ -36,7 +36,12 @@ class VarianteBasuraEspecial inherits VarianteBasura {
     }
 
     method reproducirSonido() {
-        if (admiteSonido) { gestorMusica.reproducirSonido(sonidoEfecto) }
+        self.validarSonido()
+        gestorMusica.reproducirSonido(sonidoEfecto)
+    }
+
+    method validarSonido() {
+        if (not admiteSonido) { self.error("No se puede reproducir dado que no admite sonido.") }
     }
 }
 
