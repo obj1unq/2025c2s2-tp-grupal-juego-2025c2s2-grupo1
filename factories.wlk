@@ -1,19 +1,15 @@
-import bolsaDeBasura.*
-import pokeflauta.*
-import pokebola.*
-import bota.*
-import manzanaPodrida.*
 import randomizer.*
-import pokelitos.*
-import pokeBayas.*
-import variantesComida.*
+import basura.*
+import comida.*
+import comidaVariantes.*
+import estadosDeSnorlax.*
+import sound.*
 
-class Factory {
+//Gestores de las factories
+class GestorFactory {
     const property itemsActivos = []
 
-    method añadirAlAzar() {
-        self.añadirAlJuego(self.crear())
-    }
+    method añadirAlAzar() { self.añadirAlJuego(self.crear()) }
 
     method crear() {
         const itemElegido = self.todosLosItemsPosibles().anyOne()
@@ -31,45 +27,18 @@ class Factory {
         game.removeVisual(item)
     }
 
-    method removerTodo() {
-        itemsActivos.forEach({item => self.eliminarDelJuego(item)})
-    }
+    method removerTodo() { itemsActivos.forEach({ item => self.eliminarDelJuego(item) }) }
 
     method todosLosItemsPosibles()
 }
 
-object basuraDelJuego inherits Factory {
-    method nuevaPokeflauta() {
-        return new Pokeflauta( position = randomizer.emptyPosition() )
-    }
-
-    method nuevaPokebola() {
-        return new Pokebola( position = randomizer.emptyPosition() )
-    }
-
-    method nuevaBota() {
-        return new Bota( position = randomizer.emptyPosition() )
-    }
-
-    method nuevaBolsaDeBasura() {
-        return new BolsaDeBasura( position = randomizer.emptyPosition() )
-    }
-
-    method nuevaManzanaPodrida() {
-        return new ManzanaPodrida( position = randomizer.emptyPosition() )
-    }
-
-    override method todosLosItemsPosibles() {
-        return [
-            {self.nuevaPokeflauta()}, {self.nuevaPokebola()}, {self.nuevaBota()}, 
-            {self.nuevaBolsaDeBasura()}, {self.nuevaManzanaPodrida()}
-        ]
-    }
+object basuraDelJuego inherits GestorFactory {
+    override method todosLosItemsPosibles() { return [ {factoryBasuras.crear()} ] }
 }
 
-object comidaDelJuego inherits Factory {
+object comidaDelJuego inherits GestorFactory {
     override method todosLosItemsPosibles() {
-        return [{pokelitos.crear()}, {bayalitas.crear()} ]
+        return [{factoryPokelitos.crear()}, {factoryBayalitas.crear()} ]
     }
 
     method hayComidaEn(_position) {
@@ -77,6 +46,7 @@ object comidaDelJuego inherits Factory {
     }
 }
 
+//Factories de los falling items
 class FactoryItems {
     method crear(_variante) 
     
@@ -87,7 +57,7 @@ class FactoryItems {
     method varianteAlAzar() { return self.variantes().anyOne() }
 }
 
-object pokelitos inherits FactoryItems {
+object factoryPokelitos inherits FactoryItems {
     override method crear(_gusto) { 
         return new Pokelito( variante = _gusto, position = randomizer.emptyPosition() )
     }
@@ -97,12 +67,22 @@ object pokelitos inherits FactoryItems {
     }
 }
 
-object bayalitas inherits FactoryItems {
+object factoryBayalitas inherits FactoryItems {
     override method crear(_variante) { 
         return new Baya( variante = _variante, position = randomizer.emptyPosition() )
     }
 
 	override method variantes() {
         return [frambu, grana, tamate, ziuela, meloc]
+    }
+}
+
+object factoryBasuras inherits FactoryItems {
+    override method crear(_variante) { 
+        return new Basura( variante = _variante, position = randomizer.emptyPosition() )
+    }
+
+	override method variantes() {
+        return [bolsaDeBasura, manzanaPodrida, bota, pokebola, pokeflauta]
     }
 }

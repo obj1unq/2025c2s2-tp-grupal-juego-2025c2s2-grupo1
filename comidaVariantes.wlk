@@ -4,6 +4,7 @@ class VarianteComida {
     method puntos() 
 }
 
+
 class GustoPokelito inherits VarianteComida {
     const property puntos
 }

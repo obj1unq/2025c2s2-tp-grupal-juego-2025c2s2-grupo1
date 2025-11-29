@@ -22,8 +22,7 @@ object snorlax{
 
     method recibirDaño() {
         juego.validarEstado()
-        self.validarEfecto(invulnerabilidad)
-        self.objetoEnColision().dañar()
+        self.perderUnaVida()
         self.verificarFinDelJuego()
     }
 

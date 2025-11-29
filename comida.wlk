@@ -1,15 +1,12 @@
 import extras.*
 import snorlax.*
 import estadosDeSnorlax.*
-import pokelitos.*
 import randomizer.*
 import fallingObjects.*
-import pokeBayas.*
 import score.*
 import factories.*
 
 class Comida inherits FallingObject {
-    const property variante
     const property puntos = variante.puntos()
 
     //acciones
@@ -24,4 +21,17 @@ class Comida inherits FallingObject {
     }
 
     override method chocasteConSnorlax() { snorlax.levantarComida(self) }
+}
+
+class Pokelito inherits Comida {
+    override method nombre() { return "pokelito-" + variante.nombre() }
+}
+
+class Baya inherits Comida {
+    override method comer() {
+        snorlax.ganarUnaVida()
+        super()
+    }
+
+    override method nombre() { return "baya-" + variante.nombre() }
 }

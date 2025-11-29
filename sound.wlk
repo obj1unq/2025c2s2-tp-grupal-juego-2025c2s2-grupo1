@@ -1,9 +1,6 @@
 import fallingObjects.*
-import pokelitos.*
-import comida.*
 import snorlax.*
 import extras.*
-import basura.*
 import fasesDelJuego.*
 import gameSnorlax.configuraciones
 
