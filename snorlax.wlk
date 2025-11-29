@@ -6,6 +6,7 @@ import basura.*
 import estadosDeSnorlax.*
 import fasesDelJuego.*
 import score.*
+import factories.*
 
 
 object snorlax{
@@ -21,8 +22,7 @@ object snorlax{
 
     method recibirDaño() {
         juego.validarEstado()
-        self.validarEfecto(invulnerabilidad)
-        self.objetoEnColision().dañar()
+        self.perderUnaVida()
         self.verificarFinDelJuego()
     }
 

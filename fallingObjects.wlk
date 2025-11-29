@@ -4,8 +4,10 @@ import basura.*
 import comida.*
 import randomizer.*
 import fasesDelJuego.*
+import factories.*
 
 class FallingObject {
+    const property variante
     var property estado = primerEstado
     var property position
 
@@ -37,11 +39,15 @@ class FallingObject {
 		return (direccion.siguiente(self).y().between(0, game.height()-1))
 	}
 
-    method image()
+    method image() {
+        return self.nombre() + estado.nivel() + ".png"
+    }
 
     method estaEnElJuego() {
         return game.allVisuals().any({ visual => visual == self})
     }
+
+    method nombre()
 
     //validaciones
     method validarCaida() {
@@ -58,39 +64,29 @@ class FallingObject {
 }
 
 object fallingObjectsDelJuego {
-
     method fallingObjectsActivos() {
-        return comidaDelJuego.comidaActiva() + basuraDelJuego.basuraActiva()
+        return self.gestoresFactory().map({factory => factory.itemsActivos() }).flatten()
     }
 
     method removerTodo() {
-        comidaDelJuego.removerTodo()
-        basuraDelJuego.removerTodo()
+        self.gestoresFactory().forEach({ factory => factory.removerTodo() })
     }
 
     method tiempoDeCaida() { return 1000 / juego.nivel().tiempoCaida() }
 
-    method probabilidadDeSpawneoBasura() { return juego.nivel().probabilidadBasura() }
-
     method añadirItemAlAzar() {
-        game.onTick(self.tiempoDeCaida(), "añadir item al azar", {
-            self.añadirItemSegunProbabilidad()
-        })
+        game.onTick(self.tiempoDeCaida(), "añadir item al azar", { self.añadirItemSegunProbabilidad() })
     }
 
     method añadirItemSegunProbabilidad() {
-        const probabilidad = 0.randomUpTo(100)
+        const gestorElegido = self.gestoresFactory().anyOne()
 
         juego.validarEstado()
         snorlax.validarVidas()
-        //basuraDelJuego.añadirBasuraAlAzar()
-        if(probabilidad.between(0, self.probabilidadDeSpawneoBasura())) {
-            basuraDelJuego.añadirBasuraAlAzar()
-        }
-        else {
-            comidaDelJuego.añadirComidaAlAzar()
-        }
+        gestorElegido.añadirAlAzar()
     }
+
+    method gestoresFactory() { return [basuraDelJuego, comidaDelJuego] }
 
     method aplicarGravedad() {
         game.onTick(self.tiempoDeCaida(), "aplicar gravedad", 

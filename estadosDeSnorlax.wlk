@@ -88,7 +88,7 @@ const snorlaxRecibiendoDaño = new EstadoSimple (
 
 const snorlaxPerdedor = new EstadoSimple (
     nombre = "perdedor",
-    duracion = 3000,
+    duracion = 2000,
     tipoDeArchivo = new ArchivoGIF() 
 )
 

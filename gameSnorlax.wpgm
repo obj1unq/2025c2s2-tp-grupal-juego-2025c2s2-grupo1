@@ -1,12 +1,10 @@
 import fallingObjects.*
-import pokelitos.*
 import comida.*
 import snorlax.*
 import extras.*
 import basura.*
 import sound.*
 import fasesDelJuego.*
-
 
 program snorlaxGame{
     configuraciones.sobreElTablero()
