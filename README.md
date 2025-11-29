@@ -1,4 +1,4 @@
-# Indefinido
+# Snack Attack
 
 ## Equipo de desarrollo
 - Omar Sosa
