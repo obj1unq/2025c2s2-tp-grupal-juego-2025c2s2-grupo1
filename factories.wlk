@@ -9,14 +9,7 @@ import sound.*
 class GestorFactory {
     const property itemsActivos = []
 
-    method añadirAlAzar() { self.añadirAlJuego(self.crear()) }
-
-    method crear() {
-        const itemElegido = self.todosLosItemsPosibles().anyOne()
-
-        return itemElegido.apply()
-    }
-
+    //Acciones en los items activos
     method añadirAlJuego(item) {
         itemsActivos.add(item)
         game.addVisual(item)
@@ -29,15 +22,24 @@ class GestorFactory {
 
     method removerTodo() { itemsActivos.forEach({ item => self.eliminarDelJuego(item) }) }
 
-    method todosLosItemsPosibles()
+    //Creación de items al azar
+    method crear() {
+        const itemElegido = self.factories().anyOne()
+
+        return itemElegido.apply()
+    }
+
+    method añadirAlAzar() { self.añadirAlJuego(self.crear()) }
+
+    method factories()
 }
 
 object basuraDelJuego inherits GestorFactory {
-    override method todosLosItemsPosibles() { return [ {factoryBasuras.crear()} ] }
+    override method factories() { return [ {factoryBasuras.crear()} ] }
 }
 
 object comidaDelJuego inherits GestorFactory {
-    override method todosLosItemsPosibles() {
+    override method factories() {
         return [{factoryPokelitos.crear()}, {factoryBayalitas.crear()} ]
     }
 
@@ -48,11 +50,13 @@ object comidaDelJuego inherits GestorFactory {
 
 //Factories de los falling items
 class FactoryItems {
+    //Fabricación de items
     method crear(_variante) 
     
-    method variantes()
-
     method crear() { return self.crear(self.varianteAlAzar()) }
+
+    //Sobre las variantes
+    method variantes()
 
     method varianteAlAzar() { return self.variantes().anyOne() }
 }

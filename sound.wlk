@@ -5,9 +5,9 @@ import fasesDelJuego.*
 import gameSnorlax.configuraciones
 
 object gestorMusica {
-    var temaActual = gameStartMusic
-    var musicaActual = self.audio(temaActual)
+    var musicaActual = null
 
+    //Acciones
     method cambiarASiguienteCancion() {
         self.quitarMuteSiHay() //Si no se quita la pausa durante el cambio de fase se rompe el juego.
         self.detenerActual()
@@ -30,10 +30,6 @@ object gestorMusica {
 
     method quitarMuteSiHay() {
         if (self.estaPausado()) { self.mutear() }
-    }
-
-    method estaPausado() {
-        return musicaActual.paused()
     }
 
     method pausar() { musicaActual.pause() }
@@ -65,6 +61,10 @@ object gestorMusica {
         self.audio(sonido).play()
     }
 
+    //Consultas
+    method estaPausado() { return musicaActual.paused() }
+
+    //Validaciones
     method validarMute() {
         if (not self.estaPausado()) {
             self.error("La musica ya esta corriendo.")
@@ -78,10 +78,14 @@ class Audio {
     const property volumen = 1
 }
 
+//Música
 const gameStartMusic = new Audio( nombre = "musica-inicio.mp3", volumen = 0.3)
-const gameOverMusic  = new Audio( nombre = "musica-fin.mp3"    ) //demasiado corto
+const gameOverMusic  = new Audio( nombre = "musica-fin.mp3" )
 const inGameMusic    = new Audio( nombre = "musica-juego.mp3",  volumen = 0.3)
-const harmSound      = new Audio( nombre = "harming-sound.mp3" )
-const eatSound       = new Audio( nombre = "eating-sound.mp3"  )
-const levelUpSound   = new Audio( nombre = "levelUp-sound.mp3" )
-const sleepSound     = new Audio( nombre = "sleep-sound.mp3"   )
+
+//Efectos de sonido
+const harmSound      = new Audio( nombre = "harming-sound.mp3"   )
+const eatSound       = new Audio( nombre = "eating-sound.mp3"    )
+const levelUpSound   = new Audio( nombre = "levelUp-sound.mp3"   )
+const sleepSound     = new Audio( nombre = "sleep-sound.mp3"     )
+const pokeballSound  = new Audio( nombre = "pokeball-sound.mp3"  )

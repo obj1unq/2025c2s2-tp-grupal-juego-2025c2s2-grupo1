@@ -23,6 +23,7 @@ object snorlax{
     method recibirDaño() {
         juego.validarEstado()
         self.perderUnaVida()
+        gestorMusica.reproducirSonido(harmSound)
         self.verificarFinDelJuego()
     }
 
@@ -69,7 +70,6 @@ object snorlax{
     method verificarFinDelJuego() {
         if (self.tieneVidas()) {
             snorlaxRecibiendoDaño.animar()
-            gestorMusica.reproducirSonido(harmSound)
         }
         else { self.terminarJuego() }
     }

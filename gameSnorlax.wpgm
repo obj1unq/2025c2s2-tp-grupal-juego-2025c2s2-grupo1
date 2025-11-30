@@ -11,7 +11,8 @@ program snorlaxGame{
     configuraciones.inicializar()
 
     game.start()
-    gestorMusica.reproducir(gameStartMusic) //Si no funciona, sacar comando y volver a ponerlo  
+    gestorMusica.reproducir(gameStartMusic) 
+    //Correr el programa de nuevo con el juego inGame para que se pueda escuchar la musica de inicio
 }
 
 object configuraciones {
@@ -20,9 +21,9 @@ object configuraciones {
     method sobreElTablero() {
         game.title("Snack Attack")
         game.height(11)
-        game.width(9) // expandir 2 celdas más
+        game.width(9)
         game.cellSize(50)
-        game.boardGround("fondo-propuesta.png")
+        game.boardGround("fondo-background.png")
     }
     
     method inicializar() {

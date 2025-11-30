@@ -60,7 +60,9 @@ const bota = new VarianteBasura(
 
 const pokebola = new VarianteBasuraEspecial (
     nombre = "pokebola_",
-    estadoEspecial = snorlaxCapturado
+    estadoEspecial = snorlaxCapturado,
+    admiteSonido = true,
+    sonidoEfecto = pokeballSound
 ) 
 
 const pokeflauta = new VarianteBasuraEspecial (

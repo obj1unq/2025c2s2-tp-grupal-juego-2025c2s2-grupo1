@@ -52,7 +52,7 @@ object nivelActual {
 }
 
 object timer {
-    var property position = game.at(8,5)
+    var property position = game.at(7,5)
 
     method text() { return self.segundosRestantes().toString() + "s" }
     method textColor() {return colorTexto }

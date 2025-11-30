@@ -4,13 +4,14 @@ import estadosDeSnorlax.*
 object gestorDeEstados {
     var duracionRestante = 0
 
+    //Sobre las animaciones
     method animarSecuencia(estado) {
         self.prepararEstado(estado)
         self.comenzarSecuencia(estado)
     }
 
     method comenzarSecuencia(estado) {
-        game.onTick(estado.cantFramesPorSegundo(), "Secuencia", { 
+        game.onTick(estado.tiempoPorCadaFrame(), "Secuencia", { 
             estado.avanzarASiguienteEtapa()
             self.verificarTimer()
         })
@@ -34,6 +35,7 @@ object gestorDeEstados {
         }
     }
 
+    //Sobre el timer de duración restante
     method iniciarTimer(duracion) {
         duracionRestante = duracion
         self.activarTimer()
@@ -54,6 +56,7 @@ object gestorDeEstados {
         if (self.seAgotoLaDuracion()) { self.estadoActual().finalizarAnimacion() }
     }
 
+    //Sobre la finalización del estado
     method determinarFinalizacion() {
         self.terminar()
         if (gestorInterrupciones.hayInterrupciones()) {
@@ -74,22 +77,24 @@ object gestorDeEstados {
         snorlax.cambiarEstadoA(snorlaxNormal)
     }
 
+    //Métodos getter
     method estadoActual() { return snorlax.estado() }
 
     method duracion() { return duracionRestante }
 
     method seAgotoLaDuracion() { return duracionRestante == 0 }
     
+    //Validaciones
     method validarCooldown() {
         if (not self.seAgotoLaDuracion()) { self.error("Aún no terminó el estado actual.") }
     }
 }
 
+//Sobre las interrupciones entre estados entrantes 
 object gestorInterrupciones {
     const interrupciones = []
 
-    method hayInterrupciones() { return not interrupciones.isEmpty() }
-
+    //Acciones
     method crearInterrupcion(duracionRestante) { 
         return new Interrupcion(
             estadoInterrumpido = snorlax.estado(), 
@@ -106,9 +111,12 @@ object gestorInterrupciones {
         self.eliminarTodo()
     }
 
-    method ultimaInterrupcion() { return interrupciones.last() }
-
     method eliminarTodo() { interrupciones.clear() }
+
+    //Consultas
+    method hayInterrupciones() { return not interrupciones.isEmpty() }
+
+    method ultimaInterrupcion() { return interrupciones.last() }
 }
 
 class Interrupcion {
@@ -122,7 +130,8 @@ class Interrupcion {
     }
 }
 
-class ModosDeEstado {
+//Modos de activacion de los estados de snorlax
+class ModoDeActivacion {
     method animar(estado)
 
     method validarActivacion() {}
@@ -130,7 +139,7 @@ class ModosDeEstado {
     method validarDesactivacion() {}
 }
 
-object activado inherits ModosDeEstado {
+object activado inherits ModoDeActivacion {
     override method animar(estado) {
         gestorDeEstados.extenderDuracion()
     }
@@ -140,7 +149,7 @@ object activado inherits ModosDeEstado {
     }
 }
 
-object desactivado inherits ModosDeEstado {
+object desactivado inherits ModoDeActivacion {
     override method animar(estado) {
         gestorDeEstados.verificarSiHayInterrupcion()
         estado.iniciarAnimacion()

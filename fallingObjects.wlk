@@ -64,16 +64,24 @@ class FallingObject {
 }
 
 object fallingObjectsDelJuego {
+    
+    //Relacionado a los gestoresFactory
     method fallingObjectsActivos() {
         return self.gestoresFactory().map({factory => factory.itemsActivos() }).flatten()
     }
+
+    method gestoresFactory() { return [basuraDelJuego, comidaDelJuego] }
 
     method removerTodo() {
         self.gestoresFactory().forEach({ factory => factory.removerTodo() })
     }
 
+    //Tiempos para las mecanicas segun nivel de dificutad
     method tiempoDeCaida() { return 1000 / juego.nivel().tiempoCaida() }
 
+    method tiempoDeCambioEnAnimacion() { return self.tiempoDeCaida() / 4 }
+
+    //Mecanicas
     method añadirItemAlAzar() {
         game.onTick(self.tiempoDeCaida(), "añadir item al azar", { self.añadirItemSegunProbabilidad() })
     }
@@ -86,8 +94,6 @@ object fallingObjectsDelJuego {
         gestorElegido.añadirAlAzar()
     }
 
-    method gestoresFactory() { return [basuraDelJuego, comidaDelJuego] }
-
     method aplicarGravedad() {
         game.onTick(self.tiempoDeCaida(), "aplicar gravedad", 
             { self.fallingObjectsActivos().forEach({ item => item.caer() }) }
@@ -99,8 +105,6 @@ object fallingObjectsDelJuego {
             { self.fallingObjectsActivos().forEach({ item => item.cambiarAlSiguienteEstado() }) }
         )
     }
-    
-    method tiempoDeCambioEnAnimacion() { return self.tiempoDeCaida() / 4 }
 
     method aplicarColisiones() {
         game.whenCollideDo(snorlax, { otro => otro.chocasteConSnorlax()})
