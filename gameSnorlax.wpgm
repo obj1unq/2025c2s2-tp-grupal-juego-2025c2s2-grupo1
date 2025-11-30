@@ -1,0 +1,49 @@
+import fallingObjects.*
+import comida.*
+import snorlax.*
+import extras.*
+import basura.*
+import sound.*
+import fasesDelJuego.*
+
+program snorlaxGame{
+    configuraciones.sobreElTablero()
+    configuraciones.inicializar()
+
+    game.start()
+    gestorMusica.reproducir(gameStartMusic) 
+    //Correr el programa de nuevo con el juego inGame para que se pueda escuchar la musica de inicio
+}
+
+object configuraciones {
+    var estado = pantallaDeInicio
+
+    method sobreElTablero() {
+        game.title("Snack Attack")
+        game.height(11)
+        game.width(9)
+        game.cellSize(50)
+        game.boardGround("fondo-background.png")
+    }
+    
+    method inicializar() {
+        gestorMusica.configurarTeclaMute()
+        estado.inicializar()
+    }
+
+    method cambiarEstadoA(_estado) {
+        estado = _estado
+    }
+
+    method iniciarJuego() { //Se utilizar polimorfismo aquí para el botón ENTER.
+            estado.jugar()
+    }
+
+    method estado() { return estado }    
+
+    method nextMusic() {
+        return estado.nextMusic()
+    }
+
+    method musicaActual() { return estado.musica() }
+}

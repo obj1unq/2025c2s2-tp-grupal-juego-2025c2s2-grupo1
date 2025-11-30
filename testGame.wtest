@@ -1,0 +1,316 @@
+import snorlax.*
+import extras.*
+import comida.*
+import basura.*
+import estadosDeSnorlax.* 
+import fallingObjects.*
+import randomizer.*
+import fasesDelJuego.*
+import factories.*
+import comidaVariantes.*
+import score.*
+import gestorEstadosDeSnorlax.*
+
+describe "snorlax puede moverse" {
+    method initialize() {
+        game.title("Snorlax")
+        game.height(11)
+        game.width(7)
+        game.cellSize(50)
+        juego.alternarEstado()
+    }
+
+    test "puede moverse a la derecha o a la izquierda" {
+        assert.equals(game.origin(), snorlax.position())
+
+        snorlax.mover(derecha)
+        assert.equals(game.origin().right(1), snorlax.position())
+
+        snorlax.mover(derecha)
+        assert.equals(game.origin().right(2), snorlax.position())
+
+        snorlax.mover(izquierda)
+        assert.equals(game.origin().right(1), snorlax.position())
+    }
+
+    test "snorlax no puede moverse si no tiene vidas" {
+        snorlax.vidas(0)
+        assert.throwsException({ snorlax.mover(derecha) })
+        assert.equals(game.origin(), snorlax.position())
+    }
+
+    test "snorlax no puede moverse fuera de los limites laterales del tablero" {
+        assert.throwsException({ snorlax.mover(izquierda) })
+        assert.equals(game.origin(), snorlax.position())
+
+        snorlax.position(game.at(game.width() - 2, 0))
+        assert.throwsException({ snorlax.mover(derecha) })
+        assert.equals(game.at(game.width() - 2, 0), snorlax.position())
+    }
+}
+describe "Snorlax : Mecánica de Comer" {
+    method initialize() {
+        game.title("Snorlax")
+        game.height(11)
+        game.width(7)
+        game.cellSize(50)
+        juego.alternarEstado()
+    }
+
+    test "No puede comer si tiene el efecto Desgano" {
+        snorlax.cambiarEstadoA(snorlaxAdormecido)
+        assert.throwsException({ snorlax.validarComer() })
+    }
+
+    test "No puede comer si ya está comiendo" {
+        snorlax.cambiarEstadoA(snorlaxComiendo)
+        gestorDeEstados.iniciarTimer(snorlaxComiendo.duracion())
+        
+        assert.notThat(gestorDeEstados.seAgotoLaDuracion())
+        assert.throwsException({ snorlax.validarComer() })
+    }
+
+    test "No puede comer si no hay comida en la misma posición" {
+        const pokelito = factoryPokelitos.crear(limon)
+        
+        comidaDelJuego.añadirAlJuego(pokelito)
+
+        assert.notThat(game.onSameCell(snorlax.position(), pokelito.position()))
+
+        assert.throwsException({ snorlax.validarComer() })
+    }
+
+    test "Comer" {
+        const pokelito = factoryPokelitos.crear(limon)
+        
+        comidaDelJuego.añadirAlJuego(pokelito)
+        pokelito.position(snorlax.position())
+
+        assert.that(game.onSameCell(snorlax.position(), pokelito.position()))
+
+        assert.doesNotThrowException({ snorlax.validarComer() })
+    }
+}
+
+describe "Image final de los estados de snorlax" {
+    method initialize() {
+        game.title("Snorlax")
+        game.height(11)
+        game.width(7)
+        game.cellSize(50)
+    }
+    test "snorlax Normal" {
+        snorlax.cambiarEstadoA(snorlaxNormal)
+        assert.equals("snorlax-normal.gif", snorlax.image())
+    }
+    
+    test "snorlax Perdedor" {
+        snorlax.cambiarEstadoA(snorlaxRecibiendoDaño)
+        assert.equals("snorlax-daño.gif", snorlax.image())
+
+        snorlax.cambiarEstadoA(snorlaxPerdedor)
+        assert.equals("snorlax-perdedor.gif", snorlax.image())
+    }
+
+    test "snorlax comiendo" {
+        snorlax.cambiarEstadoA(snorlaxComiendo)
+        assert.equals("snorlax-comiendo.gif", snorlax.image())
+    }
+
+    test "snorlax recibiendo daño" {
+        snorlax.cambiarEstadoA(snorlaxRecibiendoDaño)
+        assert.equals("snorlax-daño.gif", snorlax.image())
+    }
+
+    test "snorlax gana nivel" {
+        snorlax.cambiarEstadoA(snorlaxGanaNivel)
+        assert.equals("snorlax-gana.gif", snorlax.image())
+    }
+
+    test "snorlax adormecido" {
+        snorlax.cambiarEstadoA(snorlaxAdormecido)
+        assert.equals("snorlax-adormecido.gif", snorlax.image())
+    }
+
+    test "snorlax capturado" {
+        snorlax.cambiarEstadoA(snorlaxCapturado)
+        assert.equals("snorlax-capturado_0.png", snorlax.image())
+    }
+}
+
+describe "Snorlax : Mecánica de vida" {
+    method initialize() {
+        game.title("Snorlax")
+        game.height(11)
+        game.width(7)
+        game.cellSize(50)
+    }
+
+    test "prueba : perderUnaVida(), tiene1Vida() y tieneVidas()" {
+        snorlax.vidas(3)
+        assert.equals("vidas_3.png", vida.image())
+
+        snorlax.perderUnaVida()
+
+        assert.equals(2, snorlax.vidas())
+        assert.that(snorlax.tieneVidas())
+        assert.equals("vidas_2.png", vida.image())
+
+        snorlax.perderUnaVida()
+
+        assert.that(snorlax.vidas() == 1)
+        assert.equals("vidas_1.png", vida.image())
+
+        snorlax.perderUnaVida()
+        assert.notThat(snorlax.tieneVidas())
+        assert.equals("vidas_0.png", vida.image())
+    }
+
+    test "ganar 1 vida" {
+        assert.equals(3, snorlax.vidas())
+        snorlax.ganarUnaVida()
+
+        assert.equals(3, snorlax.vidas())
+
+        snorlax.perderUnaVida()
+
+        assert.equals(2, snorlax.vidas())
+
+        snorlax.ganarUnaVida()
+
+        assert.equals(3, snorlax.vidas())
+    }
+
+    test "Limite maximo de 3 vidas" {
+        assert.that(snorlax.tieneVidaLlena())
+        
+        snorlax.ganarUnaVida()
+        
+        assert.that(snorlax.tieneVidaLlena())
+    }
+}
+
+describe "Snorlax : Mecánica de puntuacion" {
+    method initialize() {
+        game.title("Snorlax")
+        game.height(11)
+        game.width(7)
+        game.cellSize(50)
+    }
+
+    test "Puntuacion" {
+        assert.equals(0, puntuacion.puntos())
+
+        puntuacion.puntos(100)
+        assert.equals(100, puntuacion.puntos())
+
+        assert.equals("100", puntuacion.text())
+    }
+
+    test "Highscore" {
+        puntuacion.puntos(100)
+        highscore.highscore(200)
+
+        assert.notThat(highscore.seBateRecord())
+
+        highscore.actualizar()
+
+        assert.equals(200, highscore.highscore())
+
+        puntuacion.puntos(300)
+
+        assert.that(highscore.seBateRecord())
+
+        highscore.actualizar()
+
+        assert.equals(300, highscore.highscore())
+    }
+
+}
+
+describe "Snorlax : Terminar el juego" {
+    method initialize() {
+        game.title("Snorlax")
+        game.height(11)
+        game.width(7)
+        game.cellSize(50)
+        juego.alternarEstado()
+    }
+
+    test "Terminar el juego por una basura" {
+        snorlax.vidas(1)
+        assert.that(snorlax.tieneVidas())
+        const bolsaBasura = factoryBasuras.crear(bolsaDeBasura)
+        snorlax.position(bolsaBasura.position())
+        assert.equals(bolsaBasura.position(), snorlax.position())   
+        game.addVisual(snorlax)
+        game.addVisual(bolsaBasura)
+        snorlax.recibirDaño()
+        game.schedule(1500, {assert.equals(snorlaxPerdedor, snorlax.estado())})
+    }
+}
+
+describe "Animaciones especiales de Snorlax" {
+    method initialize() {
+        game.title("Snorlax")
+        game.height(11)
+        game.width(7)
+        game.cellSize(50)
+    }
+
+    test "snorlax capturado" {
+        snorlax.cambiarEstadoA(snorlaxCapturado)
+        assert.equals("snorlax-capturado_0.png", snorlax.image())
+        snorlaxCapturado.animar()
+        game.schedule(7000, {assert.equals("snorlax-normal.gif", snorlax.image())})
+    }
+    test "snorlax adormecido" {
+        snorlax.cambiarEstadoA(snorlaxAdormecido)
+        assert.equals("snorlax-adormecido.gif", snorlax.image())
+        game.schedule (8000, {assert.equals("snorlax-normal.gif", snorlax.image())})
+    }
+}
+describe "Levantar comida" {
+  test "levantar comida" {
+        juego.alternarEstado()
+        const comidaALevantar = factoryPokelitos.crear(limon)
+        
+        comidaALevantar.cambiarEstadoA(segundoEstado)
+        snorlax.levantarComida(comidaALevantar)
+
+        assert.equals(primerEstado, comidaALevantar.estado())
+        assert.equals("pokelito-limon_0.png", comidaALevantar.image())
+  }
+}
+
+describe "Efectos de snorlax" {
+    test "Desgano" {
+        snorlax.cambiarEstadoA(snorlaxAdormecido)
+        assert.that(snorlaxCapturado.tieneEfecto(desgano))
+        
+        assert.throwsExceptionWithMessage(
+            "Tengo el efecto desgano",
+            {snorlax.validarEfecto(desgano)}  
+        )
+    }
+
+    test "Inmovilidad" {
+        snorlax.cambiarEstadoA(snorlaxComiendo)
+        assert.that(snorlaxCapturado.tieneEfecto(inmovilidad))
+        
+        assert.throwsExceptionWithMessage(
+            "Tengo el efecto inmovilidad",
+            {snorlax.validarEfecto(inmovilidad)}  
+        )
+    }
+    
+    test "Invulnerabilidad" {
+        assert.that(snorlaxCapturado.tieneEfecto(invulnerabilidad))
+        snorlax.cambiarEstadoA(snorlaxCapturado)
+
+        assert.throwsExceptionWithMessage(
+            "Tengo el efecto invulnerabilidad",
+            {snorlax.validarEfecto(invulnerabilidad)}  
+        )
+    }
+}
