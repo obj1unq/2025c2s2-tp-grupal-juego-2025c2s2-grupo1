@@ -28,7 +28,7 @@ class EstadoSimple {
         return efectos.contains(efecto)
     }
 
-    method extension() { return tipoDeArchivo.extension() } //por defecto
+    method extension() { return tipoDeArchivo.extension() }
 
     method finalizarAnimacion() {
         gestorDeEstados.finalizarTimerActual()
@@ -45,7 +45,7 @@ class EstadoCompuesto inherits EstadoSimple {
         gestorDeEstados.animarSecuencia(self)
     }
 
-    method cantFramesPorSegundo() { return 1000 / fps }
+    method tiempoPorCadaFrame() { return 1000 / fps }
 
     override method nombre() { return nombre + "_" + etapaActual }
 
@@ -63,7 +63,7 @@ class EstadoCompuesto inherits EstadoSimple {
 
     method resetear() { etapaActual = 0 }
 
-    override method duracion() { return cantEtapas * self.cantFramesPorSegundo() }
+    override method duracion() { return cantEtapas * self.tiempoPorCadaFrame() }
 }
 
 //estados de snorlax
@@ -112,20 +112,25 @@ const snorlaxAdormecido = new EstadoSimple (
     efectos = #{ desgano } 
 )
 
+
 //efectos
-object inmovilidad {}
+object inmovilidad {} 
+//Impide que Snorlax pueda moverse
 
-object desgano {}
+object desgano {} 
+//Impide que Snorlax pueda interactuar con la comida (levantarlo o comerlo)
 
-object invulnerabilidad {}
+object invulnerabilidad {} 
+//Impide que Snorlax pueda interactuar con la basura (que reciba daño)
+
 
 //Tipo de archivo admitidos
 class TipoDeArchivo { method extension() }
 
 class ArchivoPNG inherits TipoDeArchivo {
     override method extension() { return ".png" }
-}
+} //Creado para animaciones complejas
 
 class ArchivoGIF inherits TipoDeArchivo {
     override method extension() { return ".gif" }
-}
+} //Consejo : Funciona mejor con GIFs de menos de 5 sprites
